@@ -1,12 +1,14 @@
-import type { MetaFunction } from 'remix'
+import { LoaderFunction, redirect } from 'remix'
 
-export const meta: MetaFunction = () => {
-  return {
-    title: 'Remix Starter',
-    description: 'Welcome to remix!',
-  }
+import { authenticator } from '~/utils/auth.server'
+
+export const loader: LoaderFunction = async ({ request }) => {
+  await authenticator.isAuthenticated(request, {
+    failureRedirect: '/login',
+  })
+  return redirect('/clipboard')
 }
 
-export default function Index() {
-  return <div>Index page</div>
+export default function Copy() {
+  return null
 }

@@ -14,8 +14,16 @@ export const action: ActionFunction = async ({ request }) => {
   })
 }
 
-export const loader: LoaderFunction = () => {
-  return redirect('/login')
+export const loader: LoaderFunction = async ({ request }) => {
+  await authenticator.isAuthenticated(request, { failureRedirect: '/login' })
+
+  const session = await getSession(request.headers.get('Cookie'))
+
+  throw redirect('/login', {
+    headers: {
+      'Set-Cookie': await destroySession(session),
+    },
+  })
 }
 
 export default function Logout() {

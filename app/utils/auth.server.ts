@@ -29,7 +29,10 @@ export const gitHubStrategy = new GitHubStrategy(
     callbackURL,
   },
   async ({ profile }) => {
-    return User.findOrCreate({ email: profile.emails[0].value })
+    return User.findOrCreate({
+      email: profile.emails[0].value,
+      profileUrl: profile._json.avatar_url,
+    })
   },
 )
 

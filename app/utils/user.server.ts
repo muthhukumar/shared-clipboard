@@ -1,12 +1,12 @@
 import { prisma } from './prisma.server'
 
 export const User = {
-  async findOrCreate({ email }: { email: string }) {
+  async findOrCreate({ email, profileUrl }: { email: string; profileUrl: string }) {
     try {
       let user = await prisma.user.findUnique({ where: { email } })
 
       if (!user) {
-        user = await prisma.user.create({ data: { email } })
+        user = await prisma.user.create({ data: { email, profileUrl } })
       }
 
       return user

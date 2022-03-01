@@ -8,3 +8,4 @@ public/build
 api/build
 
 app/styles/*
+.env

@@ -10,8 +10,21 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model ClipboardContent {
+  title     String
+  content   String
+  id        Int      @id @default(autoincrement())
+  User      User?    @relation(fields: [userEmail], references: [email])
+  userEmail String?
+  private   Boolean  @default(false)
+  createdAt DateTime @default(now())
+}
+
 model User {
-  email String  @unique
-  id    String  @unique @default(uuid())
-  name  String?
+  email             String             @unique
+  id                String             @unique @default(uuid())
+  name              String?
+  profileUrl        String?
+  clipboardContents ClipboardContent[]
+  quickContent      String?
 }

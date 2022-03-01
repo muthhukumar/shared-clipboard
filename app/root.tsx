@@ -1,22 +1,46 @@
-import { Links, LiveReload, Meta, Outlet, Scripts, ScrollRestoration, useCatch } from 'remix'
+import * as React from 'react'
+import {
+  Links,
+  LiveReload,
+  LoaderFunction,
+  Meta,
+  Outlet,
+  Scripts,
+  ScrollRestoration,
+  useCatch,
+  useLoaderData,
+} from 'remix'
 import type { LinksFunction } from 'remix'
 
 import globalStylesUrl from '~/styles/global.css'
 import tailwindStylesUrl from '~/styles/tailwind.css'
+import vendorsStylesUrl from '~/styles/vendors.css'
+
+import { Sidebar } from '~/components'
+import { Box, ChakraProvider, Heading } from '@chakra-ui/react'
+import { authenticator } from './utils/auth.server'
+import { User } from '@prisma/client'
 
 export const links: LinksFunction = () => {
   return [
     { rel: 'stylesheet', href: globalStylesUrl },
     { rel: 'stylesheet', href: tailwindStylesUrl },
+    { rel: 'stylesheet', href: vendorsStylesUrl },
   ]
+}
+
+export const loader: LoaderFunction = async ({ request }) => {
+  return authenticator.isAuthenticated(request)
 }
 
 export default function App() {
   return (
     <Document>
-      <Layout>
-        <Outlet />
-      </Layout>
+      <ChakraProvider>
+        <Layout>
+          <Outlet />
+        </Layout>
+      </ChakraProvider>
     </Document>
   )
 }
@@ -25,43 +49,27 @@ export function ErrorBoundary({ error }: { error: Error }) {
   console.error(error)
   return (
     <Document title="Error!">
-      <Layout>
-        <div>
-          <h1>There was an error</h1>
-          <p>{error.message}</p>
-          <hr />
-          <p>Hey, developer, you should replace this with what you want your users to see.</p>
-        </div>
-      </Layout>
+      <ChakraProvider>
+        <Box>
+          <Heading as="h1">There was an error</Heading>
+        </Box>
+      </ChakraProvider>
     </Document>
   )
 }
 
-// https://remix.run/docs/en/v1/api/conventions#catchboundary
 export function CatchBoundary() {
   const caught = useCatch()
 
-  let message
-  switch (caught.status) {
-    case 401:
-      message = <p>Oops! Looks like you tried to visit a page that you do not have access to.</p>
-      break
-    case 404:
-      message = <p>Oops! Looks like you tried to visit a page that does not exist.</p>
-      break
-
-    default:
-      throw new Error(caught.data || caught.statusText)
-  }
-
   return (
     <Document title={`${caught.status} ${caught.statusText}`}>
-      <Layout>
-        <h1>
-          {caught.status}: {caught.statusText}
-        </h1>
-        {message}
-      </Layout>
+      <ChakraProvider>
+        <Box>
+          <Heading as="h1">
+            {caught.status} {caught.statusText}
+          </Heading>
+        </Box>
+      </ChakraProvider>
     </Document>
   )
 }
@@ -80,12 +88,21 @@ function Document({ children, title }: { children: React.ReactNode; title?: stri
         {children}
         <ScrollRestoration />
         <Scripts />
-        {process.env.NODE_ENV === 'development' && <LiveReload />}
+        <LiveReload />
       </body>
     </html>
   )
 }
 
 function Layout({ children }: { children: React.ReactNode }) {
-  return <div>{children}</div>
+  const user = useLoaderData<User>()
+
+  return (
+    <div className="h-screen">
+      {/* <TransitionModal /> */}
+      {/* <Navbar /> */}
+      <Sidebar user={user} />
+      <main className="min-h-full pl-16">{children}</main>
+    </div>
+  )
 }

@@ -8,7 +8,7 @@ export const loader: LoaderFunction = async ({ request }) => {
 
 export default function Login() {
   return (
-    <div className="flex items-center justify-center h-screen bg-gray-800">
+    <div className="flex items-center justify-center h-screen">
       <form
         className="flex flex-col items-center justify-center rounded-full"
         action="/auth/github"
