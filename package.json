@@ -17,7 +17,8 @@
     "build": "npm run build:css:prod && npm run build:remix",
     "prebuild": "npm run clean && echo All clean",
     "clean": "npx rimraf public/build ./node_modules/.cache ./app/styles/**.css ./api/build* .cache",
-    "postinstall": "remix setup node"
+    "postinstall": "remix setup node && npx prisma generate",
+    "migrate:deploy": "npx prisma migrate deploy"
   },
   "dependencies": {
     "@chakra-ui/react": "^1.8.6",
