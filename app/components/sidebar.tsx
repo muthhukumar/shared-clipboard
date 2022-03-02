@@ -11,6 +11,7 @@ import { BsClipboard } from 'react-icons/bs'
 import { FaHome } from 'react-icons/fa'
 import { HiClipboardCopy } from 'react-icons/hi'
 import { IconType } from 'react-icons/lib'
+import { TiArrowShuffle } from 'react-icons/ti'
 import { Link as RLink } from 'remix'
 
 const links: Array<{ icon: IconType; to: string }> = [
@@ -21,6 +22,10 @@ const links: Array<{ icon: IconType; to: string }> = [
   {
     icon: HiClipboardCopy,
     to: '/quick-copy',
+  },
+  {
+    icon: TiArrowShuffle,
+    to: '/quick-redirect',
   },
 ]
 
