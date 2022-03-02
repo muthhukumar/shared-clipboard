@@ -22,6 +22,7 @@ import { Box, ChakraProvider, Heading } from '@chakra-ui/react'
 import { authenticator } from './utils/auth.server'
 import { User } from '@prisma/client'
 import clsx from 'clsx'
+import { theme } from './others/theme'
 
 export const links: LinksFunction = () => {
   return [
@@ -38,7 +39,7 @@ export const loader: LoaderFunction = async ({ request }) => {
 export default function App() {
   return (
     <Document>
-      <ChakraProvider>
+      <ChakraProvider theme={theme}>
         <Layout>
           <Outlet />
         </Layout>
@@ -51,7 +52,7 @@ export function ErrorBoundary({ error }: { error: Error }) {
   console.error(error)
   return (
     <Document title="Error!">
-      <ChakraProvider>
+      <ChakraProvider theme={theme}>
         <Box>
           <Heading as="h1">There was an error</Heading>
         </Box>
@@ -65,7 +66,7 @@ export function CatchBoundary() {
 
   return (
     <Document title={`${caught.status} ${caught.statusText}`}>
-      <ChakraProvider>
+      <ChakraProvider theme={theme}>
         <Box>
           <Heading as="h1">
             {caught.status} {caught.statusText}
