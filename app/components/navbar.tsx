@@ -112,7 +112,7 @@ function StickyHeader() {
       >
         <Wrapper>
           <div className="flex items-center justify-start">
-            <Stack direction="row" spacing="8">
+            <Stack direction="row" spacing="8" overflowY="scroll">
               {links.map((link) => (
                 <RLink
                   to={link.to}
