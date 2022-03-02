@@ -1,100 +1,134 @@
-import { ReactNode } from 'react'
 import {
-  Box,
-  Flex,
   Avatar,
-  HStack,
-  Link,
-  IconButton,
+  Box,
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
   Button,
+  chakra,
   Menu,
   MenuButton,
-  MenuList,
   MenuItem,
-  MenuDivider,
-  useDisclosure,
-  useColorModeValue,
+  MenuList,
   Stack,
+  useColorModeValue,
 } from '@chakra-ui/react'
-import { HamburgerIcon, CloseIcon } from '@chakra-ui/icons'
+import { User } from '@prisma/client'
+import clsx from 'clsx'
+import { useViewportScroll } from 'framer-motion'
+import React from 'react'
+import { BsClipboard } from 'react-icons/bs'
+import { Link as RLink, useLocation } from 'remix'
+import { Wrapper } from '.'
 
-const Links = ['Dashboard', 'Projects', 'Team']
+const links: Array<{ title: string; to: string }> = [
+  {
+    title: 'Clipboard',
+    to: '/clipboard',
+  },
+  {
+    title: 'Copies',
+    to: '/quick-copy',
+  },
+  {
+    title: 'Redirects',
+    to: '/quick-redirect',
+  },
+]
 
-const NavLink = ({ children }: { children: ReactNode }) => (
-  <Link
-    px={2}
-    py={1}
-    rounded={'md'}
-    _hover={{
-      textDecoration: 'none',
-      bg: useColorModeValue('gray.200', 'gray.700'),
-    }}
-    href={'#'}
-  >
-    {children}
-  </Link>
-)
+export default function Navbar({ user }: { user: User }) {
+  return (
+    <div className="border-b">
+      <Wrapper>
+        <div className="flex items-center justify-between py-4">
+          <Breadcrumb>
+            <BreadcrumbItem>
+              <BreadcrumbLink href="#">
+                <BsClipboard />
+              </BreadcrumbLink>
+            </BreadcrumbItem>
 
-export default function Simple() {
-  const { isOpen, onOpen, onClose } = useDisclosure()
+            <BreadcrumbItem>
+              <BreadcrumbLink href="#">Docs</BreadcrumbLink>
+            </BreadcrumbItem>
+
+            <BreadcrumbItem isCurrentPage>
+              <BreadcrumbLink href="#">Breadcrumb</BreadcrumbLink>
+            </BreadcrumbItem>
+          </Breadcrumb>
+          <Menu>
+            <MenuButton as={Button} rounded={'full'} variant={'link'} cursor={'pointer'} minW={0}>
+              <Avatar src={user?.profileUrl ?? ''} size="sm" />
+            </MenuButton>
+            <MenuList alignItems={'center'} p={0}>
+              <MenuItem>
+                <RLink to="/profile">Account settings</RLink>
+              </MenuItem>
+              <MenuItem>
+                <RLink to="/logout">Logout</RLink>
+              </MenuItem>
+            </MenuList>
+          </Menu>
+        </div>
+      </Wrapper>
+      <StickyHeader />
+    </div>
+  )
+}
+
+function StickyHeader() {
+  const shadow = useColorModeValue('#0000001a', '#333')
+
+  const ref = React.useRef<HTMLHeadingElement>(null)
+  const [y, setY] = React.useState(0)
+  const { height = 49 } = ref.current?.getBoundingClientRect() ?? {}
+
+  const location = useLocation()
+
+  const { scrollY } = useViewportScroll()
+
+  React.useEffect(() => {
+    return scrollY.onChange(() => setY(scrollY.get()))
+  }, [scrollY])
+
+  const scrolledToTop = y >= 59
 
   return (
-    <div className="md:hidden">
+    <chakra.header h={`${height}px`} w="full">
       <Box
-        bg={useColorModeValue('gray.100', 'gray.900')}
-        px={4}
-        // position="fixed"
-        // top={0}
-        w="full"
-        // zIndex={100}
-        className="h-16"
+        position={scrolledToTop ? 'fixed' : 'static'}
+        transform={scrolledToTop ? 'translateZ(100px)' : undefined}
+        boxShadow={scrolledToTop ? `0 0 0 1px ${shadow}` : undefined}
+        ref={ref}
+        transition="box-shadow .2s ease"
+        top="0"
+        bg="gray.800"
+        zIndex="3000"
+        h={`${height}px`}
+        left="0"
+        right="0"
+        width="full"
+        pt="3"
       >
-        <Flex h={16} alignItems={'center'} justifyContent={'space-between'}>
-          <IconButton
-            size={'md'}
-            icon={isOpen ? <CloseIcon /> : <HamburgerIcon />}
-            aria-label={'Open Menu'}
-            display={{ md: 'none' }}
-            onClick={isOpen ? onClose : onOpen}
-          />
-          <HStack spacing={8} alignItems={'center'}>
-            <Box>Logo</Box>
-            <HStack as={'nav'} spacing={4} display={{ base: 'none', md: 'flex' }}>
-              {Links.map((link) => (
-                <NavLink key={link}>{link}</NavLink>
-              ))}
-            </HStack>
-          </HStack>
-          <Flex alignItems={'center'}>
-            <Menu>
-              <MenuButton as={Button} rounded={'full'} variant={'link'} cursor={'pointer'} minW={0}>
-                <Avatar
-                  size={'sm'}
-                  src={
-                    'https://images.unsplash.com/photo-1493666438817-866a91353ca9?ixlib=rb-0.3.5&q=80&fm=jpg&crop=faces&fit=crop&h=200&w=200&s=b616b2c5b373a80ffc9636ba24f7a4a9'
-                  }
-                />
-              </MenuButton>
-              <MenuList>
-                <MenuItem>Link 1</MenuItem>
-                <MenuItem>Link 2</MenuItem>
-                <MenuDivider />
-                <MenuItem>Link 3</MenuItem>
-              </MenuList>
-            </Menu>
-          </Flex>
-        </Flex>
-
-        {isOpen ? (
-          <Box pb={4} display={{ md: 'none' }}>
-            <Stack as={'nav'} spacing={4}>
-              {Links.map((link) => (
-                <NavLink key={link}>{link}</NavLink>
+        <Wrapper>
+          <div className="flex items-center justify-start">
+            <Stack direction="row" spacing="8">
+              {links.map((link) => (
+                <RLink
+                  to={link.to}
+                  key={link.to}
+                  className={clsx('text-gray-400 pb-3 border-b-2 border-transparent', {
+                    'text-black dark:text-white border-black dark:border-white':
+                      location.pathname.includes(link.to),
+                  })}
+                >
+                  {link.title}
+                </RLink>
               ))}
             </Stack>
-          </Box>
-        ) : null}
+          </div>
+        </Wrapper>
       </Box>
-    </div>
+    </chakra.header>
   )
 }

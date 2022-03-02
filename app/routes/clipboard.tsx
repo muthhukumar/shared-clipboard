@@ -1,10 +1,12 @@
-import { Button, VStack } from '@chakra-ui/react'
-import { ClipboardContent, User } from '@prisma/client'
+import { Button, Input, InputGroup, InputLeftElement } from '@chakra-ui/react'
+import { ClipboardContent as ClipboardContentType, User } from '@prisma/client'
 import { IoMdAdd } from 'react-icons/io'
-import { LoaderFunction, json, useLoaderData, Outlet, useNavigate, Link } from 'remix'
+import { LoaderFunction, json, useLoaderData, useNavigate, Link, Outlet } from 'remix'
+import { RiSearchLine } from 'react-icons/ri'
 
 import { authenticator } from '~/utils/auth.server'
 import { prisma } from '~/utils/prisma.server'
+import { ClipboardContent, Wrapper } from '~/components'
 
 export const loader: LoaderFunction = async ({ request }) => {
   const user = (await authenticator.isAuthenticated(request, {
@@ -21,37 +23,40 @@ export const loader: LoaderFunction = async ({ request }) => {
 }
 
 export default function ClipbaordContent() {
-  const contents = useLoaderData<Array<ClipboardContent>>()
+  const contents = useLoaderData<Array<ClipboardContentType>>()
   const navigation = useNavigate()
+
   return (
-    <div className="flex w-full h-screen">
-      <div className="container w-full max-w-[256px] h-full p-4 border-r">
-        <h2 className="mb-6 text-2xl font-bold">Clipboard</h2>
+    <div className="flex w-full py-8">
+      <Wrapper>
         <div className="flex items-center justify-between w-full">
-          <h3 className="font-bold text-gray-600">Copied</h3>
+          <InputGroup size="md" width="83%">
+            {/* eslint-disable-next-line react/no-children-prop*/}
+            <InputLeftElement pointerEvents="none" children={<RiSearchLine color="gray.300" />} />
+            <Input pr="4.5rem" type={'text'} placeholder="Search..." />
+          </InputGroup>
           <Button
             leftIcon={<IoMdAdd />}
             variant="solid"
-            size="sm"
+            w="15%"
+            size="md"
             onClick={() => navigation('/clipboard/new')}
           >
             Add
           </Button>
         </div>
         <div className="flex flex-col mt-4">
-          <VStack alignItems="flex-start">
-            {contents.map((content) => (
-              <Link
-                to={`/clipboard/${content.id}`}
-                key={content.id}
-                className="w-full p-2 text-sm border rounded-md"
-              >
-                <p>{content.title}</p>
-              </Link>
-            ))}
-          </VStack>
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+            {contents.map((content) => {
+              return (
+                <Link to={`/clipboard/${content.id}`} key={content.id} className="w-full">
+                  <ClipboardContent {...content} key={content.id} />
+                </Link>
+              )
+            })}
+          </div>
         </div>
-      </div>
+      </Wrapper>
       <Outlet />
     </div>
   )

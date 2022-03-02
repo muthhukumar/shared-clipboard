@@ -1,6 +1,7 @@
-import { FormControl, FormLabel, Button, Textarea } from '@chakra-ui/react'
+import { FormControl, Button, Textarea } from '@chakra-ui/react'
 import { User } from '@prisma/client'
 import { ActionFunction, Form, LoaderFunction, redirect, useLoaderData, useTransition } from 'remix'
+import { PageTitle, Wrapper } from '~/components'
 import { authenticator } from '~/utils/auth.server'
 import { prisma } from '~/utils/prisma.server'
 
@@ -45,19 +46,20 @@ export default function QuickCopy() {
   const content = useLoaderData<string>()
 
   return (
-    <div className="w-full p-4">
-      <h2 className="mb-6 text-2xl font-bold">Quick copy</h2>
-      <div className="container h-full max-w-5xl mx-auto">
-        <Form method="post">
+    <div className="w-full">
+      <PageTitle>
+        <h2 className="text-3xl font-bold">Quick Copy</h2>
+      </PageTitle>
+      <Wrapper>
+        <Form method="post" className="py-8">
           <FormControl>
-            <FormLabel>Quick content</FormLabel>
             <Textarea placeholder="Title" name="content" defaultValue={content} />
           </FormControl>
           <Button type="submit" isLoading={saving} loadingText="Saving" mt="4">
             Save
           </Button>
         </Form>
-      </div>
+      </Wrapper>
     </div>
   )
 }

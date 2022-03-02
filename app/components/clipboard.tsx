@@ -1,15 +1,15 @@
-import { Form, useNavigate } from 'remix'
 import { ClipboardContent } from '@prisma/client'
 import moment from 'moment'
 
 export default function ClipboardContent(props: ClipboardContent) {
-  const navigation = useNavigate()
   return (
-    <div className="p-4 border rounded-md">
-      <h2 className="mb-2 text-xl font-bold">{props.title}</h2>
-      <p className="truncate">{props.content}</p>
-      <time className="text-sm text-gray-500">{moment(props.createdAt).calendar()}</time>
-      <div className="flex items-center justify-end mt-2">
+    <div className="w-full p-4 border rounded-md">
+      <div className="flex flex-col gap-y-4">
+        <h2 className="text-xl font-bold">{props.title}</h2>
+        <p className="truncate">{props.content}</p>
+        <time className="text-sm text-gray-500">{moment(props.createdAt).calendar()}</time>
+      </div>
+      {/* <div className="flex items-center justify-end mt-2">
         <button
           className="px-2 py-1 text-white bg-blue-500 border rounded-md"
           onClick={() => navigation(`/clipboard/${props.id}`)}
@@ -22,7 +22,7 @@ export default function ClipboardContent(props: ClipboardContent) {
             Delete
           </button>
         </Form>
-      </div>
+      </div> */}
     </div>
   )
 }
