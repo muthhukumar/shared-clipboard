@@ -51,9 +51,9 @@ export default function QuickCopy() {
         <h2 className="text-3xl font-bold">Quick Redirect</h2>
       </PageTitle>
       <Wrapper>
-        <Form method="post" className="py-8">
+        <Form method="post" className="py-6">
           <FormControl>
-            <FormLabel>Quick Redirect</FormLabel>
+            <FormLabel>URL</FormLabel>
             <Input placeholder="Url" name="url" defaultValue={url} type="url" />
           </FormControl>
           <Button type="submit" isLoading={saving} loadingText="Saving" mt="4">

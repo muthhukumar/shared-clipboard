@@ -1,9 +1,6 @@
 import {
   Avatar,
   Box,
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
   Button,
   chakra,
   Menu,
@@ -41,21 +38,19 @@ export default function Navbar({ user }: { user: User }) {
     <div className="border-b">
       <Wrapper>
         <div className="flex items-center justify-between py-4">
-          <Breadcrumb>
+          <div className="flex items-center">
+            <BsClipboard size={20} />
+            <h2 className="ml-4 font-bold">Clip</h2>
+          </div>
+          {/* <Breadcrumb>
             <BreadcrumbItem>
-              <BreadcrumbLink href="#">
-                <BsClipboard />
-              </BreadcrumbLink>
+              <BreadcrumbLink href="#"></BreadcrumbLink>
             </BreadcrumbItem>
 
             <BreadcrumbItem>
-              <BreadcrumbLink href="#">Docs</BreadcrumbLink>
+              <BreadcrumbLink href="#">{user.email}</BreadcrumbLink>
             </BreadcrumbItem>
-
-            <BreadcrumbItem isCurrentPage>
-              <BreadcrumbLink href="#">Breadcrumb</BreadcrumbLink>
-            </BreadcrumbItem>
-          </Breadcrumb>
+          </Breadcrumb> */}
           <Menu>
             <MenuButton as={Button} rounded={'full'} variant={'link'} cursor={'pointer'} minW={0}>
               <Avatar src={user?.profileUrl ?? ''} size="sm" />

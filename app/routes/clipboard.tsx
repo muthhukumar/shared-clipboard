@@ -77,11 +77,15 @@ export default function ClipbaordContent() {
             Add
           </Button>
         </Form>
-        <div className="flex flex-col mt-4">
+        <div className="flex flex-col mt-6">
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
             {contents.map((content) => {
               return (
-                <Link to={`/clipboard/${content.id}`} key={content.id} className="w-full">
+                <Link
+                  to={`/clipboard/${content.id}`}
+                  key={content.id}
+                  className="w-full transition-all border rounded-md hover:border-white"
+                >
                   <ClipboardContent {...content} key={content.id} />
                 </Link>
               )
