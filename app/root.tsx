@@ -9,6 +9,7 @@ import {
   ScrollRestoration,
   useCatch,
   useLoaderData,
+  useLocation,
 } from 'remix'
 import type { LinksFunction } from 'remix'
 
@@ -16,10 +17,11 @@ import globalStylesUrl from '~/styles/global.css'
 import tailwindStylesUrl from '~/styles/tailwind.css'
 import vendorsStylesUrl from '~/styles/vendors.css'
 
-import { Sidebar } from '~/components'
+import { Navbar, Sidebar } from '~/components'
 import { Box, ChakraProvider, Heading } from '@chakra-ui/react'
 import { authenticator } from './utils/auth.server'
 import { User } from '@prisma/client'
+import clsx from 'clsx'
 
 export const links: LinksFunction = () => {
   return [
@@ -96,13 +98,16 @@ function Document({ children, title }: { children: React.ReactNode; title?: stri
 
 function Layout({ children }: { children: React.ReactNode }) {
   const user = useLoaderData<User>()
+  const location = useLocation()
+
+  const isLogin = location.pathname === '/login'
 
   return (
-    <div className="h-screen">
+    <div className="flex flex-col h-screen md:flex-row max-h-[100vh]">
       {/* <TransitionModal /> */}
-      {/* <Navbar /> */}
-      <Sidebar user={user} />
-      <main className="min-h-full pl-16">{children}</main>
+      {!isLogin && <Navbar />}
+      {!isLogin && <Sidebar user={user} />}
+      <main className={clsx('w-full', { '': !isLogin })}>{children}</main>
     </div>
   )
 }

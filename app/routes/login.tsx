@@ -1,24 +1,76 @@
-import { LoaderFunction } from 'remix'
+import {
+  Button,
+  Checkbox,
+  Flex,
+  FormControl,
+  FormLabel,
+  Heading,
+  Input,
+  Link,
+  Stack,
+  Image,
+  Text,
+} from '@chakra-ui/react'
+import { Form, LoaderFunction } from 'remix'
 import { authenticator } from '~/utils/auth.server'
+import { BsGithub } from 'react-icons/bs'
 
 export const loader: LoaderFunction = async ({ request }) => {
   await authenticator.isAuthenticated(request, { successRedirect: '/' })
   return null
 }
 
-export default function Login() {
+export default function SimpleCard() {
   return (
-    <div className="flex items-center justify-center h-screen">
-      <form
-        className="flex flex-col items-center justify-center rounded-full"
+    <Stack minH={'100vh'} direction={{ base: 'column', md: 'row' }}>
+      <Form
+        className="flex items-center justify-center flex-1 p-8"
         action="/auth/github"
         method="post"
       >
-        <h1 className="text-3xl font-bold text-white">Shared clipboard</h1>
-        <button className="px-8 py-2 mt-4 text-white bg-yellow-600 rounded-md">
-          Login (or Sign up) with Github
-        </button>
-      </form>
-    </div>
+        <Stack spacing={4} w={'full'} maxW={'md'}>
+          <Heading fontSize={'2xl'}>Sign in to your account</Heading>
+          <FormControl id="email">
+            <FormLabel>Email address</FormLabel>
+            <Input type="email" disabled />
+          </FormControl>
+          <FormControl id="password">
+            <FormLabel>Password</FormLabel>
+            <Input type="password" disabled />
+          </FormControl>
+          <Stack spacing={6}>
+            <Stack
+              direction={{ base: 'column', sm: 'row' }}
+              align={'start'}
+              justify={'space-between'}
+            >
+              <Checkbox>Remember me</Checkbox>
+              <Link color={'blue.500'}>Forgot password?</Link>
+            </Stack>
+            <Button colorScheme={'blue'} variant={'solid'} disabled>
+              Sign in
+            </Button>
+            <Text textAlign="center">Or</Text>
+            <Button
+              colorScheme={'telegram'}
+              variant={'solid'}
+              leftIcon={<BsGithub />}
+              type="submit"
+            >
+              Sign in or Sign up with Github
+            </Button>
+          </Stack>
+        </Stack>
+      </Form>
+      <Flex flex={1}>
+        <Image
+          alt={'Login Image'}
+          objectFit={'cover'}
+          src={
+            'https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1352&q=80'
+          }
+        />
+      </Flex>
+    </Stack>
   )
 }
