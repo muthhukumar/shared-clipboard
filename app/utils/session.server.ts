@@ -1,8 +1,10 @@
 // app/session.server.ts
 import { createCookieSessionStorage } from 'remix'
 
-if (process.env.NODE_ENV === 'production' && !process.env.COOKIE_SECRET) {
-  throw new Error('Add cookie secret in the env for production')
+const cookieSecret = process.env.COOKIE_SECRET
+
+if (!cookieSecret) {
+  throw new Error('Please add cookie secret env variable')
 }
 
 export const sessionStorage = createCookieSessionStorage({
@@ -11,7 +13,7 @@ export const sessionStorage = createCookieSessionStorage({
     sameSite: 'lax',
     path: '/',
     httpOnly: true,
-    secrets: ['s3cr3t'],
+    secrets: [cookieSecret],
     secure: process.env.NODE_ENV === 'production',
   },
 })
