@@ -17,7 +17,7 @@ import globalStylesUrl from '~/styles/global.css'
 import tailwindStylesUrl from '~/styles/tailwind.css'
 import vendorsStylesUrl from '~/styles/vendors.css'
 
-import { Navbar } from '~/components'
+import { Navbar, TransitionModal } from '~/components'
 import { Box, ChakraProvider, Heading } from '@chakra-ui/react'
 import { authenticator } from './utils/auth.server'
 import { User } from '@prisma/client'
@@ -105,7 +105,7 @@ function Layout({ children }: { children: React.ReactNode }) {
 
   return (
     <div className="h-screen relative max-h-[100vh]">
-      {/* <TransitionModal /> */}
+      <TransitionModal />
       {!isLogin && <Navbar user={user} />}
       {/* {!isLogin && <Sidebar user={user} />} */}
       <main className={clsx('w-full', { '': !isLogin })}>{children}</main>
