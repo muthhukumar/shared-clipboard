@@ -1,4 +1,4 @@
-import { Modal, ModalOverlay } from '@chakra-ui/react'
+import { Modal, ModalOverlay, ModalContent } from '@chakra-ui/react'
 import { useTransition } from 'remix'
 import { Spinner } from '.'
 
@@ -9,7 +9,9 @@ export default function TransitionModal() {
     return (
       <Modal isOpen={true} onClose={() => null}>
         <ModalOverlay />
-        <Spinner />
+        <ModalContent bg="transparent" shadow="none" m={0}>
+          <Spinner />
+        </ModalContent>
       </Modal>
     )
   }
