@@ -1,9 +1,26 @@
-import { FormControl, FormLabel, Button, Input } from '@chakra-ui/react'
+import { FormControl, FormLabel, Button, Input, FormErrorMessage } from '@chakra-ui/react'
 import { User } from '@prisma/client'
-import { ActionFunction, Form, LoaderFunction, redirect, useLoaderData, useTransition } from 'remix'
+import {
+  ActionFunction,
+  Form,
+  LoaderFunction,
+  redirect,
+  useActionData,
+  useLoaderData,
+  useTransition,
+} from 'remix'
 import { PageTitle, Wrapper } from '~/components'
 import { authenticator } from '~/utils/auth.server'
 import { prisma } from '~/utils/prisma.server'
+import Validator from 'validator'
+
+type ActionDataType = {
+  value: string
+  errors: {
+    message: string
+    isInvalid: boolean
+  }
+}
 
 export const action: ActionFunction = async ({ request }) => {
   const user = (await authenticator.isAuthenticated(request, {
@@ -12,14 +29,31 @@ export const action: ActionFunction = async ({ request }) => {
 
   const formData = await request.formData()
 
-  const content = String(formData.get('url')) ?? ''
+  const url = String(formData.get('url')) ?? ''
+
+  const urlValidationResult = Validator.isURL(url)
+
+  const actionData: ActionDataType = {
+    value: '',
+    errors: { isInvalid: true, message: '' },
+  }
+
+  if (!urlValidationResult) {
+    actionData.value = url
+    actionData.errors = {
+      isInvalid: true,
+      message: 'Please enter valid URL.',
+    }
+
+    return actionData
+  }
 
   await prisma.user.update({
     where: {
       email: user.email,
     },
     data: {
-      quickRedirect: content,
+      quickRedirect: url,
     },
   })
 
@@ -43,6 +77,8 @@ export default function QuickCopy() {
   const transition = useTransition()
   const saving = transition.state === 'submitting'
 
+  const actionData = useActionData<ActionDataType>()
+
   const url = useLoaderData<string>()
 
   return (
@@ -52,9 +88,15 @@ export default function QuickCopy() {
       </PageTitle>
       <Wrapper>
         <Form method="post" className="py-6">
-          <FormControl>
+          <FormControl isInvalid={actionData?.errors.isInvalid}>
             <FormLabel>URL</FormLabel>
-            <Input placeholder="Url" name="url" defaultValue={url} type="url" />
+            <Input
+              placeholder="Url"
+              name="url"
+              defaultValue={url}
+              isInvalid={actionData?.errors.isInvalid}
+            />
+            <FormErrorMessage>{actionData?.errors.message}</FormErrorMessage>
           </FormControl>
           <Button type="submit" isLoading={saving} loadingText="Saving" mt="4">
             Save

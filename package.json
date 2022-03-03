@@ -40,6 +40,7 @@
     "remix": "^1.2.1",
     "remix-auth": "^3.2.1",
     "remix-auth-github": "^1.0.0",
+    "validator": "^13.7.0",
     "zod": "^3.12.0"
   },
   "devDependencies": {
@@ -47,6 +48,7 @@
     "@tailwindcss/forms": "^0.4.0",
     "@types/react": "^17.0.39",
     "@types/react-dom": "^17.0.11",
+    "@types/validator": "^13.7.1",
     "@typescript-eslint/eslint-plugin": "^5.12.0",
     "autoprefixer": "^10.4.2",
     "eslint": "^8.9.0",
