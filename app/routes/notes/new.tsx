@@ -22,7 +22,6 @@ import {
   FormLabel,
   Input,
   FormErrorMessage,
-  Select,
 } from '@chakra-ui/react'
 import { z } from 'zod'
 import { User } from '@prisma/client'
@@ -30,16 +29,15 @@ import { formatFieldErrorsNew } from '~/utils'
 import { authenticator } from '~/utils/auth.server'
 import { prisma } from '~/utils/prisma.server'
 
-const ClipboardContentSchema = z.object({
+const NoteSchema = z.object({
   title: z.string().min(5),
-  content: z.string().min(5),
-  private: z.boolean(),
+  note: z.string().min(5),
 })
 
 type ActionDataType = {
-  values: z.infer<typeof ClipboardContentSchema> | Record<string, unknown>
+  values: z.infer<typeof NoteSchema> | Record<string, unknown>
   errors: Record<
-    keyof z.infer<typeof ClipboardContentSchema>,
+    keyof z.infer<typeof NoteSchema>,
     {
       message: string
       isInvalid: boolean
@@ -58,41 +56,35 @@ export const action: ActionFunction = async ({ request }) => {
     values: {},
     errors: {
       title: { isInvalid: true, message: '' },
-      content: { isInvalid: true, message: '' },
-      private: { isInvalid: true, message: '' },
+      note: { isInvalid: true, message: '' },
     },
   }
 
-  const clipboardContentData = {
+  const notesData = {
     title: formData.get('title'),
-    content: formData.get('content'),
-    private: formData.get('private') === 'true' ? true : false,
+    note: formData.get('note'),
   }
 
-  const clipboardContentValidationResult = ClipboardContentSchema.safeParse(clipboardContentData)
+  const notesValidationResult = NoteSchema.safeParse(notesData)
 
-  if (!clipboardContentValidationResult.success) {
-    actionData.values = { ...clipboardContentData }
+  if (!notesValidationResult.success) {
+    actionData.values = { ...notesData }
     actionData.errors = {
-      ...formatFieldErrorsNew(
-        clipboardContentData,
-        clipboardContentValidationResult.error.formErrors.fieldErrors,
-      ),
+      ...formatFieldErrorsNew(notesData, notesValidationResult.error.formErrors.fieldErrors),
     }
 
     return actionData
   }
 
   try {
-    const clipboardContent = await prisma.clipboardContent.create({
+    const note = await prisma.note.create({
       data: {
-        content: clipboardContentValidationResult.data.content,
-        title: clipboardContentValidationResult.data.title,
-        private: clipboardContentValidationResult.data.private,
+        note: notesValidationResult.data.note,
+        title: notesValidationResult.data.title,
         userEmail: user.email,
       },
     })
-    return redirect(`/clipboard/${clipboardContent.id}`)
+    return redirect(`/notes/${note.id}`)
   } catch (err) {
     throw redirect('/')
   }
@@ -104,7 +96,7 @@ export const loader: LoaderFunction = async ({ request }) => {
   })
 }
 
-export default function ClipboardContentNew() {
+export default function NoteNew() {
   const navigation = useNavigate()
 
   const onClose = () => navigation(-1)
@@ -119,10 +111,10 @@ export default function ClipboardContentNew() {
 
   return (
     <>
-      <Modal initialFocusRef={initialRef} isOpen={true} onClose={onClose} isCentered size="xl">
+      <Modal initialFocusRef={initialRef} isOpen={true} onClose={onClose} isCentered size="2xl">
         <ModalOverlay bg="none" backdropFilter="auto" backdropInvert="80%" backdropBlur="2px" />
         <ModalContent>
-          <ModalHeader>Create new Clipboard content</ModalHeader>
+          <ModalHeader>Create new note</ModalHeader>
           <ModalCloseButton />
           <Form method="post">
             <ModalBody pb={6}>
@@ -138,27 +130,16 @@ export default function ClipboardContentNew() {
                 <FormErrorMessage>{actionData?.errors.title.message}</FormErrorMessage>
               </FormControl>
 
-              <FormControl mt={4} isInvalid={actionData?.errors.content.isInvalid}>
-                <FormLabel>Content</FormLabel>
+              <FormControl mt={4} isInvalid={actionData?.errors.note.isInvalid}>
+                <FormLabel>Note</FormLabel>
                 <Textarea
-                  name="content"
-                  placeholder="Content to copy"
-                  isInvalid={actionData?.errors.content.isInvalid}
+                  name="note"
+                  placeholder="Write your note here."
+                  isInvalid={actionData?.errors.note.isInvalid}
+                  noOfLines={5}
+                  size="lg"
                 />
-                <FormErrorMessage>{actionData?.errors.content.message}</FormErrorMessage>
-              </FormControl>
-              <FormControl mt={4} isInvalid={actionData?.errors.private.isInvalid}>
-                <FormLabel>Is Private</FormLabel>
-                <Select
-                  name="private"
-                  placeholder="Select option"
-                  defaultValue="true"
-                  isInvalid={actionData?.errors.private.isInvalid}
-                >
-                  <option value="false">Public</option>
-                  <option value="true">Private</option>
-                </Select>
-                <FormErrorMessage>{actionData?.errors.private.message}</FormErrorMessage>
+                <FormErrorMessage>{actionData?.errors.note.message}</FormErrorMessage>
               </FormControl>
             </ModalBody>
 

@@ -1,5 +1,5 @@
 import { User } from '.prisma/client'
-import { Button, Code, useToast } from '@chakra-ui/react'
+import { Button, useToast } from '@chakra-ui/react'
 import * as React from 'react'
 import { json, LoaderFunction, useLoaderData } from 'remix'
 import { authenticator } from '~/utils/auth.server'
@@ -72,13 +72,17 @@ export default function CopyId() {
   const toast = useToast()
 
   React.useEffect(() => {
+    copy()
+  }, [])
+
+  const copy = () => {
     copyToClipboard(content, () => {
       toast({
         title: 'Successfully copied to clipboard',
         status: 'success',
       })
     })
-  }, [])
+  }
 
   return (
     <div className="min-h-full p-4">
@@ -87,8 +91,8 @@ export default function CopyId() {
         <p className="mt-4">
           The content below is automatically copied. To copy manually please press the below button
         </p>
-        <Code p="4">{content}</Code>
-        <Button onClick={() => copyToClipboard(content)}>Copy to Clipboard</Button>
+        <p className="p-4 border rounded-md">{content}</p>
+        <Button onClick={() => copy()}>Copy to Clipboard</Button>
       </div>
     </div>
   )

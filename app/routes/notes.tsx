@@ -1,5 +1,5 @@
 import { Button, Input, InputGroup, InputLeftElement } from '@chakra-ui/react'
-import { ClipboardContent as ClipboardContentType, User } from '@prisma/client'
+import { Note as NoteType, User } from '@prisma/client'
 import { IoMdAdd } from 'react-icons/io'
 import {
   LoaderFunction,
@@ -15,7 +15,7 @@ import { RiSearchLine } from 'react-icons/ri'
 
 import { authenticator } from '~/utils/auth.server'
 import { prisma } from '~/utils/prisma.server'
-import { ClipboardContent, NoItems, Wrapper } from '~/components'
+import { NoItems, Note, Wrapper } from '~/components'
 
 export const loader: LoaderFunction = async ({ request }) => {
   const user = (await authenticator.isAuthenticated(request, {
@@ -27,7 +27,7 @@ export const loader: LoaderFunction = async ({ request }) => {
   const query = url.searchParams.get('q') ?? ''
 
   if (query) {
-    const searchMatchResult = await prisma.clipboardContent.findMany({
+    const searchMatchResult = await prisma.note.findMany({
       where: {
         userEmail: user.email,
         title: {
@@ -39,17 +39,17 @@ export const loader: LoaderFunction = async ({ request }) => {
     return json(searchMatchResult)
   }
 
-  const clipboardContents = await prisma.clipboardContent.findMany({
+  const notes = await prisma.note.findMany({
     where: {
       userEmail: user.email,
     },
   })
 
-  return json(clipboardContents)
+  return json(notes)
 }
 
-export default function ClipbaordContent() {
-  const contents = useLoaderData<Array<ClipboardContentType>>()
+export default function Notes() {
+  const notes = useLoaderData<Array<NoteType>>()
   const navigation = useNavigate()
 
   const submit = useSubmit()
@@ -72,26 +72,26 @@ export default function ClipbaordContent() {
             variant="solid"
             w="17%"
             size="md"
-            onClick={() => navigation('/clipboard/new')}
+            onClick={() => navigation('/notes/new')}
           >
             Add
           </Button>
         </Form>
         <div className="flex flex-col mt-6">
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
-            {contents.map((content) => {
+            {notes.map((note) => {
               return (
                 <Link
-                  to={`/clipboard/${content.id}`}
-                  key={content.id}
+                  to={`/notes/${note.id}`}
+                  key={note.id}
                   className="w-full transition-all border rounded-md hover:border-white"
                 >
-                  <ClipboardContent {...content} key={content.id} />
+                  <Note {...note} key={note.id} />
                 </Link>
               )
             })}
           </div>
-          {contents.length === 0 && <NoItems title="No copied items found!!!" />}
+          {notes.length === 0 && <NoItems title="No Notes found!!!" />}
         </div>
       </Wrapper>
       <Outlet />

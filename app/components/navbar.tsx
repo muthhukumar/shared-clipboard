@@ -31,6 +31,10 @@ const links: Array<{ title: string; to: string }> = [
     title: 'Redirects',
     to: '/quick-redirect',
   },
+  {
+    title: 'Notes',
+    to: '/notes',
+  },
 ]
 
 export default function Navbar({ user }: { user: User }) {

@@ -1,4 +1,13 @@
-import { FormControl, FormLabel, Input, Select, Textarea, Button, HStack } from '@chakra-ui/react'
+import {
+  FormControl,
+  FormLabel,
+  Input,
+  Select,
+  Textarea,
+  Button,
+  useToast,
+  Stack,
+} from '@chakra-ui/react'
 import { ClipboardContent as ClipboardContentType, User } from '@prisma/client'
 import {
   json,
@@ -14,6 +23,7 @@ import {
 import { authenticator } from '~/utils/auth.server'
 import { prisma } from '~/utils/prisma.server'
 import { PageTitle, Wrapper } from '~/components'
+import { copyToClipboard } from '~/utils/browser'
 
 export const loader: LoaderFunction = async ({ request, params }) => {
   const user = (await authenticator.isAuthenticated(request, {
@@ -51,17 +61,29 @@ export default function Copy() {
 
   const navigation = useNavigate()
 
+  const toast = useToast()
+
+  const copy = () => {
+    copyToClipboard(clipboardContents.content, () => {
+      toast({
+        title: 'Successfully copied to clipboard',
+        status: 'success',
+      })
+    })
+  }
+
   return (
     <div className="w-full">
       <PageTitle>
         <div className="flex items-center">
           <h2 className="text-3xl font-bold">{clipboardContents.title}</h2>
-          <HStack ml={'auto'}>
+          <Stack ml={'auto'} direction={['column', 'column', 'row', 'row']} spacing={2}>
+            <Button onClick={() => copy()}>Copy</Button>
             <Button onClick={() => navigation(`/clipboard/${id}/edit`)}>Edit</Button>
             <Button onClick={() => navigation(`/clipboard/${id}/delete`)} variant={'outline'}>
               Delete
             </Button>
-          </HStack>
+          </Stack>
         </div>
       </PageTitle>
 

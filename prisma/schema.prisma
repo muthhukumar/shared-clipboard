@@ -26,6 +26,16 @@ model User {
   name              String?
   profileUrl        String?
   clipboardContents ClipboardContent[]
+  notes             Note[]
   quickContent      String?
   quickRedirect     String?
+}
+
+model Note {
+  note      String
+  title     String
+  id        Int      @id @default(autoincrement())
+  User      User?    @relation(fields: [userEmail], references: [email])
+  userEmail String?
+  createdAt DateTime @default(now())
 }
