@@ -77,6 +77,21 @@ export default function Copy() {
     })
   }
 
+  const share = () => {
+    const url = `${window.location.host}/c/${id}`
+    copyToClipboard(url, () => {
+      toast({
+        title: 'URL copied to clipboard',
+        status: 'success',
+      })
+      toast({
+        title:
+          'If you want to share this content to other please make sure to update the content private field to public.',
+        status: 'info',
+      })
+    })
+  }
+
   return (
     <div className="w-full">
       <PageTitle>
@@ -88,6 +103,7 @@ export default function Copy() {
                 Options
               </MenuButton>
               <MenuList>
+                <MenuItem onClick={() => share()}>Share</MenuItem>
                 <MenuItem onClick={() => copy()}>Copy</MenuItem>
                 <MenuItem onClick={() => navigation(`/clipboard/${id}/edit`)}>Edit</MenuItem>
                 <MenuItem onClick={() => navigation(`/clipboard/${id}/delete`)}>Delete</MenuItem>
