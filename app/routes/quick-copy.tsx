@@ -1,7 +1,18 @@
-import { FormControl, Button, Textarea, FormLabel } from '@chakra-ui/react'
+import * as React from 'react'
+import {
+  FormControl,
+  Button,
+  Textarea,
+  FormLabel,
+  Tab,
+  TabList,
+  TabPanel,
+  TabPanels,
+  Tabs,
+} from '@chakra-ui/react'
 import { User } from '@prisma/client'
 import { ActionFunction, Form, LoaderFunction, redirect, useLoaderData, useTransition } from 'remix'
-import { PageTitle, Wrapper } from '~/components'
+import { PageTitle, QRCode, Wrapper } from '~/components'
 import { authenticator } from '~/utils/auth.server'
 import { prisma } from '~/utils/prisma.server'
 
@@ -40,8 +51,13 @@ export const loader: LoaderFunction = async ({ request }) => {
 }
 
 export default function QuickCopy() {
+  const [url, setUrl] = React.useState<string>('')
   const transition = useTransition()
   const saving = transition.state === 'submitting'
+
+  React.useEffect(() => {
+    setUrl(`${window.location.host}/c/q`)
+  }, [])
 
   const content = useLoaderData<string>()
 
@@ -60,6 +76,21 @@ export default function QuickCopy() {
             Save
           </Button>
         </Form>
+        <Tabs mt={'4'}>
+          <TabList>
+            <Tab>Content QR code</Tab>
+            <Tab>Shareable link QR code</Tab>
+          </TabList>
+
+          <TabPanels>
+            <TabPanel>
+              <QRCode value={content} />
+            </TabPanel>
+            <TabPanel>
+              <QRCode value={url} />
+            </TabPanel>
+          </TabPanels>
+        </Tabs>
       </Wrapper>
     </div>
   )

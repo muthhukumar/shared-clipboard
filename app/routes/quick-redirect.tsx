@@ -1,4 +1,4 @@
-import { FormControl, FormLabel, Button, Input, FormErrorMessage } from '@chakra-ui/react'
+import { FormControl, FormLabel, Button, Input, FormErrorMessage, VStack } from '@chakra-ui/react'
 import { User } from '@prisma/client'
 import {
   ActionFunction,
@@ -9,7 +9,7 @@ import {
   useLoaderData,
   useTransition,
 } from 'remix'
-import { PageTitle, Wrapper } from '~/components'
+import { PageTitle, QRCode, Wrapper } from '~/components'
 import { authenticator } from '~/utils/auth.server'
 import { prisma } from '~/utils/prisma.server'
 import Validator from 'validator'
@@ -102,6 +102,10 @@ export default function QuickCopy() {
             Save
           </Button>
         </Form>
+        <VStack mt={'4'} alignItems={'flex-start'} w="full">
+          <h2 className="font-semibold">URL QR code</h2>
+          <QRCode value={url} />
+        </VStack>
       </Wrapper>
     </div>
   )

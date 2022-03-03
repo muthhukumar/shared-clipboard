@@ -1,3 +1,4 @@
+import * as React from 'react'
 import {
   FormControl,
   FormLabel,
@@ -11,6 +12,11 @@ import {
   MenuItem,
   MenuList,
   Box,
+  Tab,
+  TabList,
+  TabPanel,
+  TabPanels,
+  Tabs,
 } from '@chakra-ui/react'
 import { ClipboardContent as ClipboardContentType, User } from '@prisma/client'
 import {
@@ -26,7 +32,7 @@ import {
 
 import { authenticator } from '~/utils/auth.server'
 import { prisma } from '~/utils/prisma.server'
-import { PageTitle, Wrapper } from '~/components'
+import { PageTitle, QRCode, Wrapper } from '~/components'
 import { copyToClipboard } from '~/utils/browser'
 import { ChevronDownIcon } from '@chakra-ui/icons'
 
@@ -59,6 +65,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
 }
 
 export default function Copy() {
+  const [url, setUrl] = React.useState<string>('')
   const clipboardContents = useLoaderData<ClipboardContentType>()
   const { id } = useParams()
 
@@ -67,6 +74,10 @@ export default function Copy() {
   const navigation = useNavigate()
 
   const toast = useToast()
+
+  React.useEffect(() => {
+    setUrl(`${window.location.host}/c/${id}`)
+  }, [])
 
   const copy = () => {
     copyToClipboard(clipboardContents.content, () => {
@@ -148,6 +159,21 @@ export default function Copy() {
             </Select>
           </FormControl>
         </Form>
+        <Tabs mt={'4'}>
+          <TabList>
+            <Tab>Content QR code</Tab>
+            <Tab>Shareable link QR code</Tab>
+          </TabList>
+
+          <TabPanels>
+            <TabPanel>
+              <QRCode value={clipboardContents.content} />
+            </TabPanel>
+            <TabPanel>
+              <QRCode value={url} />
+            </TabPanel>
+          </TabPanels>
+        </Tabs>
         <Outlet />
       </Wrapper>
     </div>
