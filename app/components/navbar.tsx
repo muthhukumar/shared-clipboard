@@ -24,11 +24,11 @@ const links: Array<{ title: string; to: string }> = [
     to: '/clipboard',
   },
   {
-    title: 'Copies',
+    title: 'Copy',
     to: '/quick-copy',
   },
   {
-    title: 'Redirects',
+    title: 'Redirect',
     to: '/quick-redirect',
   },
   {

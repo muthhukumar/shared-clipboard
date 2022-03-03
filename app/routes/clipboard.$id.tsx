@@ -6,7 +6,11 @@ import {
   Textarea,
   Button,
   useToast,
-  Stack,
+  Menu,
+  MenuButton,
+  MenuItem,
+  MenuList,
+  Box,
 } from '@chakra-ui/react'
 import { ClipboardContent as ClipboardContentType, User } from '@prisma/client'
 import {
@@ -24,6 +28,7 @@ import { authenticator } from '~/utils/auth.server'
 import { prisma } from '~/utils/prisma.server'
 import { PageTitle, Wrapper } from '~/components'
 import { copyToClipboard } from '~/utils/browser'
+import { ChevronDownIcon } from '@chakra-ui/icons'
 
 export const loader: LoaderFunction = async ({ request, params }) => {
   const user = (await authenticator.isAuthenticated(request, {
@@ -77,13 +82,18 @@ export default function Copy() {
       <PageTitle>
         <div className="flex items-center">
           <h2 className="text-3xl font-bold">{clipboardContents.title}</h2>
-          <Stack ml={'auto'} direction={['column', 'column', 'row', 'row']} spacing={2}>
-            <Button onClick={() => copy()}>Copy</Button>
-            <Button onClick={() => navigation(`/clipboard/${id}/edit`)}>Edit</Button>
-            <Button onClick={() => navigation(`/clipboard/${id}/delete`)} variant={'outline'}>
-              Delete
-            </Button>
-          </Stack>
+          <Box ml={'auto'}>
+            <Menu>
+              <MenuButton as={Button} rightIcon={<ChevronDownIcon />}>
+                Options
+              </MenuButton>
+              <MenuList>
+                <MenuItem onClick={() => copy()}>Copy</MenuItem>
+                <MenuItem onClick={() => navigation(`/clipboard/${id}/edit`)}>Edit</MenuItem>
+                <MenuItem onClick={() => navigation(`/clipboard/${id}/delete`)}>Delete</MenuItem>
+              </MenuList>
+            </Menu>
+          </Box>
         </div>
       </PageTitle>
 
