@@ -107,8 +107,7 @@ function Layout({ children }: { children: React.ReactNode }) {
     <div className="h-screen relative max-h-[100vh]">
       <TransitionModal />
       {!isLogin && <Navbar user={user} />}
-      {/* {!isLogin && <Sidebar user={user} />} */}
-      <main className={clsx('w-full', { '': !isLogin })}>{children}</main>
+      <main className={clsx('w-full pb-24', { '': !isLogin })}>{children}</main>
     </div>
   )
 }

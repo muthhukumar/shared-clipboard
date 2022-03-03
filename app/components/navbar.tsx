@@ -3,11 +3,14 @@ import {
   Box,
   Button,
   chakra,
+  HStack,
+  IconButton,
   Menu,
   MenuButton,
   MenuItem,
   MenuList,
   Stack,
+  useColorMode,
   useColorModeValue,
 } from '@chakra-ui/react'
 import { User } from '@prisma/client'
@@ -17,6 +20,7 @@ import React from 'react'
 import { BsClipboard } from 'react-icons/bs'
 import { Link as RLink, useLocation } from 'remix'
 import { Wrapper } from '.'
+import { FaMoon, FaSun } from 'react-icons/fa'
 
 const links: Array<{ title: string; to: string }> = [
   {
@@ -38,6 +42,10 @@ const links: Array<{ title: string; to: string }> = [
 ]
 
 export default function Navbar({ user }: { user: User }) {
+  const { toggleColorMode: toggleMode } = useColorMode()
+  const text = useColorModeValue('dark', 'light')
+  const SwitchIcon = useColorModeValue(FaMoon, FaSun)
+
   return (
     <div className="border-b">
       <Wrapper>
@@ -55,19 +63,31 @@ export default function Navbar({ user }: { user: User }) {
               <BreadcrumbLink href="#">{user.email}</BreadcrumbLink>
             </BreadcrumbItem>
           </Breadcrumb> */}
-          <Menu>
-            <MenuButton as={Button} rounded={'full'} variant={'link'} cursor={'pointer'} minW={0}>
-              <Avatar src={user?.profileUrl ?? ''} size="sm" />
-            </MenuButton>
-            <MenuList alignItems={'center'} p={0}>
-              <MenuItem>
-                <RLink to="/profile">Account settings</RLink>
-              </MenuItem>
-              <MenuItem>
-                <RLink to="/logout">Logout</RLink>
-              </MenuItem>
-            </MenuList>
-          </Menu>
+          <HStack spacing={4}>
+            <IconButton
+              size="md"
+              fontSize="lg"
+              aria-label={`Switch to ${text} mode`}
+              variant="ghost"
+              color="current"
+              ml={{ base: '0', md: '3' }}
+              onClick={toggleMode}
+              icon={<SwitchIcon />}
+            />
+            <Menu>
+              <MenuButton as={Button} rounded={'full'} variant={'link'} cursor={'pointer'} minW={0}>
+                <Avatar src={user?.profileUrl ?? ''} size="sm" />
+              </MenuButton>
+              <MenuList alignItems={'center'} p={0}>
+                <MenuItem>
+                  <RLink to="/profile">Account settings</RLink>
+                </MenuItem>
+                <MenuItem>
+                  <RLink to="/logout">Logout</RLink>
+                </MenuItem>
+              </MenuList>
+            </Menu>
+          </HStack>
         </div>
       </Wrapper>
       <StickyHeader />
@@ -82,6 +102,10 @@ function StickyHeader() {
   const [y, setY] = React.useState(0)
   const { height = 49 } = ref.current?.getBoundingClientRect() ?? {}
 
+  const textColor = useColorModeValue('text-black', 'text-white')
+  const borderColor = useColorModeValue('border-black', 'border-white')
+  const bgColor = useColorModeValue('white', 'gray.800')
+
   const location = useLocation()
 
   const { scrollY } = useViewportScroll()
@@ -90,7 +114,7 @@ function StickyHeader() {
     return scrollY.onChange(() => setY(scrollY.get()))
   }, [scrollY])
 
-  const scrolledToTop = y >= 59
+  const scrolledToTop = y >= 71
 
   return (
     <chakra.header h={`${height}px`} w="full">
@@ -101,7 +125,7 @@ function StickyHeader() {
         ref={ref}
         transition="box-shadow .2s ease"
         top="0"
-        bg="gray.800"
+        bg={bgColor}
         zIndex="3000"
         h={`${height}px`}
         left="0"
@@ -117,8 +141,8 @@ function StickyHeader() {
                   to={link.to}
                   key={link.to}
                   className={clsx('text-gray-400 pb-3 border-b-2 border-transparent', {
-                    'text-black dark:text-white border-black dark:border-white':
-                      location.pathname.includes(link.to),
+                    [borderColor]: location.pathname.includes(link.to),
+                    [textColor]: location.pathname.includes(link.to),
                   })}
                 >
                   {link.title}
