@@ -11,9 +11,15 @@ import {
   Image,
   Text,
 } from '@chakra-ui/react'
-import { Form, LoaderFunction, useTransition } from 'remix'
+import { Form, LoaderFunction, MetaFunction, useTransition } from 'remix'
 import { authenticator } from '~/utils/auth.server'
 import { BsGithub } from 'react-icons/bs'
+
+export const meta: MetaFunction = () => {
+  return {
+    title: 'Clipi | Sign up (or in)',
+  }
+}
 
 export const loader: LoaderFunction = async ({ request }) => {
   await authenticator.isAuthenticated(request, { successRedirect: '/' })

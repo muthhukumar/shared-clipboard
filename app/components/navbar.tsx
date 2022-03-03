@@ -17,10 +17,10 @@ import { User } from '@prisma/client'
 import clsx from 'clsx'
 import { useViewportScroll } from 'framer-motion'
 import React from 'react'
-import { BsClipboard } from 'react-icons/bs'
 import { Link as RLink, useLocation } from 'remix'
 import { Wrapper } from '.'
 import { FaMoon, FaSun } from 'react-icons/fa'
+import { AiOutlineAliwangwang } from 'react-icons/ai'
 
 const links: Array<{ title: string; to: string }> = [
   {
@@ -46,23 +46,16 @@ export default function Navbar({ user }: { user: User }) {
   const text = useColorModeValue('dark', 'light')
   const SwitchIcon = useColorModeValue(FaMoon, FaSun)
 
+  const bgColor = useColorModeValue('bg-white', 'bg-[color:var(--chakra-colors-brand-900)]')
+
   return (
-    <div className="border-b">
+    <div className={clsx('border-b', bgColor)}>
       <Wrapper>
         <div className="flex items-center justify-between py-4">
           <div className="flex items-center">
-            <BsClipboard size={20} />
-            <h2 className="ml-4 font-bold">Clip</h2>
+            <AiOutlineAliwangwang size={30} />
+            <h2 className="ml-2 font-bold">Clipi</h2>
           </div>
-          {/* <Breadcrumb>
-            <BreadcrumbItem>
-              <BreadcrumbLink href="#"></BreadcrumbLink>
-            </BreadcrumbItem>
-
-            <BreadcrumbItem>
-              <BreadcrumbLink href="#">{user.email}</BreadcrumbLink>
-            </BreadcrumbItem>
-          </Breadcrumb> */}
           <HStack spacing={4}>
             <IconButton
               size="md"
@@ -104,7 +97,7 @@ function StickyHeader() {
 
   const textColor = useColorModeValue('text-black', 'text-white')
   const borderColor = useColorModeValue('border-black', 'border-white')
-  const bgColor = useColorModeValue('white', 'gray.800')
+  const bgColor = useColorModeValue('white', 'brand.900')
 
   const location = useLocation()
 
@@ -114,7 +107,7 @@ function StickyHeader() {
     return scrollY.onChange(() => setY(scrollY.get()))
   }, [scrollY])
 
-  const scrolledToTop = y >= 71
+  const scrolledToTop = y >= 59
 
   return (
     <chakra.header h={`${height}px`} w="full">
@@ -140,8 +133,9 @@ function StickyHeader() {
                 <RLink
                   to={link.to}
                   key={link.to}
-                  className={clsx('text-gray-400 pb-3 border-b-2 border-transparent', {
+                  className={clsx('pb-3 border-b-2', {
                     [borderColor]: location.pathname.includes(link.to),
+                    'border-transparent': !location.pathname.includes(link.to),
                     [textColor]: location.pathname.includes(link.to),
                   })}
                 >

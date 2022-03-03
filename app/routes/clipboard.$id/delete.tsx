@@ -9,9 +9,15 @@ import {
   Button,
 } from '@chakra-ui/react'
 import { User } from '@prisma/client'
-import { ActionFunction, Form, redirect, useNavigate, useTransition } from 'remix'
+import { ActionFunction, Form, MetaFunction, redirect, useNavigate, useTransition } from 'remix'
 import { authenticator } from '~/utils/auth.server'
 import { prisma } from '~/utils/prisma.server'
+
+export const meta: MetaFunction = () => {
+  return {
+    title: 'Clipboard | Delete',
+  }
+}
 
 export const action: ActionFunction = async ({ request, params }) => {
   const user = (await authenticator.isAuthenticated(request, {

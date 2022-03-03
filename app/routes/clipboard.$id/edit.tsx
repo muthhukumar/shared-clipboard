@@ -9,6 +9,7 @@ import {
   Form,
   json,
   useLoaderData,
+  MetaFunction,
 } from 'remix'
 import {
   Button,
@@ -47,6 +48,12 @@ type ActionDataType = {
       isInvalid: boolean
     }
   >
+}
+
+export const meta: MetaFunction = () => {
+  return {
+    title: 'Clipboard | Edit',
+  }
 }
 
 export const action: ActionFunction = async ({ request, params }) => {

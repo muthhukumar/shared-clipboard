@@ -1,13 +1,19 @@
 import { User } from '.prisma/client'
 import { Button, useToast, VStack } from '@chakra-ui/react'
 import * as React from 'react'
-import { json, LoaderFunction, useLoaderData } from 'remix'
+import { json, LoaderFunction, MetaFunction, useLoaderData } from 'remix'
 import { PageTitle, Wrapper } from '~/components'
 import { authenticator } from '~/utils/auth.server'
 import { copyToClipboard } from '~/utils/browser'
 import { prisma } from '~/utils/prisma.server'
 
 type LoaderType = { content: string; title: string }
+
+export const meta: MetaFunction = () => {
+  return {
+    title: 'Quick Copy',
+  }
+}
 
 export const loader: LoaderFunction = async ({ request, params }) => {
   const clipboardContentId = params.id

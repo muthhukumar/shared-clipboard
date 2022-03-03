@@ -10,12 +10,19 @@ import {
   Outlet,
   Form,
   useSubmit,
+  MetaFunction,
 } from 'remix'
 import { RiSearchLine } from 'react-icons/ri'
 
 import { authenticator } from '~/utils/auth.server'
 import { prisma } from '~/utils/prisma.server'
 import { NoItems, Note, Wrapper } from '~/components'
+
+export const meta: MetaFunction = () => {
+  return {
+    title: 'Notes',
+  }
+}
 
 export const loader: LoaderFunction = async ({ request }) => {
   const user = (await authenticator.isAuthenticated(request, {

@@ -9,11 +9,18 @@ import {
   useTransition,
   Form,
   useNavigate,
+  MetaFunction,
 } from 'remix'
 
 import { authenticator } from '~/utils/auth.server'
 import { prisma } from '~/utils/prisma.server'
 import { PageTitle, Wrapper } from '~/components'
+
+export const meta: MetaFunction = () => {
+  return {
+    title: 'Notes',
+  }
+}
 
 export const loader: LoaderFunction = async ({ request, params }) => {
   const user = (await authenticator.isAuthenticated(request, {

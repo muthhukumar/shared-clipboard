@@ -18,7 +18,7 @@ import tailwindStylesUrl from '~/styles/tailwind.css'
 import vendorsStylesUrl from '~/styles/vendors.css'
 
 import { Navbar, TransitionModal } from '~/components'
-import { Box, ChakraProvider, Heading } from '@chakra-ui/react'
+import { Box, ChakraProvider, Heading, useColorModeValue } from '@chakra-ui/react'
 import { authenticator } from './utils/auth.server'
 import { User } from '@prisma/client'
 import clsx from 'clsx'
@@ -103,11 +103,16 @@ function Layout({ children }: { children: React.ReactNode }) {
 
   const isLogin = location.pathname === '/login'
 
+  const bgColor = useColorModeValue(
+    'bg-[color:var(--chakra-colors-brand-lightWhite)]',
+    'bg-[color:var(--chakra-colors-brand-100)]',
+  )
+
   return (
     <div className="h-screen relative max-h-[100vh]">
       <TransitionModal />
       {!isLogin && <Navbar user={user} />}
-      <main className={clsx('w-full pb-24', { '': !isLogin })}>{children}</main>
+      <main className={clsx('h-full w-full pb-24', bgColor)}>{children}</main>
     </div>
   )
 }

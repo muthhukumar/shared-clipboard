@@ -7,6 +7,7 @@ import {
   useNavigate,
   useTransition,
   Form,
+  MetaFunction,
 } from 'remix'
 import {
   Button,
@@ -43,6 +44,12 @@ type ActionDataType = {
       isInvalid: boolean
     }
   >
+}
+
+export const meta: MetaFunction = () => {
+  return {
+    title: 'Notes | New',
+  }
 }
 
 export const action: ActionFunction = async ({ request }) => {

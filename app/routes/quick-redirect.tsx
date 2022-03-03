@@ -4,6 +4,7 @@ import {
   ActionFunction,
   Form,
   LoaderFunction,
+  MetaFunction,
   redirect,
   useActionData,
   useLoaderData,
@@ -19,6 +20,12 @@ type ActionDataType = {
   errors: {
     message: string
     isInvalid: boolean
+  }
+}
+
+export const meta: MetaFunction = () => {
+  return {
+    title: 'Quick Redirect',
   }
 }
 

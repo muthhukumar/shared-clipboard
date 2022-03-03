@@ -11,10 +11,24 @@ import {
   Tabs,
 } from '@chakra-ui/react'
 import { User } from '@prisma/client'
-import { ActionFunction, Form, LoaderFunction, redirect, useLoaderData, useTransition } from 'remix'
+import {
+  ActionFunction,
+  Form,
+  LoaderFunction,
+  MetaFunction,
+  redirect,
+  useLoaderData,
+  useTransition,
+} from 'remix'
 import { PageTitle, QRCode, Wrapper } from '~/components'
 import { authenticator } from '~/utils/auth.server'
 import { prisma } from '~/utils/prisma.server'
+
+export const meta: MetaFunction = () => {
+  return {
+    title: 'Quick Copy',
+  }
+}
 
 export const action: ActionFunction = async ({ request }) => {
   const user = (await authenticator.isAuthenticated(request, {
