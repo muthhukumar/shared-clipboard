@@ -11,7 +11,7 @@ import {
   Image,
   Text,
 } from '@chakra-ui/react'
-import { Form, LoaderFunction } from 'remix'
+import { Form, LoaderFunction, useTransition } from 'remix'
 import { authenticator } from '~/utils/auth.server'
 import { BsGithub } from 'react-icons/bs'
 
@@ -21,6 +21,13 @@ export const loader: LoaderFunction = async ({ request }) => {
 }
 
 export default function SimpleCard() {
+  const transition = useTransition()
+
+  const isAuthenticating =
+    transition.state === 'submitting' &&
+    transition.type === 'actionSubmission' &&
+    transition.submission.action === '/auth/github'
+
   return (
     <Stack minH={'100vh'} direction={{ base: 'column', md: 'row' }}>
       <Form
@@ -29,7 +36,9 @@ export default function SimpleCard() {
         method="post"
       >
         <Stack spacing={4} w={'full'} maxW={'md'}>
-          <Heading fontSize={'2xl'}>Sign in to your account</Heading>
+          <Heading fontSize={'2xl'} mb="4">
+            Sign in to your account
+          </Heading>
           <FormControl id="email">
             <FormLabel>Email address</FormLabel>
             <Input type="email" disabled />
@@ -38,7 +47,7 @@ export default function SimpleCard() {
             <FormLabel>Password</FormLabel>
             <Input type="password" disabled />
           </FormControl>
-          <Stack spacing={6}>
+          <Stack spacing={4}>
             <Stack
               direction={{ base: 'column', sm: 'row' }}
               align={'start'}
@@ -50,14 +59,18 @@ export default function SimpleCard() {
             <Button colorScheme={'blue'} variant={'solid'} disabled>
               Sign in
             </Button>
-            <Text textAlign="center">Or</Text>
+            <Text textAlign="center" color="gray.300">
+              Or
+            </Text>
             <Button
+              isLoading={isAuthenticating}
+              loadingText="Authenticating"
               colorScheme={'telegram'}
               variant={'solid'}
               leftIcon={<BsGithub />}
               type="submit"
             >
-              Sign in or Sign up with Github
+              Sign In (or up) with Github
             </Button>
           </Stack>
         </Stack>
