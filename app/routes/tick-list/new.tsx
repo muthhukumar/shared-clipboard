@@ -36,9 +36,7 @@ const TickListSchema = z.object({
   title: z.string().min(5).max(500),
   description: z.string().max(150).optional(),
   completed: z.boolean().optional(),
-  dueDate: z.preprocess((arg) => {
-    if (typeof arg == 'string' || arg instanceof Date) return new Date(arg)
-  }, z.date()),
+  dueDate: z.date().optional(),
 })
 
 type ActionDataType = {
@@ -79,7 +77,7 @@ export const action: ActionFunction = async ({ request }) => {
     title: String(formData.get('title')),
     description: String(formData.get('description')),
     completed: formData.get('completed') === 'true' ? true : false,
-    dueDate: String(formData.get('dueDate')),
+    dueDate: formData.get('dueDate') ? new Date(String(formData.get('dueDate'))) : undefined,
   }
 
   const todoValidationResult = TickListSchema.safeParse(tickListData)
@@ -93,18 +91,20 @@ export const action: ActionFunction = async ({ request }) => {
     return actionData
   }
 
+  const payload = {
+    description: todoValidationResult.data.description,
+    title: todoValidationResult.data.title,
+    completed: todoValidationResult.data.completed,
+    dueDate: todoValidationResult.data.dueDate
+      ? moment(todoValidationResult.data.dueDate.toLocaleDateString()).format('YYYY-MM-DD')
+      : moment().format('YYYY-MM-DD'),
+  }
+
   try {
     await prisma.tickList.create({
-      data: {
-        description: todoValidationResult.data.description,
-        title: todoValidationResult.data.title,
-        completed: todoValidationResult.data.completed,
-        dueDate: new Date(todoValidationResult.data.dueDate).toISOString(),
-        userEmail: user.email,
-      },
+      data: { ...payload, userEmail: user.email },
     })
 
-    // return redirect(`/tick-list/${clipboardContent.id}`)
     return redirect(`/tick-list`)
   } catch {
     throw redirect('/')
@@ -182,8 +182,7 @@ export default function TickListNew() {
                 <Input
                   name="dueDate"
                   isRequired={false}
-                  type="datetime-local"
-                  defaultValue={moment().format('YYYY-MM-DDTHH:MM')}
+                  type="date"
                   isInvalid={actionData?.errors.dueDate.isInvalid}
                 />
                 <FormErrorMessage>{actionData?.errors.dueDate.message}</FormErrorMessage>

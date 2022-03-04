@@ -109,7 +109,7 @@ function Layout({ children }: { children: React.ReactNode }) {
   )
 
   return (
-    <div className="h-screen relative max-h-[100vh]">
+    <div className="min-h-screen relative max-h-[100vh]">
       <TransitionModal />
       {!isLogin && <Navbar user={user} />}
       <main className={clsx('h-full w-full pb-24', bgColor)}>{children}</main>

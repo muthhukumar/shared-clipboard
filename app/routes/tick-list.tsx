@@ -90,6 +90,25 @@ export default function TickList() {
             Add
           </Button>
         </Form>
+        <div className="mt-8">
+          <div>
+            <h2 className="pb-2 mb-8 text-xl font-bold border-b">Upcoming</h2>
+            <VStack
+              alignItems={'flex-start'}
+              divider={<StackDivider borderColor="gray.800" />}
+              spacing={4}
+            >
+              {tickLists.map((tickList) => {
+                const today = moment().format('YYYY-MM-DD')
+                const dueDate = moment(tickList.dueDate).format('YYYY-MM-DD')
+
+                if (moment(today).isBefore(dueDate)) {
+                  return <TickItem {...tickList} key={tickList.id} />
+                }
+              })}
+            </VStack>
+          </div>
+        </div>
         <div className="mt-6">
           <div>
             <h2 className="pb-2 mb-8 text-xl font-bold border-b">Today</h2>
@@ -124,6 +143,20 @@ export default function TickList() {
                 if (moment(today).isAfter(dueDate)) {
                   return <TickItem {...tickList} key={tickList.id} />
                 }
+              })}
+            </VStack>
+          </div>
+        </div>
+        <div className="mt-6">
+          <div>
+            <h2 className="pb-2 mb-8 text-xl font-bold border-b">All the tasks</h2>
+            <VStack
+              alignItems={'flex-start'}
+              divider={<StackDivider borderColor="gray.800" />}
+              spacing={4}
+            >
+              {tickLists.map((tickList) => {
+                return <TickItem {...tickList} key={tickList.id} />
               })}
             </VStack>
           </div>

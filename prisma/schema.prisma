@@ -43,12 +43,12 @@ model Note {
 
 model TickList {
   title       String
-  id          String    @unique @default(uuid())
+  id          String   @unique @default(uuid())
   description String?
-  completed   Boolean   @default(false)
-  dueDate     DateTime? @default(now())
-  User        User      @relation(fields: [userEmail], references: [email])
+  completed   Boolean  @default(false)
+  dueDate     String
+  User        User     @relation(fields: [userEmail], references: [email])
   userEmail   String
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 }
