@@ -39,6 +39,10 @@ const links: Array<{ title: string; to: string }> = [
     title: 'Notes',
     to: '/notes',
   },
+  {
+    title: 'TickList',
+    to: '/tick-list',
+  },
 ]
 
 export default function Navbar({ user }: { user: User }) {
