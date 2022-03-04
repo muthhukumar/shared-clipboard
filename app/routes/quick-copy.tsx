@@ -102,11 +102,9 @@ export default function QuickCopy() {
               <FormLabel>Content</FormLabel>
               <Textarea placeholder="Title" name="content" defaultValue={content} />
             </FormControl>
-            <HStack>
-              <Button type="submit" isLoading={saving} loadingText="Saving">
-                Save
-              </Button>
-            </HStack>
+            <Button type="submit" isLoading={saving} loadingText="Saving" mt="2">
+              Save
+            </Button>
           </Form>
 
           <VStack w="full" alignItems={'flex-start'}>
