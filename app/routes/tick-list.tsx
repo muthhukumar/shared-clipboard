@@ -106,7 +106,11 @@ export default function TickList() {
           </Button>
         </Form>
 
-        {tickLists.length === 0 && <NoItems title="No tick list items found!!!" />}
+        {tickLists.length === 0 && (
+          <div className="mt-8">
+            <NoItems title="No tick list items found!!!" />
+          </div>
+        )}
 
         {tickLists.length > 0 && (
           <Tabs mt="8">
