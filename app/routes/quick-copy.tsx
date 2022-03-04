@@ -9,6 +9,9 @@ import {
   TabPanel,
   TabPanels,
   Tabs,
+  VStack,
+  useToast,
+  HStack,
 } from '@chakra-ui/react'
 import { User } from '@prisma/client'
 import {
@@ -23,6 +26,7 @@ import {
 import { PageTitle, QRCode, Wrapper } from '~/components'
 import { authenticator } from '~/utils/auth.server'
 import { prisma } from '~/utils/prisma.server'
+import { copyToClipboard } from '~/utils/browser'
 
 export const meta: MetaFunction = () => {
   return {
@@ -75,36 +79,65 @@ export default function QuickCopy() {
 
   const content = useLoaderData<string>()
 
+  const toast = useToast()
+
+  const copy = () => {
+    copyToClipboard(url, () => {
+      toast({
+        title: 'URL successfully copied to clipboard',
+        status: 'success',
+      })
+    })
+  }
+
   return (
     <div className="w-full">
       <PageTitle>
         <h2 className="text-3xl font-bold">Quick Copy</h2>
       </PageTitle>
       <Wrapper>
-        <Form method="post" className="py-6">
-          <FormControl>
-            <FormLabel>Content</FormLabel>
-            <Textarea placeholder="Title" name="content" defaultValue={content} />
-          </FormControl>
-          <Button type="submit" isLoading={saving} loadingText="Saving" mt="4">
-            Save
-          </Button>
-        </Form>
-        <Tabs mt={'4'}>
-          <TabList>
-            <Tab>Content QR code</Tab>
-            <Tab>Shareable link QR code</Tab>
-          </TabList>
+        <VStack alignItems={'flex-start'} w="full" mt="8" spacing={8}>
+          <Form method="post" className="w-full">
+            <FormControl>
+              <FormLabel>Content</FormLabel>
+              <Textarea placeholder="Title" name="content" defaultValue={content} />
+            </FormControl>
+            <HStack>
+              <Button type="submit" isLoading={saving} loadingText="Saving">
+                Save
+              </Button>
+            </HStack>
+          </Form>
 
-          <TabPanels>
-            <TabPanel>
-              <QRCode value={content} />
-            </TabPanel>
-            <TabPanel>
-              <QRCode value={url} />
-            </TabPanel>
-          </TabPanels>
-        </Tabs>
+          <VStack w="full" alignItems={'flex-start'}>
+            <h2>Shareable URL</h2>
+            <p className="w-full p-4 border rounded-md">{url}</p>
+            <HStack>
+              <Button onClick={copy}>Copy URL</Button>
+              <Button>
+                <a href={url} target={'_blank'} rel="noreferrer">
+                  Visit
+                </a>
+              </Button>
+            </HStack>
+          </VStack>
+
+          <Tabs w="full">
+            <TabList>
+              <Tab>Content QR code</Tab>
+              <Tab>Shareable link QR code</Tab>
+            </TabList>
+
+            <TabPanels>
+              <TabPanel>
+                <QRCode value={content} />
+              </TabPanel>
+              <TabPanel>
+                <QRCode value={url} />
+              </TabPanel>
+            </TabPanels>
+          </Tabs>
+        </VStack>
       </Wrapper>
     </div>
   )

@@ -1,4 +1,13 @@
-import { FormControl, FormLabel, Button, Input, FormErrorMessage, VStack } from '@chakra-ui/react'
+import {
+  FormControl,
+  FormLabel,
+  Button,
+  Input,
+  FormErrorMessage,
+  VStack,
+  HStack,
+  useToast,
+} from '@chakra-ui/react'
 import { User } from '@prisma/client'
 import {
   ActionFunction,
@@ -14,6 +23,7 @@ import { PageTitle, QRCode, Wrapper } from '~/components'
 import { authenticator } from '~/utils/auth.server'
 import { prisma } from '~/utils/prisma.server'
 import Validator from 'validator'
+import { copyToClipboard } from '~/utils/browser'
 
 type ActionDataType = {
   value: string
@@ -88,30 +98,56 @@ export default function QuickCopy() {
 
   const url = useLoaderData<string>()
 
+  const toast = useToast()
+
+  const copy = () => {
+    copyToClipboard(url, () => {
+      toast({
+        title: 'URL successfully copied to clipboard',
+        status: 'success',
+      })
+    })
+  }
+
   return (
     <div className="w-full">
       <PageTitle>
         <h2 className="text-3xl font-bold">Quick Redirect</h2>
       </PageTitle>
       <Wrapper>
-        <Form method="post" className="py-6">
-          <FormControl isInvalid={actionData?.errors.isInvalid}>
-            <FormLabel>URL</FormLabel>
-            <Input
-              placeholder="Url"
-              name="url"
-              defaultValue={url}
-              isInvalid={actionData?.errors.isInvalid}
-            />
-            <FormErrorMessage>{actionData?.errors.message}</FormErrorMessage>
-          </FormControl>
-          <Button type="submit" isLoading={saving} loadingText="Saving" mt="4">
-            Save
-          </Button>
-        </Form>
-        <VStack mt={'4'} alignItems={'flex-start'} w="full">
-          <h2 className="font-semibold">URL QR code</h2>
-          <QRCode value={url} />
+        <VStack alignItems={'flex-start'} w="full" spacing={8} mt="8">
+          <Form method="post" className="w-full">
+            <FormControl isInvalid={actionData?.errors.isInvalid}>
+              <FormLabel>URL</FormLabel>
+              <Input
+                placeholder="Url"
+                name="url"
+                w="full"
+                defaultValue={url}
+                isInvalid={actionData?.errors.isInvalid}
+              />
+              <FormErrorMessage>{actionData?.errors.message}</FormErrorMessage>
+            </FormControl>
+            <HStack mt="4">
+              <Button type="submit" isLoading={saving} loadingText="Saving">
+                Save
+              </Button>
+              <Button onClick={copy}>Copy URL</Button>
+              <Button>
+                <a href={url} target={'_blank'} rel="noreferrer">
+                  Visit
+                </a>
+              </Button>
+            </HStack>
+          </Form>
+          {/* <VStack alignItems={'flex-start'} w="full">
+            <h2>Shareable URL</h2>
+            <p className="w-full p-4 border rounded-md">{url}</p>
+          </VStack> */}
+          <VStack alignItems={'flex-start'} w="full">
+            <h2 className="font-semibold">URL QR code</h2>
+            <QRCode value={url} />
+          </VStack>
         </VStack>
       </Wrapper>
     </div>
