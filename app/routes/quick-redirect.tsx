@@ -1,3 +1,4 @@
+import * as React from 'react'
 import {
   FormControl,
   FormLabel,
@@ -91,6 +92,12 @@ export const loader: LoaderFunction = async ({ request }) => {
 }
 
 export default function QuickCopy() {
+  const [quickUrl, setQuickUrl] = React.useState<string>('')
+
+  React.useEffect(() => {
+    setQuickUrl(`${window.location.host}/r`)
+  }, [])
+
   const transition = useTransition()
   const saving = transition.state === 'submitting'
 
@@ -101,7 +108,7 @@ export default function QuickCopy() {
   const toast = useToast()
 
   const copy = () => {
-    copyToClipboard(url, () => {
+    copyToClipboard(quickUrl, () => {
       toast({
         title: 'URL successfully copied to clipboard',
         status: 'success',
@@ -128,7 +135,8 @@ export default function QuickCopy() {
               />
               <FormErrorMessage>{actionData?.errors.message}</FormErrorMessage>
             </FormControl>
-            <HStack mt="4">
+
+            <HStack mt="2">
               <Button type="submit" isLoading={saving} loadingText="Saving">
                 Save
               </Button>
@@ -140,10 +148,20 @@ export default function QuickCopy() {
               </Button>
             </HStack>
           </Form>
-          {/* <VStack alignItems={'flex-start'} w="full">
+
+          <VStack w="full" alignItems={'flex-start'}>
             <h2>Shareable URL</h2>
-            <p className="w-full p-4 border rounded-md">{url}</p>
-          </VStack> */}
+            <p className="w-full p-4 border rounded-md">{quickUrl}</p>
+            <HStack>
+              <Button onClick={copy}>Copy URL</Button>
+              <Button>
+                <a href={quickUrl} target={'_blank'} rel="noreferrer">
+                  Visit
+                </a>
+              </Button>
+            </HStack>
+          </VStack>
+
           <VStack alignItems={'flex-start'} w="full">
             <h2 className="font-semibold">URL QR code</h2>
             <QRCode value={url} />
