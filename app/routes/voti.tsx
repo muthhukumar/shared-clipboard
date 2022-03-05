@@ -15,6 +15,7 @@ import { User, Voti } from '@prisma/client'
 import { IoMdAdd } from 'react-icons/io'
 import { RiSearchLine } from 'react-icons/ri'
 import { BsArrowDown, BsArrowUp } from 'react-icons/bs'
+import { MdOutlineDeleteForever } from 'react-icons/md'
 import {
   useLoaderData,
   useSubmit,
@@ -27,6 +28,7 @@ import {
   Outlet,
   ActionFunction,
   redirect,
+  useNavigate,
 } from 'remix'
 import { NoItems, Wrapper } from '~/components'
 import { authenticator } from '~/utils/auth.server'
@@ -141,6 +143,8 @@ export default function ClipbaordContent() {
 
   const transition = useTransition()
 
+  const navigation = useNavigate()
+
   const actionData = useActionData<ActionDataType>()
 
   const borderColor = useColorModeValue('gray.200', 'gray.700')
@@ -187,20 +191,23 @@ export default function ClipbaordContent() {
                   <p className="flex items-center justify-center w-8 h-8 p-2 mr-4 font-bold border rounded-full">
                     {index + 1}
                   </p>
-                  <p className="font-bold">{voti.title}</p>
-                  <HStack ml="auto" pl="2" spacing={4}>
-                    <HStack>
-                      <p className="flex items-center justify-center w-8 h-8 p-2 ml-2 font-bold border rounded-full">
-                        {voti.votes}
-                      </p>
-                      <p className="mr-2 font-bold">votes</p>
-                    </HStack>
+                  <p className="mr-4 font-bold">{voti.title}</p>
+                  <HStack ml="auto" pl="2" spacing={2}>
+                    <p className="flex items-center justify-center px-2 py-1 ml-2 text-sm font-bold border rounded-full">
+                      {voti.votes} votes
+                    </p>
                     <Form method="post" action={`/voti/${voti.id}/upvote`}>
                       <IconButton aria-label="Upvote" type="submit" icon={<BsArrowUp />} />
                     </Form>
                     <Form method="post" action={`/voti/${voti.id}/downvote`}>
                       <IconButton type="submit" aria-label="Down vote" icon={<BsArrowDown />} />
                     </Form>
+                    <IconButton
+                      type="submit"
+                      aria-label="Delete Voti"
+                      icon={<MdOutlineDeleteForever />}
+                      onClick={() => navigation(`/voti/${voti.id}/delete`)}
+                    />
                   </HStack>
                 </div>
               )
