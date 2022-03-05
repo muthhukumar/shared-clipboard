@@ -14,6 +14,7 @@ import {
   MenuButton,
   MenuItem,
   MenuList,
+  Tag,
 } from '@chakra-ui/react'
 import { User, Voti } from '@prisma/client'
 import { IoMdAdd } from 'react-icons/io'
@@ -199,9 +200,10 @@ export default function ClipbaordContent() {
                     <p className="mr-4 text-xl font-bold">{voti.title}</p>
                   </div>
                   <div className="flex items-center justify-between w-full">
-                    <p className="flex items-center justify-center px-2 py-1 ml-12 text-xs border rounded-full">
-                      {voti.votes} votes
-                    </p>
+                    <HStack className="ml-12">
+                      <Tag>{voti.votes} votes</Tag>
+                      {voti.label ? <Tag>{voti.label}</Tag> : null}
+                    </HStack>
                     <HStack pl="2" spacing={2}>
                       <p className="ml-auto text-xs">{moment(voti.updatedAt).calendar()}</p>
                       <Form method="post" action={`/voti/${voti.id}/upvote`}>

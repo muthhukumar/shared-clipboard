@@ -67,9 +67,9 @@ model Voti {
 }
 
 model Birthday {
-  id   Int    @id @default(autoincrement())
-  name String
-  date String
+  id        Int     @id @default(autoincrement())
+  name      String
+  date      String
   User      User?   @relation(fields: [userEmail], references: [email])
   userEmail String?
 }

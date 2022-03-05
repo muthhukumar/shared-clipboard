@@ -32,6 +32,7 @@ import { prisma } from '~/utils/prisma.server'
 
 const VotiSchema = z.object({
   title: z.string().min(5),
+  label: z.string().optional(),
 })
 
 export type ActionDataType = {
@@ -58,11 +59,13 @@ export const action: ActionFunction = async ({ params, request }) => {
     values: {},
     errors: {
       title: { isInvalid: true, message: '' },
+      label: { isInvalid: true, message: '' },
     },
   }
 
   const votiContentData = {
     title: formData.get('title'),
+    label: formData.get('label') ? formData.get('label') : '',
   }
 
   const votiValidationResult = VotiSchema.safeParse(votiContentData)
@@ -83,6 +86,7 @@ export const action: ActionFunction = async ({ params, request }) => {
       },
       data: {
         title: votiValidationResult.data.title,
+        label: votiValidationResult.data.label,
         userEmail: user.email,
       },
     })
@@ -151,6 +155,18 @@ export default function VotiEdit() {
                   name="title"
                   defaultValue={voti.title}
                   isInvalid={actionData?.errors.title.isInvalid}
+                />
+                <FormErrorMessage>{actionData?.errors.title.message}</FormErrorMessage>
+              </FormControl>
+              <FormControl isInvalid={actionData?.errors.label.isInvalid} mt="2">
+                <FormLabel>Label</FormLabel>
+                <Input
+                  // isRequired
+                  placeholder="Label"
+                  type="text"
+                  name="label"
+                  defaultValue={voti.label ?? ''}
+                  isInvalid={actionData?.errors.label.isInvalid}
                 />
                 <FormErrorMessage>{actionData?.errors.title.message}</FormErrorMessage>
               </FormControl>
