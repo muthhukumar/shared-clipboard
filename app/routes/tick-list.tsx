@@ -164,7 +164,7 @@ export default function TickList() {
                     const today = moment().format('YYYY-MM-DD')
                     const dueDate = moment(tickList.dueDate).format('YYYY-MM-DD')
 
-                    if (moment(today).isAfter(dueDate)) {
+                    if (moment(today).isAfter(dueDate) && !tickList.completed) {
                       return <TickItem {...tickList} key={tickList.id} />
                     }
                   })}
