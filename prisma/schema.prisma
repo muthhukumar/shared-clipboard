@@ -29,6 +29,7 @@ model User {
   notes             Note[]
   tickLists         TickList[]
   voties            Voti[]
+  birthdays         Birthday[]
   quickContent      String?
   quickRedirect     String?
 }
@@ -56,11 +57,19 @@ model TickList {
 
 model Voti {
   title     String
-  id        Int      @id @default(autoincrement())
-  votes     Int      @default(0)
-  User      User?    @relation(fields: [userEmail], references: [email])
+  id        Int       @id @default(autoincrement())
+  votes     Int       @default(0)
+  User      User?     @relation(fields: [userEmail], references: [email])
   userEmail String?
-  createdAt DateTime @default(now())
+  createdAt DateTime  @default(now())
   updatedAt DateTime? @updatedAt
   label     String?
+}
+
+model Birthday {
+  id   Int    @id @default(autoincrement())
+  name String
+  date String
+  User      User?   @relation(fields: [userEmail], references: [email])
+  userEmail String?
 }

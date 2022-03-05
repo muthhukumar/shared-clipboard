@@ -49,6 +49,10 @@ const links: Array<{ title: string; to: string }> = [
     title: 'Voti',
     to: '/voti',
   },
+  {
+    title: 'Birthday',
+    to: '/birthday',
+  },
 ]
 
 export default function Navbar({ user }: { user: User }) {
