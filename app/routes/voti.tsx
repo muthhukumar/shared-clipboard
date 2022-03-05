@@ -171,7 +171,7 @@ export default function ClipbaordContent() {
 
         <div className="p-4 mt-4 border rounded-md">
           <Form
-            className="flex items-center justify-between w-full mb-8"
+            className="flex items-center justify-between w-full mb-6"
             method="post"
             action="/voti"
             key={transition.location?.key}
@@ -190,25 +190,26 @@ export default function ClipbaordContent() {
             </Button>
           </Form>
           <VStack alignItems={'flex-start'} divider={<StackDivider borderColor={borderColor} />}>
-            {voties.map((voti, index) => {
+            {voties.map((voti) => {
               return (
                 <div
                   key={voti.id}
-                  className="flex flex-col items-start w-full p-1 rounded-md gap-y-1"
+                  className="flex flex-col items-start w-full py-2 rounded-md gap-y-1"
                 >
-                  <div className="flex items-center justify-start w-full mb-1">
-                    <Tag variant="outline" className="mr-4">
-                      {index + 1}
-                    </Tag>
-                    <p className="text-xl">{voti.title}</p>
-                  </div>
+                  <p className="text-xl">{voti.title}</p>
                   <div className="flex items-center justify-between w-full">
-                    <HStack className="ml-10">
-                      <Tag fontSize={'x-small'}>{voti.votes} votes</Tag>
-                      {voti.label ? <Tag fontSize={'x-small'}>{voti.label}</Tag> : null}
+                    <HStack>
+                      <Tag fontSize={'x-small'} colorScheme={'purple'}>
+                        {voti.votes} votes
+                      </Tag>
+                      {voti.label ? (
+                        <Tag fontSize={'x-small'} colorScheme="whatsapp">
+                          {voti.label}
+                        </Tag>
+                      ) : null}
                     </HStack>
                     <HStack pl="2" spacing={2}>
-                      <Tag ml="auto" fontSize={'x-small'}>
+                      <Tag ml="auto" fontSize={'x-small'} colorScheme={'linkedin'}>
                         {moment(voti.updatedAt).calendar()}
                       </Tag>
                       <Form method="post" action={`/voti/${voti.id}/upvote`}>
