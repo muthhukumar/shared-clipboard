@@ -1,3 +1,5 @@
+import { Transition } from '@remix-run/react/transition'
+
 export function formatFieldErrors(fieldErrors: Record<string, Array<string>>) {
   const result: Record<keyof typeof fieldErrors, string> = {}
 
@@ -29,4 +31,36 @@ export function formatFieldErrorsNew(
   })
 
   return result
+}
+
+export const getTransitionTypes = (transition: Transition) => {
+  if (transition.state === 'submitting' && transition.submission.method === 'GET') {
+    return 'Searching'
+  }
+
+  if (transition.state === 'submitting' && transition.type === 'actionSubmission') {
+    return 'Submitting'
+  }
+
+  if (transition.state === 'loading' && transition.type === 'normalLoad') {
+    return 'Navigating'
+  }
+
+  if (transition.state === 'loading' && transition.type === 'actionRedirect') {
+    return 'Redirecting'
+  }
+
+  if (transition.state === 'loading' && transition.type === 'normalRedirect') {
+    return 'NormalRedirecting'
+  }
+
+  if (transition.state === 'loading' && transition.type === 'actionReload') {
+    return 'Reloading'
+  }
+
+  if (transition.state === 'idle') {
+    return 'Idle'
+  }
+
+  return 'Unknown'
 }

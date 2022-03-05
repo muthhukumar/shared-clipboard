@@ -10,6 +10,7 @@ import {
   MenuItem,
   MenuList,
   Stack,
+  Tag,
   useColorMode,
   useColorModeValue,
 } from '@chakra-ui/react'
@@ -17,10 +18,11 @@ import { User } from '@prisma/client'
 import clsx from 'clsx'
 import { useViewportScroll } from 'framer-motion'
 import React from 'react'
-import { Link as RLink, useLocation } from 'remix'
+import { Link as RLink, useLocation, useTransition } from 'remix'
 import { Wrapper } from '.'
 import { FaMoon, FaSun } from 'react-icons/fa'
 import { AiOutlineAliwangwang } from 'react-icons/ai'
+import { getTransitionTypes } from '~/utils'
 
 const links: Array<{ title: string; to: string }> = [
   {
@@ -56,6 +58,8 @@ export default function Navbar({ user }: { user: User }) {
 
   const bgColor = useColorModeValue('bg-white', 'bg-[color:var(--chakra-colors-brand-900)]')
 
+  const transition = useTransition()
+
   return (
     <div className={clsx('border-b', bgColor)}>
       <Wrapper>
@@ -65,6 +69,7 @@ export default function Navbar({ user }: { user: User }) {
             <h2 className="ml-2 font-bold">Clipi</h2>
           </div>
           <HStack spacing={4}>
+            <Tag size={'sm'}>{getTransitionTypes(transition)}</Tag>
             <IconButton
               size="md"
               fontSize="lg"
