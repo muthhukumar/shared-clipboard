@@ -56,8 +56,11 @@ model TickList {
 
 model Voti {
   title     String
-  id        Int     @id @default(autoincrement())
-  votes     Int     @default(0)
-  User      User?   @relation(fields: [userEmail], references: [email])
+  id        Int      @id @default(autoincrement())
+  votes     Int      @default(0)
+  User      User?    @relation(fields: [userEmail], references: [email])
   userEmail String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime? @updatedAt
+  label     String?
 }
