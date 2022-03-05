@@ -10,13 +10,15 @@ import {
   VStack,
   useColorModeValue,
   StackDivider,
+  Menu,
+  MenuButton,
+  MenuItem,
+  MenuList,
 } from '@chakra-ui/react'
 import { User, Voti } from '@prisma/client'
 import { IoMdAdd } from 'react-icons/io'
 import { RiSearchLine } from 'react-icons/ri'
-import { BsArrowDown, BsArrowUp } from 'react-icons/bs'
-import { MdOutlineDeleteForever } from 'react-icons/md'
-import { MdEdit } from 'react-icons/md'
+import { BsThreeDotsVertical, BsArrowDown, BsArrowUp } from 'react-icons/bs'
 import {
   useLoaderData,
   useSubmit,
@@ -36,6 +38,7 @@ import { authenticator } from '~/utils/auth.server'
 import { prisma } from '~/utils/prisma.server'
 import { z } from 'zod'
 import { formatFieldErrorsNew } from '~/utils'
+import moment from 'moment'
 
 export const meta: MetaFunction = () => {
   return {
@@ -188,33 +191,53 @@ export default function ClipbaordContent() {
           <VStack alignItems={'flex-start'} divider={<StackDivider borderColor={borderColor} />}>
             {voties.map((voti, index) => {
               return (
-                <div key={voti.id} className="flex items-center justify-between w-full rounded-md">
-                  <p className="flex items-center justify-center w-8 h-8 p-2 mr-4 font-bold border rounded-full">
-                    {index + 1}
-                  </p>
-                  <p className="mr-4 font-bold">{voti.title}</p>
-                  <HStack ml="auto" pl="2" spacing={2}>
-                    <p className="flex items-center justify-center px-2 py-1 ml-2 text-sm font-bold border rounded-full">
+                <div key={voti.id} className="flex flex-col items-start w-full rounded-md gap-y-1">
+                  <div className="flex items-center justify-start w-full">
+                    <p className="flex items-center justify-center w-8 h-8 p-2 mr-4 font-bold border rounded-full">
+                      {index + 1}
+                    </p>
+                    <p className="mr-4 text-xl font-bold">{voti.title}</p>
+                  </div>
+                  <div className="flex items-center justify-between w-full">
+                    <p className="flex items-center justify-center px-2 py-1 ml-12 text-xs border rounded-full">
                       {voti.votes} votes
                     </p>
-                    <IconButton
-                      aria-label="Upvote"
-                      icon={<MdEdit />}
-                      onClick={() => navigation(`/voti/${voti.id}/edit`)}
-                    />
-                    <Form method="post" action={`/voti/${voti.id}/upvote`}>
-                      <IconButton aria-label="Upvote" type="submit" icon={<BsArrowUp />} />
-                    </Form>
-                    <Form method="post" action={`/voti/${voti.id}/downvote`}>
-                      <IconButton type="submit" aria-label="Down vote" icon={<BsArrowDown />} />
-                    </Form>
-                    <IconButton
-                      type="submit"
-                      aria-label="Delete Voti"
-                      icon={<MdOutlineDeleteForever />}
-                      onClick={() => navigation(`/voti/${voti.id}/delete`)}
-                    />
-                  </HStack>
+                    <HStack pl="2" spacing={2}>
+                      <p className="ml-auto text-xs">{moment(voti.updatedAt).calendar()}</p>
+                      <Form method="post" action={`/voti/${voti.id}/upvote`}>
+                        <IconButton
+                          variant={'outline'}
+                          aria-label="Upvote"
+                          type="submit"
+                          icon={<BsArrowUp />}
+                          size="sm"
+                        />
+                      </Form>
+                      <Form method="post" action={`/voti/${voti.id}/downvote`}>
+                        <IconButton
+                          variant={'outline'}
+                          type="submit"
+                          aria-label="Down vote"
+                          icon={<BsArrowDown />}
+                          size="sm"
+                        />
+                      </Form>
+
+                      <Menu>
+                        <MenuButton>
+                          <BsThreeDotsVertical />
+                        </MenuButton>
+                        <MenuList>
+                          <MenuItem onClick={() => navigation(`/voti/${voti.id}/edit`)}>
+                            Edit
+                          </MenuItem>
+                          <MenuItem onClick={() => navigation(`/voti/${voti.id}/delete`)}>
+                            Delete
+                          </MenuItem>
+                        </MenuList>
+                      </Menu>
+                    </HStack>
+                  </div>
                 </div>
               )
             })}
