@@ -16,6 +16,7 @@ import { IoMdAdd } from 'react-icons/io'
 import { RiSearchLine } from 'react-icons/ri'
 import { BsArrowDown, BsArrowUp } from 'react-icons/bs'
 import { MdOutlineDeleteForever } from 'react-icons/md'
+import { MdEdit } from 'react-icons/md'
 import {
   useLoaderData,
   useSubmit,
@@ -196,6 +197,11 @@ export default function ClipbaordContent() {
                     <p className="flex items-center justify-center px-2 py-1 ml-2 text-sm font-bold border rounded-full">
                       {voti.votes} votes
                     </p>
+                    <IconButton
+                      aria-label="Upvote"
+                      icon={<MdEdit />}
+                      onClick={() => navigation(`/voti/${voti.id}/edit`)}
+                    />
                     <Form method="post" action={`/voti/${voti.id}/upvote`}>
                       <IconButton aria-label="Upvote" type="submit" icon={<BsArrowUp />} />
                     </Form>
