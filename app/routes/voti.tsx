@@ -194,18 +194,20 @@ export default function ClipbaordContent() {
               return (
                 <div key={voti.id} className="flex flex-col items-start w-full rounded-md gap-y-1">
                   <div className="flex items-center justify-start w-full">
-                    <p className="flex items-center justify-center w-8 h-8 p-2 mr-4 font-bold border rounded-full">
+                    <Tag variant="outline" className="mr-4">
                       {index + 1}
-                    </p>
-                    <p className="mr-4 text-xl font-bold">{voti.title}</p>
+                    </Tag>
+                    <p className="text-xl font-bold">{voti.title}</p>
                   </div>
                   <div className="flex items-center justify-between w-full">
-                    <HStack className="ml-12">
-                      <Tag>{voti.votes} votes</Tag>
-                      {voti.label ? <Tag>{voti.label}</Tag> : null}
+                    <HStack className="ml-10">
+                      <Tag fontSize={'x-small'}>{voti.votes} votes</Tag>
+                      {voti.label ? <Tag fontSize={'x-small'}>{voti.label}</Tag> : null}
                     </HStack>
                     <HStack pl="2" spacing={2}>
-                      <p className="ml-auto text-xs">{moment(voti.updatedAt).calendar()}</p>
+                      <Tag ml="auto" fontSize={'x-small'}>
+                        {moment(voti.updatedAt).calendar()}
+                      </Tag>
                       <Form method="post" action={`/voti/${voti.id}/upvote`}>
                         <IconButton
                           variant={'outline'}
