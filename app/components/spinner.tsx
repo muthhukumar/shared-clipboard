@@ -1,7 +1,7 @@
 export default function Spinner() {
   return (
     <div className="fixed z-10 loader bottom-12 right-12">
-      <span style={{ opacity: 1 }}>
+      <span style={{ opacity: 1, color: 'white', background: 'white' }}>
         <svg
           xmlns="http://www.w3.org/2000/svg"
           width="24"
