@@ -192,12 +192,15 @@ export default function ClipbaordContent() {
           <VStack alignItems={'flex-start'} divider={<StackDivider borderColor={borderColor} />}>
             {voties.map((voti, index) => {
               return (
-                <div key={voti.id} className="flex flex-col items-start w-full rounded-md gap-y-1">
-                  <div className="flex items-center justify-start w-full">
+                <div
+                  key={voti.id}
+                  className="flex flex-col items-start w-full p-1 rounded-md gap-y-1"
+                >
+                  <div className="flex items-center justify-start w-full mb-1">
                     <Tag variant="outline" className="mr-4">
                       {index + 1}
                     </Tag>
-                    <p className="text-xl font-bold">{voti.title}</p>
+                    <p className="text-xl">{voti.title}</p>
                   </div>
                   <div className="flex items-center justify-between w-full">
                     <HStack className="ml-10">
