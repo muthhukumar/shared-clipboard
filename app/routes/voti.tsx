@@ -210,9 +210,11 @@ export default function ClipbaordContent() {
                       ) : null}
                     </HStack>
                     <HStack pl="2" spacing={2}>
-                      <Tag ml="auto" fontSize={'x-small'} colorScheme={'linkedin'}>
-                        {moment(voti.updatedAt).calendar()}
-                      </Tag>
+                      {voti.updatedAt ? (
+                        <Tag ml="auto" fontSize={'x-small'} colorScheme={'linkedin'}>
+                          {moment(voti.updatedAt).calendar()}
+                        </Tag>
+                      ) : null}
                       <Form method="post" action={`/voti/${voti.id}/upvote`}>
                         <IconButton
                           variant={'outline'}
