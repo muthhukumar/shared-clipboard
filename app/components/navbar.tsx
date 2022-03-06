@@ -13,6 +13,7 @@ import {
   Tag,
   useColorMode,
   useColorModeValue,
+  VStack,
 } from '@chakra-ui/react'
 import { User } from '@prisma/client'
 import clsx from 'clsx'
@@ -126,6 +127,8 @@ function StickyHeader() {
 
   const scrolledToTop = y >= 59
 
+  const transition = useTransition()
+
   return (
     <chakra.header h={`${height}px`} w="full">
       <Box
@@ -145,7 +148,13 @@ function StickyHeader() {
       >
         <Wrapper>
           <div className="flex items-center justify-start">
-            <Stack direction="row" spacing="8" overflowY="scroll">
+            <Stack direction="row" spacing="8" overflowY="scroll" alignItems={'center'}>
+              {scrolledToTop ? (
+                <HStack className="pb-3">
+                  <AiOutlineAliwangwang />
+                  <Tag size={'sm'}>{getTransitionTypes(transition)}</Tag>
+                </HStack>
+              ) : null}
               {links.map((link) => (
                 <RLink
                   to={link.to}
