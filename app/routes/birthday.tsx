@@ -52,6 +52,7 @@ export const loader: LoaderFunction = async ({ request }) => {
         userEmail: user.email,
         name: {
           contains: query,
+          mode: 'insensitive',
         },
       },
     })
