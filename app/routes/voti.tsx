@@ -197,7 +197,7 @@ export default function ClipbaordContent() {
                   key={voti.id}
                   className="flex flex-col items-start w-full py-2 rounded-md gap-y-1"
                 >
-                  <p className="text-xl">{voti.title}</p>
+                  <p className="text-lg">{voti.title}</p>
                   <div className="flex items-center justify-between w-full">
                     <HStack>
                       <Tag fontSize={'x-small'} colorScheme={'purple'}>
