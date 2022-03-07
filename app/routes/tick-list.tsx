@@ -36,6 +36,7 @@ import { Wrapper, NoItems, TickItem } from '~/components'
 import { authenticator } from '~/utils/auth.server'
 import { prisma } from '~/utils/prisma.server'
 import { IoIosOptions } from 'react-icons/io'
+import { RiDeleteBack2Line } from 'react-icons/ri'
 
 const enum FilterByOptions {
   SHOW_ALL = 'showall',
@@ -44,11 +45,12 @@ const enum FilterByOptions {
   OVERDUE = 'overdue',
 }
 
-// const enum SortByOptions {
-//   PRIORITY = 'priority',
-//   LAST_UPDATED = 'lastupdated',
-//   TITLE = 'title',
-// }
+const enum SortByOptions {
+  PRIORITY = 'priority',
+  LAST_UPDATED = 'lastupdated',
+  TITLE = 'title',
+  LATEST = 'latest',
+}
 
 type LoaderType = {
   tickList: (TickList & {
@@ -56,7 +58,7 @@ type LoaderType = {
       Label: Label | null
     })[]
   })[]
-  sortBy: string
+  sortBy: SortByOptions
   filterBy: FilterByOptions
   show: 'completed' | 'pending'
 }
@@ -76,13 +78,32 @@ export const loader: LoaderFunction = async ({ request }) => {
 
   const query = url.searchParams.get('q') ?? ''
   const filterBy = url.searchParams.get('filterBy') ?? FilterByOptions.SHOW_ALL
-  const sortBy = url.searchParams.get('sortBy') ?? ''
+  const sortBy = url.searchParams.get('sortBy') ?? SortByOptions.LATEST
   const show = url.searchParams.get('show') ?? 'pending'
 
   // const today = moment().format('YYYY-MM-DD')
   const dueDate = moment().format('YYYY-MM-DD')
 
   let addiontalQuery = {}
+  let orderBy = {}
+
+  if (sortBy === SortByOptions.LATEST) {
+    orderBy = {
+      createdAt: 'desc',
+    }
+  } else if (sortBy === SortByOptions.TITLE) {
+    orderBy = {
+      title: 'asc',
+    }
+  } else if (sortBy === SortByOptions.PRIORITY) {
+    orderBy = {
+      priority: 'asc',
+    }
+  } else if (sortBy === SortByOptions.LAST_UPDATED) {
+    orderBy = {
+      updatedAt: 'desc',
+    }
+  }
 
   if (filterBy === FilterByOptions.UPCOMING) {
     addiontalQuery = {
@@ -136,7 +157,7 @@ export const loader: LoaderFunction = async ({ request }) => {
         },
       },
       orderBy: {
-        createdAt: 'desc',
+        ...orderBy,
       },
     })
 
@@ -156,7 +177,7 @@ export const loader: LoaderFunction = async ({ request }) => {
       },
     },
     orderBy: {
-      createdAt: 'desc',
+      ...orderBy,
     },
   })
 
@@ -179,10 +200,11 @@ export default function TickList() {
           className="flex items-center justify-between w-full"
           method="get"
           onChange={(target) => submit(target.currentTarget)}
+          onReset={(target) => submit(target.currentTarget)}
         >
           <VStack w="full">
             <Stack
-              direction={['column', 'row', 'row', 'row']}
+              direction={['column', 'column', 'row', 'row']}
               justifyContent={['flex-start']}
               className="w-full"
             >
@@ -206,10 +228,14 @@ export default function TickList() {
                     <option value={FilterByOptions.UPCOMING}>Upcoming</option>
                     <option value={FilterByOptions.OVERDUE}>Overdue</option>
                   </Select>
-                  <Select placeholder="Sort by" defaultValue={sortBy ?? ''}>
-                    <option value="option1">Option 1</option>
-                    <option value="option2">Option 2</option>
-                    <option value="option3">Option 3</option>
+                  <Select name="sortBy" defaultValue={sortBy ?? SortByOptions.LATEST}>
+                    <option disabled value={SortByOptions.LATEST}>
+                      Sort by
+                    </option>
+                    <option value={SortByOptions.LATEST}>Latest</option>
+                    <option value={SortByOptions.TITLE}>Title</option>
+                    <option value={SortByOptions.PRIORITY}>Priority</option>
+                    <option value={SortByOptions.LAST_UPDATED}>Last updated</option>
                   </Select>
                   <Menu>
                     <MenuButton
@@ -246,6 +272,16 @@ export default function TickList() {
                 onClick={() => navigation('/tick-list/new')}
               >
                 Add
+              </Button>
+              <Button
+                leftIcon={<RiDeleteBack2Line />}
+                variant="outline"
+                w={['full', 'full', 'initial', 'initial']}
+                colorScheme="red"
+                size="md"
+                type="reset"
+              >
+                Clear
               </Button>
             </HStack>
           </VStack>
