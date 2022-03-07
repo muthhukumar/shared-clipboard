@@ -266,7 +266,8 @@ export default function TickList() {
             <HStack w="full" justifyContent={'flex-end'}>
               <Button
                 leftIcon={<IoMdAdd />}
-                variant="solid"
+                variant="outline"
+                colorScheme={'twitter'}
                 w={['full', 'full', 'initial', 'initial']}
                 size="md"
                 onClick={() => navigation('/tick-list/new')}
