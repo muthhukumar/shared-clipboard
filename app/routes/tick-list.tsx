@@ -197,7 +197,7 @@ export default function TickList() {
                 leftIcon={<IoMdAdd />}
                 variant="solid"
                 ml={'auto'}
-                w={['full', 'initial', 'initial', 'initial']}
+                w={['full', 'full', 'initial', 'initial']}
                 size="md"
                 onClick={() => navigation('/tick-list/new')}
               >
