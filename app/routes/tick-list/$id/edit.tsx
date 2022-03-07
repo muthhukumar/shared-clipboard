@@ -25,20 +25,22 @@ import {
   FormLabel,
   Input,
   FormErrorMessage,
-  Select,
+  Select as CSelect,
 } from '@chakra-ui/react'
 import { z } from 'zod'
-import { TickList, User } from '@prisma/client'
+import { Priority, TickList, User } from '@prisma/client'
 import { formatFieldErrorsNew } from '~/utils'
 import { authenticator } from '~/utils/auth.server'
 import { prisma } from '~/utils/prisma.server'
 import moment from 'moment'
+import { composePriority } from '../new'
 
 const TickListSchema = z.object({
   title: z.string().min(5).max(500),
   description: z.string().max(150).optional(),
   completed: z.boolean().optional(),
   dueDate: z.date().optional(),
+  priority: z.nativeEnum(Priority).optional(),
 })
 
 type ActionDataType = {
@@ -72,6 +74,7 @@ export const action: ActionFunction = async ({ request, params }) => {
       description: { isInvalid: true, message: '' },
       completed: { isInvalid: true, message: '' },
       dueDate: { isInvalid: true, message: '' },
+      priority: { isInvalid: true, message: '' },
     },
   }
 
@@ -80,6 +83,7 @@ export const action: ActionFunction = async ({ request, params }) => {
     description: String(formData.get('description')),
     completed: formData.get('completed') === 'true' ? true : false,
     dueDate: formData.get('dueDate') ? new Date(String(formData.get('dueDate'))) : undefined,
+    priority: composePriority(String(formData.get('priority')) as Priority),
   }
 
   const todoValidationResult = TickListSchema.safeParse(tickListData)
@@ -100,6 +104,7 @@ export const action: ActionFunction = async ({ request, params }) => {
     dueDate: todoValidationResult.data.dueDate
       ? moment(todoValidationResult.data.dueDate.toLocaleDateString()).format('YYYY-MM-DD')
       : moment().format('YYYY-MM-DD'),
+    priority: todoValidationResult.data.priority,
   }
 
   try {
@@ -193,7 +198,7 @@ export default function TickListEdit() {
 
               <FormControl mt={4} isInvalid={actionData?.errors.completed.isInvalid}>
                 <FormLabel>Completed</FormLabel>
-                <Select
+                <CSelect
                   name="completed"
                   placeholder="Select option"
                   defaultValue={String(tickList.completed) ?? 'false'}
@@ -201,7 +206,23 @@ export default function TickListEdit() {
                 >
                   <option value="true">True</option>
                   <option value="false">False</option>
-                </Select>
+                </CSelect>
+                <FormErrorMessage>{actionData?.errors.completed.message}</FormErrorMessage>
+              </FormControl>
+
+              <FormControl mt={4} isInvalid={actionData?.errors.priority.isInvalid}>
+                <FormLabel>Priority</FormLabel>
+                <CSelect
+                  name="priority"
+                  placeholder="Select priority"
+                  defaultValue={tickList.priority}
+                  isInvalid={actionData?.errors.priority.isInvalid}
+                >
+                  <option value={Priority.LOW}>Low</option>
+                  <option value={Priority.NORMAL}>Normal</option>
+                  <option value={Priority.MEDIUM}>Medium</option>
+                  <option value={Priority.HIGH}>High</option>
+                </CSelect>
                 <FormErrorMessage>{actionData?.errors.completed.message}</FormErrorMessage>
               </FormControl>
 

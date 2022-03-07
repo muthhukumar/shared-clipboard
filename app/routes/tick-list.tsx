@@ -7,7 +7,7 @@ import {
   StackDivider,
   useColorModeValue,
 } from '@chakra-ui/react'
-import { TickList, User } from '@prisma/client'
+import { Label, LabelsOnTickList, TickList, User } from '@prisma/client'
 import { IoMdAdd } from 'react-icons/io'
 import { RiSearchLine } from 'react-icons/ri'
 import {
@@ -48,6 +48,13 @@ export const loader: LoaderFunction = async ({ request }) => {
           mode: 'insensitive',
         },
       },
+      include: {
+        labels: {
+          include: {
+            Label: true,
+          },
+        },
+      },
       orderBy: {
         createdAt: 'desc',
       },
@@ -60,6 +67,13 @@ export const loader: LoaderFunction = async ({ request }) => {
     where: {
       userEmail: user.email,
     },
+    include: {
+      labels: {
+        include: {
+          Label: true,
+        },
+      },
+    },
     orderBy: {
       createdAt: 'desc',
     },
@@ -71,7 +85,13 @@ export const loader: LoaderFunction = async ({ request }) => {
 export default function TickList() {
   const navigation = useNavigate()
 
-  const tickLists = useLoaderData<Array<TickList>>()
+  const tickLists = useLoaderData<
+    (TickList & {
+      labels: (LabelsOnTickList & {
+        Label: Label | null
+      })[]
+    })[]
+  >()
 
   const submit = useSubmit()
 

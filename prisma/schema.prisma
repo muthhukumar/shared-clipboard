@@ -44,20 +44,6 @@ model Note {
   createdAt DateTime @default(now())
 }
 
-model TickList {
-  title       String
-  id          String   @unique @default(uuid())
-  description String?
-  completed   Boolean  @default(false)
-  dueDate     String
-  User        User     @relation(fields: [userEmail], references: [email])
-  userEmail   String
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  priority    Priority @default(NORMAL)
-  labels      Label[]
-}
-
 model Voti {
   title     String
   id        Int       @id @default(autoincrement())
@@ -77,13 +63,34 @@ model Birthday {
   userEmail String?
 }
 
+model TickList {
+  title       String
+  id          String             @unique @default(uuid())
+  description String?
+  completed   Boolean            @default(false)
+  dueDate     String
+  User        User               @relation(fields: [userEmail], references: [email])
+  userEmail   String
+  createdAt   DateTime           @default(now())
+  updatedAt   DateTime           @updatedAt
+  priority    Priority           @default(NORMAL)
+  labels      LabelsOnTickList[]
+}
+
 model Label {
-  id         Int       @id @default(autoincrement())
-  label      String
-  User       User?     @relation(fields: [userEmail], references: [email])
-  userEmail  String?
-  tickListId String?
+  id            Int                @id @default(autoincrement())
+  label         String
+  User          User?              @relation(fields: [userEmail], references: [email])
+  userEmail     String?
+  tickListItems LabelsOnTickList[]
+}
+
+model LabelsOnTickList {
   TickList   TickList? @relation(fields: [tickListId], references: [id])
+  tickListId String
+  Label      Label?    @relation(fields: [labelId], references: [id])
+  labelId    Int
+  id         Int       @id @default(autoincrement())
 }
 
 enum Priority {
@@ -91,10 +98,4 @@ enum Priority {
   LOW
   MEDIUM
   NORMAL
-}
-
-enum Color {
-  ED0000
-  F4A522
-  F81CE5
 }
