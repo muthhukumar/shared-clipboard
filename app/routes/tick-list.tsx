@@ -9,6 +9,14 @@ import {
   HStack,
   Select,
   Stack,
+  FormControl,
+  FormLabel,
+  Switch,
+  IconButton,
+  Menu,
+  MenuButton,
+  MenuItem,
+  MenuList,
 } from '@chakra-ui/react'
 import { Label, LabelsOnTickList, TickList, User } from '@prisma/client'
 import moment from 'moment'
@@ -27,6 +35,7 @@ import {
 import { Wrapper, NoItems, TickItem } from '~/components'
 import { authenticator } from '~/utils/auth.server'
 import { prisma } from '~/utils/prisma.server'
+import { IoIosOptions } from 'react-icons/io'
 
 const enum FilterByOptions {
   SHOW_ALL = 'showall',
@@ -40,6 +49,17 @@ const enum FilterByOptions {
 //   LAST_UPDATED = 'lastupdated',
 //   TITLE = 'title',
 // }
+
+type LoaderType = {
+  tickList: (TickList & {
+    labels: (LabelsOnTickList & {
+      Label: Label | null
+    })[]
+  })[]
+  sortBy: string
+  filterBy: FilterByOptions
+  show: 'completed' | 'pending'
+}
 
 export const meta: MetaFunction = () => {
   return {
@@ -57,6 +77,7 @@ export const loader: LoaderFunction = async ({ request }) => {
   const query = url.searchParams.get('q') ?? ''
   const filterBy = url.searchParams.get('filterBy') ?? FilterByOptions.SHOW_ALL
   const sortBy = url.searchParams.get('sortBy') ?? ''
+  const show = url.searchParams.get('show') ?? 'pending'
 
   // const today = moment().format('YYYY-MM-DD')
   const dueDate = moment().format('YYYY-MM-DD')
@@ -85,6 +106,17 @@ export const loader: LoaderFunction = async ({ request }) => {
     addiontalQuery = {}
   }
 
+  if (show === 'completed') {
+    addiontalQuery = {
+      ...addiontalQuery,
+    }
+  } else {
+    addiontalQuery = {
+      ...addiontalQuery,
+      completed: false,
+    }
+  }
+
   if (query) {
     const searchMatchResult = await prisma.tickList.findMany({
       where: {
@@ -93,9 +125,7 @@ export const loader: LoaderFunction = async ({ request }) => {
           contains: query,
           mode: 'insensitive',
         },
-        // dueDate : {
-        //   eq
-        // },
+
         ...addiontalQuery,
       },
       include: {
@@ -130,21 +160,13 @@ export const loader: LoaderFunction = async ({ request }) => {
     },
   })
 
-  return json({ tickList, filterBy, sortBy })
+  return json({ tickList, filterBy, sortBy, show })
 }
 
 export default function TickList() {
   const navigation = useNavigate()
 
-  const { tickList, filterBy, sortBy } = useLoaderData<{
-    tickList: (TickList & {
-      labels: (LabelsOnTickList & {
-        Label: Label | null
-      })[]
-    })[]
-    sortBy: string
-    filterBy: FilterByOptions
-  }>()
+  const { tickList, filterBy, sortBy, show } = useLoaderData<LoaderType>()
 
   const submit = useSubmit()
 
@@ -189,21 +211,43 @@ export default function TickList() {
                     <option value="option2">Option 2</option>
                     <option value="option3">Option 3</option>
                   </Select>
+                  <Menu>
+                    <MenuButton
+                      as={IconButton}
+                      aria-label="Options"
+                      icon={<IoIosOptions />}
+                      variant="outline"
+                    />
+                    <MenuList>
+                      <MenuItem>
+                        <FormControl display="flex" alignItems="center" width={'initial'}>
+                          <FormLabel htmlFor="show-completed" mb="0">
+                            Show completed
+                          </FormLabel>
+                          <Switch
+                            id="show-completed"
+                            defaultChecked={show === 'completed' ? true : false}
+                            name="show"
+                            value="completed"
+                          />
+                        </FormControl>
+                      </MenuItem>
+                    </MenuList>
+                  </Menu>
                 </HStack>
               </div>
             </Stack>
-            <div className="flex items-center justify-end w-full">
+            <HStack w="full" justifyContent={'flex-end'}>
               <Button
                 leftIcon={<IoMdAdd />}
                 variant="solid"
-                ml={'auto'}
                 w={['full', 'full', 'initial', 'initial']}
                 size="md"
                 onClick={() => navigation('/tick-list/new')}
               >
                 Add
               </Button>
-            </div>
+            </HStack>
           </VStack>
         </Form>
 
