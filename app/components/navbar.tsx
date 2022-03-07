@@ -46,8 +46,8 @@ const links: Array<{ title: string; to: string }> = [
     to: '/tick-list',
   },
   {
-    title: 'Voti',
-    to: '/voti',
+    title: 'HabitsRank',
+    to: '/vote',
   },
   {
     title: 'Birthday',

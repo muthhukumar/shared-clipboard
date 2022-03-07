@@ -10,18 +10,18 @@ export const action: ActionFunction = async ({ params, request }) => {
 
   const id = params.id ? +params.id : undefined
 
-  const isCurrentUsers = await prisma.voti.findUnique({
+  const isCurrentUsers = await prisma.vote.findUnique({
     where: {
       id,
     },
   })
 
   if (!isCurrentUsers || isCurrentUsers.userEmail !== user.email) {
-    return redirect('/voti')
+    return redirect('/vote')
   }
 
   try {
-    await prisma.voti.update({
+    await prisma.vote.update({
       where: {
         id,
       },
@@ -31,7 +31,7 @@ export const action: ActionFunction = async ({ params, request }) => {
         },
       },
     })
-    return redirect(`/voti`)
+    return redirect(`/vote`)
   } catch (err) {
     throw redirect('/')
   }

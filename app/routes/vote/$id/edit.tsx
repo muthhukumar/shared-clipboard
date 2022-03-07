@@ -25,7 +25,7 @@ import {
   FormErrorMessage,
 } from '@chakra-ui/react'
 import { z } from 'zod'
-import { Voti, User } from '@prisma/client'
+import { Vote, User } from '@prisma/client'
 import { formatFieldErrorsNew } from '~/utils'
 import { authenticator } from '~/utils/auth.server'
 import { prisma } from '~/utils/prisma.server'
@@ -80,7 +80,7 @@ export const action: ActionFunction = async ({ params, request }) => {
   }
 
   try {
-    await prisma.voti.update({
+    await prisma.vote.update({
       where: {
         id,
       },
@@ -90,7 +90,7 @@ export const action: ActionFunction = async ({ params, request }) => {
         userEmail: user.email,
       },
     })
-    return redirect(`/voti`)
+    return redirect(`/vote`)
   } catch (err) {
     return redirect('/')
   }
@@ -101,24 +101,24 @@ export const loader: LoaderFunction = async ({ request, params }) => {
     failureRedirect: '/login',
   })) as User
 
-  const voti = await prisma.voti.findUnique({
+  const vote = await prisma.vote.findUnique({
     where: {
       id: params.id ? +params.id : undefined,
     },
   })
 
-  if (!voti) {
-    throw json({ message: `The voti you're looking for doesn't exists` }, { status: 404 })
+  if (!vote) {
+    throw json({ message: `The vote you're looking for doesn't exists` }, { status: 404 })
   }
 
-  if (voti.userEmail !== user.email) {
+  if (vote.userEmail !== user.email) {
     throw json(
-      { message: `Unauthorized access. You're not allowed to see this voti` },
+      { message: `Unauthorized access. You're not allowed to see this vote` },
       { status: 401 },
     )
   }
 
-  return json(voti)
+  return json(vote)
 }
 
 export default function VotiEdit() {
@@ -134,14 +134,14 @@ export default function VotiEdit() {
 
   const actionData = useActionData<ActionDataType>()
 
-  const voti = useLoaderData<Voti>()
+  const vote = useLoaderData<Vote>()
 
   return (
     <>
       <Modal initialFocusRef={initialRef} isOpen={true} onClose={onClose} isCentered size="3xl">
         <ModalOverlay bg="none" backdropFilter="auto" backdropInvert="80%" backdropBlur="2px" />
         <ModalContent>
-          <ModalHeader>Edit Voti</ModalHeader>
+          <ModalHeader>Edit Vote</ModalHeader>
           <ModalCloseButton />
           <Form method="post">
             <ModalBody pb={6}>
@@ -153,7 +153,7 @@ export default function VotiEdit() {
                   placeholder="Title"
                   type="text"
                   name="title"
-                  defaultValue={voti.title}
+                  defaultValue={vote.title}
                   isInvalid={actionData?.errors.title.isInvalid}
                 />
                 <FormErrorMessage>{actionData?.errors.title.message}</FormErrorMessage>
@@ -165,7 +165,7 @@ export default function VotiEdit() {
                   placeholder="Label"
                   type="text"
                   name="label"
-                  defaultValue={voti.label ?? ''}
+                  defaultValue={vote.label ?? ''}
                   isInvalid={actionData?.errors.label.isInvalid}
                 />
                 <FormErrorMessage>{actionData?.errors.title.message}</FormErrorMessage>

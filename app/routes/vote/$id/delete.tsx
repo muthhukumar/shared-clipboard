@@ -26,21 +26,21 @@ export const action: ActionFunction = async ({ request, params }) => {
 
   const id = params.id ? +params.id : undefined
 
-  const isCurrentUsers = await prisma.voti.findUnique({
+  const isCurrentUsers = await prisma.vote.findUnique({
     where: {
       id,
     },
   })
 
   if (isCurrentUsers && isCurrentUsers.userEmail === user.email) {
-    await prisma.voti.delete({
+    await prisma.vote.delete({
       where: {
         id,
       },
     })
   }
 
-  return redirect('/voti')
+  return redirect('/vote')
 }
 
 export default function Delete() {
@@ -55,9 +55,9 @@ export default function Delete() {
     <Modal isOpen={true} onClose={onClose}>
       <ModalOverlay />
       <ModalContent>
-        <ModalHeader>Delete Voti</ModalHeader>
+        <ModalHeader>Delete Vote</ModalHeader>
         <ModalCloseButton />
-        <ModalBody>Are you sure to delete this Voti?</ModalBody>
+        <ModalBody>Are you sure to delete this Vote?</ModalBody>
 
         <ModalFooter>
           <Form method="delete">

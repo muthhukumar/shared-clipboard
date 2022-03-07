@@ -16,7 +16,7 @@ import {
   MenuList,
   Tag,
 } from '@chakra-ui/react'
-import { User, Voti } from '@prisma/client'
+import { User, Vote } from '@prisma/client'
 import { IoMdAdd } from 'react-icons/io'
 import { RiSearchLine } from 'react-icons/ri'
 import { BsThreeDotsVertical, BsArrowDown, BsArrowUp } from 'react-icons/bs'
@@ -43,7 +43,7 @@ import moment from 'moment'
 
 export const meta: MetaFunction = () => {
   return {
-    title: 'Voti',
+    title: 'Vote',
   }
 }
 
@@ -92,13 +92,13 @@ export const action: ActionFunction = async ({ request }) => {
   }
 
   try {
-    await prisma.voti.create({
+    await prisma.vote.create({
       data: {
         title: votiValidationResult.data.title,
         userEmail: user.email,
       },
     })
-    return redirect(`/voti`)
+    return redirect(`/vote`)
   } catch (err) {
     return redirect('/')
   }
@@ -114,7 +114,7 @@ export const loader: LoaderFunction = async ({ request }) => {
   const query = url.searchParams.get('q') ?? ''
 
   if (query) {
-    const searchMatchResult = await prisma.voti.findMany({
+    const searchMatchResult = await prisma.vote.findMany({
       where: {
         userEmail: user.email,
         title: {
@@ -130,7 +130,7 @@ export const loader: LoaderFunction = async ({ request }) => {
     return json(searchMatchResult)
   }
 
-  const voties = await prisma.voti.findMany({
+  const voties = await prisma.vote.findMany({
     where: {
       userEmail: user.email,
     },
@@ -143,7 +143,7 @@ export const loader: LoaderFunction = async ({ request }) => {
 }
 
 export default function ClipbaordContent() {
-  const voties = useLoaderData<Array<Voti>>()
+  const voties = useLoaderData<Array<Vote>>()
 
   const submit = useSubmit()
 
@@ -174,14 +174,14 @@ export default function ClipbaordContent() {
           <Form
             className="flex items-center justify-between w-full mb-6"
             method="post"
-            action="/voti"
+            action="/vote"
             key={transition.location?.key}
           >
             <FormControl isInvalid={actionData?.errors.title.isInvalid}>
               <Input
                 type="text"
                 name="title"
-                placeholder="Enter your Voti..."
+                placeholder="Enter your Habit..."
                 isInvalid={actionData?.errors.title.isInvalid}
               />
               <FormErrorMessage>{actionData?.errors.title.message}</FormErrorMessage>
@@ -191,31 +191,31 @@ export default function ClipbaordContent() {
             </Button>
           </Form>
           <VStack alignItems={'flex-start'} divider={<StackDivider borderColor={borderColor} />}>
-            {voties.map((voti) => {
+            {voties.map((vote) => {
               return (
                 <div
-                  key={voti.id}
+                  key={vote.id}
                   className="flex flex-col items-start w-full py-2 rounded-md gap-y-1"
                 >
-                  <p className="text-lg">{voti.title}</p>
+                  <p className="text-lg">{vote.title}</p>
                   <div className="flex items-center justify-between w-full">
                     <HStack>
                       <Tag fontSize={'x-small'} colorScheme={'purple'}>
-                        {voti.votes} votes
+                        {vote.votes} votes
                       </Tag>
-                      {voti.label ? (
+                      {vote.label ? (
                         <Tag fontSize={'x-small'} colorScheme="whatsapp">
-                          {voti.label}
+                          {vote.label}
                         </Tag>
                       ) : null}
                     </HStack>
                     <HStack pl="2" spacing={2}>
-                      {voti.updatedAt ? (
+                      {vote.updatedAt ? (
                         <Tag ml="auto" fontSize={'x-small'} colorScheme={'linkedin'}>
-                          {moment(voti.updatedAt).calendar()}
+                          {moment(vote.updatedAt).calendar()}
                         </Tag>
                       ) : null}
-                      <Form method="post" action={`/voti/${voti.id}/upvote`}>
+                      <Form method="post" action={`/vote/${vote.id}/upvote`}>
                         <IconButton
                           variant={'outline'}
                           aria-label="Upvote"
@@ -224,7 +224,7 @@ export default function ClipbaordContent() {
                           size="sm"
                         />
                       </Form>
-                      <Form method="post" action={`/voti/${voti.id}/downvote`}>
+                      <Form method="post" action={`/vote/${vote.id}/downvote`}>
                         <IconButton
                           variant={'outline'}
                           type="submit"
@@ -239,10 +239,10 @@ export default function ClipbaordContent() {
                           <BsThreeDotsVertical />
                         </MenuButton>
                         <MenuList>
-                          <MenuItem onClick={() => navigation(`/voti/${voti.id}/edit`)}>
+                          <MenuItem onClick={() => navigation(`/vote/${vote.id}/edit`)}>
                             Edit
                           </MenuItem>
-                          <MenuItem onClick={() => navigation(`/voti/${voti.id}/delete`)}>
+                          <MenuItem onClick={() => navigation(`/vote/${vote.id}/delete`)}>
                             Delete
                           </MenuItem>
                         </MenuList>

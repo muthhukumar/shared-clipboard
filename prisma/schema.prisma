@@ -28,7 +28,7 @@ model User {
   clipboardContents ClipboardContent[]
   notes             Note[]
   tickLists         TickList[]
-  voties            Voti[]
+  voties            Vote[]
   birthdays         Birthday[]
   labels            Label[]
   quickContent      String?
@@ -44,7 +44,7 @@ model Note {
   createdAt DateTime @default(now())
 }
 
-model Voti {
+model Vote {
   title     String
   id        Int       @id @default(autoincrement())
   votes     Int       @default(0)
