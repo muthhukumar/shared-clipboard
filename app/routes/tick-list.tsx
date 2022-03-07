@@ -6,8 +6,12 @@ import {
   VStack,
   StackDivider,
   useColorModeValue,
+  HStack,
+  Select,
+  Stack,
 } from '@chakra-ui/react'
 import { Label, LabelsOnTickList, TickList, User } from '@prisma/client'
+import moment from 'moment'
 import { IoMdAdd } from 'react-icons/io'
 import { RiSearchLine } from 'react-icons/ri'
 import {
@@ -24,6 +28,19 @@ import { Wrapper, NoItems, TickItem } from '~/components'
 import { authenticator } from '~/utils/auth.server'
 import { prisma } from '~/utils/prisma.server'
 
+const enum FilterByOptions {
+  SHOW_ALL = 'showall',
+  TODAY = 'today',
+  UPCOMING = 'upcoming',
+  OVERDUE = 'overdue',
+}
+
+// const enum SortByOptions {
+//   PRIORITY = 'priority',
+//   LAST_UPDATED = 'lastupdated',
+//   TITLE = 'title',
+// }
+
 export const meta: MetaFunction = () => {
   return {
     title: 'Tick list',
@@ -38,6 +55,35 @@ export const loader: LoaderFunction = async ({ request }) => {
   const url = new URL(request.url)
 
   const query = url.searchParams.get('q') ?? ''
+  const filterBy = url.searchParams.get('filterBy') ?? FilterByOptions.SHOW_ALL
+  const sortBy = url.searchParams.get('sortBy') ?? ''
+
+  // const today = moment().format('YYYY-MM-DD')
+  const dueDate = moment().format('YYYY-MM-DD')
+
+  let addiontalQuery = {}
+
+  if (filterBy === FilterByOptions.UPCOMING) {
+    addiontalQuery = {
+      dueDate: {
+        gt: dueDate,
+      },
+    }
+  } else if (filterBy === FilterByOptions.OVERDUE) {
+    addiontalQuery = {
+      dueDate: {
+        lt: dueDate,
+      },
+    }
+  } else if (filterBy === FilterByOptions.TODAY) {
+    addiontalQuery = {
+      dueDate: {
+        equals: dueDate,
+      },
+    }
+  } else if (filterBy === FilterByOptions.SHOW_ALL) {
+    addiontalQuery = {}
+  }
 
   if (query) {
     const searchMatchResult = await prisma.tickList.findMany({
@@ -47,6 +93,10 @@ export const loader: LoaderFunction = async ({ request }) => {
           contains: query,
           mode: 'insensitive',
         },
+        // dueDate : {
+        //   eq
+        // },
+        ...addiontalQuery,
       },
       include: {
         labels: {
@@ -60,12 +110,13 @@ export const loader: LoaderFunction = async ({ request }) => {
       },
     })
 
-    return json(searchMatchResult)
+    return json({ tickList: searchMatchResult, filterBy, sortBy })
   }
 
   const tickList = await prisma.tickList.findMany({
     where: {
       userEmail: user.email,
+      ...addiontalQuery,
     },
     include: {
       labels: {
@@ -79,19 +130,21 @@ export const loader: LoaderFunction = async ({ request }) => {
     },
   })
 
-  return json(tickList)
+  return json({ tickList, filterBy, sortBy })
 }
 
 export default function TickList() {
   const navigation = useNavigate()
 
-  const tickLists = useLoaderData<
-    (TickList & {
+  const { tickList, filterBy, sortBy } = useLoaderData<{
+    tickList: (TickList & {
       labels: (LabelsOnTickList & {
         Label: Label | null
       })[]
     })[]
-  >()
+    sortBy: string
+    filterBy: FilterByOptions
+  }>()
 
   const submit = useSubmit()
 
@@ -105,22 +158,56 @@ export default function TickList() {
           method="get"
           onChange={(target) => submit(target.currentTarget)}
         >
-          <InputGroup size="md" width="81%">
-            {/* eslint-disable-next-line react/no-children-prop*/}
-            <InputLeftElement pointerEvents="none" children={<RiSearchLine color="gray.300" />} />
-            <Input pr="4.5rem" type="text" name="q" placeholder="Search..." />
-          </InputGroup>
-          <Button
-            leftIcon={<IoMdAdd />}
-            variant="solid"
-            w="17%"
-            size="md"
-            onClick={() => navigation('/tick-list/new')}
-          >
-            Add
-          </Button>
+          <VStack w="full">
+            <Stack
+              direction={['column', 'row', 'row', 'row']}
+              justifyContent={['flex-start']}
+              className="w-full"
+            >
+              <InputGroup size="md">
+                <InputLeftElement
+                  pointerEvents="none"
+                  //  eslint-disable-next-line react/no-children-prop
+                  children={<RiSearchLine color="gray.300" />}
+                />
+                <Input pr="4.5rem" type="text" name="q" placeholder="Search..." />
+              </InputGroup>
+
+              <div className="w-full">
+                <HStack flex={'2'} justifyContent="flex-start" w="100%">
+                  <Select name="filterBy" defaultValue={filterBy ?? FilterByOptions.SHOW_ALL}>
+                    <option disabled value={FilterByOptions.SHOW_ALL}>
+                      Filter by
+                    </option>
+                    <option value={FilterByOptions.SHOW_ALL}>Show All</option>
+                    <option value={FilterByOptions.TODAY}>Today</option>
+                    <option value={FilterByOptions.UPCOMING}>Upcoming</option>
+                    <option value={FilterByOptions.OVERDUE}>Overdue</option>
+                  </Select>
+                  <Select placeholder="Sort by" defaultValue={sortBy ?? ''}>
+                    <option value="option1">Option 1</option>
+                    <option value="option2">Option 2</option>
+                    <option value="option3">Option 3</option>
+                  </Select>
+                </HStack>
+              </div>
+            </Stack>
+            <div className="flex items-center justify-end w-full">
+              <Button
+                leftIcon={<IoMdAdd />}
+                variant="solid"
+                ml={'auto'}
+                w={['full', 'initial', 'initial', 'initial']}
+                size="md"
+                onClick={() => navigation('/tick-list/new')}
+              >
+                Add
+              </Button>
+            </div>
+          </VStack>
         </Form>
-        {tickLists.length === 0 && (
+
+        {tickList.length === 0 && (
           <div className="mt-8">
             <NoItems title="No tick list items found!!!" />
           </div>
@@ -130,8 +217,8 @@ export default function TickList() {
           mt="8"
           divider={<StackDivider borderColor={borderColor} />}
         >
-          {tickLists.length > 0 &&
-            tickLists.map((tickList) => {
+          {tickList.length > 0 &&
+            tickList.map((tickList) => {
               return <TickItem {...tickList} key={tickList.id} />
             })}
         </VStack>
