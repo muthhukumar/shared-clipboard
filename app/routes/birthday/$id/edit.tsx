@@ -123,7 +123,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
   return json(birthday)
 }
 
-export default function VotiEdit() {
+export default function VoteEdit() {
   const navigation = useNavigate()
 
   const onClose = () => navigation(-1)

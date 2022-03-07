@@ -99,7 +99,7 @@ export const loader: LoaderFunction = async ({ request }) => {
   })
 }
 
-export default function VotiEdit() {
+export default function VoteEdit() {
   const navigation = useNavigate()
 
   const onClose = () => navigation(-1)

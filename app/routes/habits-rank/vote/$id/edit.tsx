@@ -30,15 +30,15 @@ import { formatFieldErrorsNew } from '~/utils'
 import { authenticator } from '~/utils/auth.server'
 import { prisma } from '~/utils/prisma.server'
 
-const VotiSchema = z.object({
+const VoteSchema = z.object({
   title: z.string().min(5),
   label: z.string().optional(),
 })
 
 export type ActionDataType = {
-  values: z.infer<typeof VotiSchema> | Record<string, unknown>
+  values: z.infer<typeof VoteSchema> | Record<string, unknown>
   errors: Record<
-    keyof z.infer<typeof VotiSchema>,
+    keyof z.infer<typeof VoteSchema>,
     {
       message: string
       isInvalid: boolean
@@ -63,17 +63,17 @@ export const action: ActionFunction = async ({ params, request }) => {
     },
   }
 
-  const votiContentData = {
+  const VoteContentData = {
     title: formData.get('title'),
     label: formData.get('label') ? formData.get('label') : '',
   }
 
-  const votiValidationResult = VotiSchema.safeParse(votiContentData)
+  const VoteValidationResult = VoteSchema.safeParse(VoteContentData)
 
-  if (!votiValidationResult.success) {
-    actionData.values = { ...votiContentData }
+  if (!VoteValidationResult.success) {
+    actionData.values = { ...VoteContentData }
     actionData.errors = {
-      ...formatFieldErrorsNew(votiContentData, votiValidationResult.error.formErrors.fieldErrors),
+      ...formatFieldErrorsNew(VoteContentData, VoteValidationResult.error.formErrors.fieldErrors),
     }
 
     return actionData
@@ -85,12 +85,12 @@ export const action: ActionFunction = async ({ params, request }) => {
         id,
       },
       data: {
-        title: votiValidationResult.data.title,
-        label: votiValidationResult.data.label,
+        title: VoteValidationResult.data.title,
+        label: VoteValidationResult.data.label,
         userEmail: user.email,
       },
     })
-    return redirect(`/vote`)
+    return redirect(`/habits-rank`)
   } catch (err) {
     return redirect('/')
   }
@@ -121,7 +121,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
   return json(vote)
 }
 
-export default function VotiEdit() {
+export default function VoteEdit() {
   const navigation = useNavigate()
 
   const onClose = () => navigation(-1)

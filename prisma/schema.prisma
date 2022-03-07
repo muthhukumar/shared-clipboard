@@ -28,7 +28,7 @@ model User {
   clipboardContents ClipboardContent[]
   notes             Note[]
   tickLists         TickList[]
-  voties            Vote[]
+  votes             Vote[]
   birthdays         Birthday[]
   labels            Label[]
   quickContent      String?

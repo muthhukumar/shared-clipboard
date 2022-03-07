@@ -47,14 +47,14 @@ export const meta: MetaFunction = () => {
   }
 }
 
-const VotiSchema = z.object({
+const VoteSchema = z.object({
   title: z.string().min(5),
 })
 
 export type ActionDataType = {
-  values: z.infer<typeof VotiSchema> | Record<string, unknown>
+  values: z.infer<typeof VoteSchema> | Record<string, unknown>
   errors: Record<
-    keyof z.infer<typeof VotiSchema>,
+    keyof z.infer<typeof VoteSchema>,
     {
       message: string
       isInvalid: boolean
@@ -76,16 +76,16 @@ export const action: ActionFunction = async ({ request }) => {
     },
   }
 
-  const votiContentData = {
+  const VoteContentData = {
     title: formData.get('title'),
   }
 
-  const votiValidationResult = VotiSchema.safeParse(votiContentData)
+  const VoteValidationResult = VoteSchema.safeParse(VoteContentData)
 
-  if (!votiValidationResult.success) {
-    actionData.values = { ...votiContentData }
+  if (!VoteValidationResult.success) {
+    actionData.values = { ...VoteContentData }
     actionData.errors = {
-      ...formatFieldErrorsNew(votiContentData, votiValidationResult.error.formErrors.fieldErrors),
+      ...formatFieldErrorsNew(VoteContentData, VoteValidationResult.error.formErrors.fieldErrors),
     }
 
     return actionData
@@ -94,11 +94,11 @@ export const action: ActionFunction = async ({ request }) => {
   try {
     await prisma.vote.create({
       data: {
-        title: votiValidationResult.data.title,
+        title: VoteValidationResult.data.title,
         userEmail: user.email,
       },
     })
-    return redirect(`/vote`)
+    return redirect(`/habits-rank`)
   } catch (err) {
     return redirect('/')
   }
@@ -130,7 +130,7 @@ export const loader: LoaderFunction = async ({ request }) => {
     return json(searchMatchResult)
   }
 
-  const voties = await prisma.vote.findMany({
+  const votes = await prisma.vote.findMany({
     where: {
       userEmail: user.email,
     },
@@ -139,11 +139,11 @@ export const loader: LoaderFunction = async ({ request }) => {
     },
   })
 
-  return json(voties)
+  return json(votes)
 }
 
 export default function ClipbaordContent() {
-  const voties = useLoaderData<Array<Vote>>()
+  const votes = useLoaderData<Array<Vote>>()
 
   const submit = useSubmit()
 
@@ -174,7 +174,7 @@ export default function ClipbaordContent() {
           <Form
             className="flex items-center justify-between w-full mb-6"
             method="post"
-            action="/vote"
+            action="/habits-rank"
             key={transition.location?.key}
           >
             <FormControl isInvalid={actionData?.errors.title.isInvalid}>
@@ -191,7 +191,7 @@ export default function ClipbaordContent() {
             </Button>
           </Form>
           <VStack alignItems={'flex-start'} divider={<StackDivider borderColor={borderColor} />}>
-            {voties.map((vote) => {
+            {votes.map((vote) => {
               return (
                 <div
                   key={vote.id}
@@ -215,7 +215,7 @@ export default function ClipbaordContent() {
                           {moment(vote.updatedAt).calendar()}
                         </Tag>
                       ) : null}
-                      <Form method="post" action={`/vote/${vote.id}/upvote`}>
+                      <Form method="post" action={`/habits-rank/vote/${vote.id}/upvote`}>
                         <IconButton
                           variant={'outline'}
                           aria-label="Upvote"
@@ -224,7 +224,7 @@ export default function ClipbaordContent() {
                           size="sm"
                         />
                       </Form>
-                      <Form method="post" action={`/vote/${vote.id}/downvote`}>
+                      <Form method="post" action={`/habits-rank/vote/${vote.id}/downvote`}>
                         <IconButton
                           variant={'outline'}
                           type="submit"
@@ -239,10 +239,12 @@ export default function ClipbaordContent() {
                           <BsThreeDotsVertical />
                         </MenuButton>
                         <MenuList>
-                          <MenuItem onClick={() => navigation(`/vote/${vote.id}/edit`)}>
+                          <MenuItem onClick={() => navigation(`/habits-rank/vote/${vote.id}/edit`)}>
                             Edit
                           </MenuItem>
-                          <MenuItem onClick={() => navigation(`/vote/${vote.id}/delete`)}>
+                          <MenuItem
+                            onClick={() => navigation(`/habits-rank/vote/${vote.id}/delete`)}
+                          >
                             Delete
                           </MenuItem>
                         </MenuList>
@@ -252,7 +254,7 @@ export default function ClipbaordContent() {
                 </div>
               )
             })}
-            {voties.length === 0 && <NoItems title="No Voties found. Please add some!!!" />}
+            {votes.length === 0 && <NoItems title="No Votees found. Please add some!!!" />}
           </VStack>
         </div>
       </Wrapper>

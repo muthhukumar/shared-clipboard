@@ -40,7 +40,7 @@ export const action: ActionFunction = async ({ request, params }) => {
     })
   }
 
-  return redirect('/vote')
+  return redirect('/habits-rank')
 }
 
 export default function Delete() {

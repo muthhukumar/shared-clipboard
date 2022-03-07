@@ -47,7 +47,7 @@ const links: Array<{ title: string; to: string }> = [
   },
   {
     title: 'HabitsRank',
-    to: '/vote',
+    to: '/habits-rank',
   },
   {
     title: 'Birthday',

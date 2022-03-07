@@ -17,7 +17,7 @@ export const action: ActionFunction = async ({ params, request }) => {
   })
 
   if (!isCurrentUsers || isCurrentUsers.userEmail !== user.email) {
-    return redirect('/vote')
+    return redirect('/habits-rank')
   }
 
   try {
@@ -31,7 +31,7 @@ export const action: ActionFunction = async ({ params, request }) => {
         },
       },
     })
-    return redirect(`/vote`)
+    return redirect(`/habits-rank`)
   } catch (err) {
     throw redirect('/')
   }
