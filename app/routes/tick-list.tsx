@@ -5,15 +5,9 @@ import {
   Button,
   VStack,
   StackDivider,
-  Tab,
-  TabList,
-  TabPanel,
-  TabPanels,
-  Tabs,
   useColorModeValue,
 } from '@chakra-ui/react'
 import { TickList, User } from '@prisma/client'
-import moment from 'moment'
 import { IoMdAdd } from 'react-icons/io'
 import { RiSearchLine } from 'react-icons/ri'
 import {
@@ -106,74 +100,26 @@ export default function TickList() {
             Add
           </Button>
         </Form>
-
         {tickLists.length === 0 && (
           <div className="mt-8">
             <NoItems title="No tick list items found!!!" />
           </div>
         )}
+        <VStack
+          alignItems={'flex-start'}
+          mt="8"
+          divider={<StackDivider borderColor={borderColor} />}
+        >
+          {tickLists.length > 0 &&
+            tickLists.map((tickList) => {
+              // const today = moment().format('YYYY-MM-DD')
+              // const dueDate = moment(tickList.dueDate).format('YYYY-MM-DD')
 
-        {tickLists.length > 0 && (
-          <Tabs mt="8">
-            <TabList>
-              <Tab>Today</Tab>
-              <Tab>Upcoming</Tab>
-              <Tab>Overdue</Tab>
-            </TabList>
-
-            <TabPanels>
-              <TabPanel pt="10">
-                <VStack
-                  alignItems={'flex-start'}
-                  divider={<StackDivider borderColor={borderColor} />}
-                  spacing={4}
-                >
-                  {tickLists.map((tickList) => {
-                    const today = moment().format('YYYY-MM-DD')
-                    const dueDate = moment(tickList.dueDate).format('YYYY-MM-DD')
-
-                    if (moment(today).isSame(dueDate)) {
-                      return <TickItem {...tickList} key={tickList.id} />
-                    }
-                  })}
-                </VStack>
-              </TabPanel>
-              <TabPanel pt="10">
-                <VStack
-                  alignItems={'flex-start'}
-                  divider={<StackDivider borderColor={borderColor} />}
-                  spacing={4}
-                >
-                  {tickLists.map((tickList) => {
-                    const today = moment().format('YYYY-MM-DD')
-                    const dueDate = moment(tickList.dueDate).format('YYYY-MM-DD')
-
-                    if (moment(today).isBefore(dueDate)) {
-                      return <TickItem {...tickList} key={tickList.id} />
-                    }
-                  })}
-                </VStack>
-              </TabPanel>
-
-              <TabPanel pt="10">
-                <VStack
-                  alignItems={'flex-start'}
-                  divider={<StackDivider borderColor={borderColor} />}
-                  spacing={4}
-                >
-                  {tickLists.map((tickList) => {
-                    const today = moment().format('YYYY-MM-DD')
-                    const dueDate = moment(tickList.dueDate).format('YYYY-MM-DD')
-
-                    if (moment(today).isAfter(dueDate) && !tickList.completed) {
-                      return <TickItem {...tickList} key={tickList.id} />
-                    }
-                  })}
-                </VStack>
-              </TabPanel>
-            </TabPanels>
-          </Tabs>
-        )}
+              // if (moment(today).isSame(dueDate)) {
+              return <TickItem {...tickList} key={tickList.id} />
+              // }
+            })}
+        </VStack>
       </Wrapper>
       <Outlet />
     </div>

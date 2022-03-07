@@ -30,6 +30,7 @@ model User {
   tickLists         TickList[]
   voties            Voti[]
   birthdays         Birthday[]
+  labels            Label[]
   quickContent      String?
   quickRedirect     String?
 }
@@ -53,6 +54,8 @@ model TickList {
   userEmail   String
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+  priority    Priority @default(NORMAL)
+  labels      Label[]
 }
 
 model Voti {
@@ -72,4 +75,26 @@ model Birthday {
   date      String
   User      User?   @relation(fields: [userEmail], references: [email])
   userEmail String?
+}
+
+model Label {
+  id         Int       @id @default(autoincrement())
+  label      String
+  User       User?     @relation(fields: [userEmail], references: [email])
+  userEmail  String?
+  tickListId String?
+  TickList   TickList? @relation(fields: [tickListId], references: [id])
+}
+
+enum Priority {
+  HIGH
+  LOW
+  MEDIUM
+  NORMAL
+}
+
+enum Color {
+  ED0000
+  F4A522
+  F81CE5
 }
