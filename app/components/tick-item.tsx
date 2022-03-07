@@ -85,11 +85,12 @@ export default function TickItem(
               type="submit"
               aria-label="Toogle task completion"
               isLoading={isSubmitting}
+              colorScheme={props.completed ? 'green' : 'gray'}
               icon={
                 props.completed ? (
-                  <HiCheckCircle size={20} />
+                  <HiCheckCircle size={24} />
                 ) : (
-                  <RiCheckboxBlankCircleLine size={20} />
+                  <RiCheckboxBlankCircleLine size={24} />
                 )
               }
               size="sm"
