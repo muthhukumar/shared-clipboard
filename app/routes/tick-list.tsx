@@ -112,12 +112,7 @@ export default function TickList() {
         >
           {tickLists.length > 0 &&
             tickLists.map((tickList) => {
-              // const today = moment().format('YYYY-MM-DD')
-              // const dueDate = moment(tickList.dueDate).format('YYYY-MM-DD')
-
-              // if (moment(today).isSame(dueDate)) {
               return <TickItem {...tickList} key={tickList.id} />
-              // }
             })}
         </VStack>
       </Wrapper>

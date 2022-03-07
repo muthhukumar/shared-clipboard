@@ -1,13 +1,24 @@
 import { HStack, IconButton, Menu, MenuButton, MenuItem, MenuList, Tag } from '@chakra-ui/react'
 import { TickList } from '@prisma/client'
 import moment from 'moment'
-import { Form, useNavigate } from 'remix'
+import { Form, useNavigate, useTransition } from 'remix'
 import { BsThreeDotsVertical } from 'react-icons/bs'
 import { RiCheckboxBlankCircleLine } from 'react-icons/ri'
 import { HiCheckCircle } from 'react-icons/hi'
 
 export default function TickItem(props: TickList) {
   const navigation = useNavigate()
+  const today = moment().format('YYYY-MM-DD')
+  const dueDate = moment(props.dueDate).format('YYYY-MM-DD')
+
+  const isOverDue = moment(today).isAfter(dueDate)
+
+  const transition = useTransition()
+
+  const isSubmitting =
+    transition.location?.pathname === `/tick-list/${props.id}/toggle` &&
+    transition.state === 'submitting' &&
+    transition.type === 'actionSubmission'
 
   return (
     <div className="flex flex-col items-start w-full py-2 rounded-md gap-y-1">
@@ -17,6 +28,11 @@ export default function TickItem(props: TickList) {
           <Tag fontSize={'x-small'} colorScheme={'purple'}>
             {props.priority} PRIORITY
           </Tag>
+          {isOverDue && !props.completed && (
+            <Tag fontSize={'x-small'} colorScheme={'red'}>
+              Overdue
+            </Tag>
+          )}
           {/* {props.labels ? (
               <Tag fontSize={'x-small'} colorScheme="whatsapp">
                 {props.labels}
@@ -34,6 +50,7 @@ export default function TickItem(props: TickList) {
               variant={'ghost'}
               type="submit"
               aria-label="Toogle task completion"
+              isLoading={isSubmitting}
               icon={
                 props.completed ? (
                   <HiCheckCircle size={20} />
