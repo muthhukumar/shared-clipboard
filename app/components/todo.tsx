@@ -5,6 +5,7 @@ import { useFetcher, useNavigate } from 'remix'
 import { BsThreeDotsVertical } from 'react-icons/bs'
 import { RiCheckboxBlankCircleLine } from 'react-icons/ri'
 import { HiCheckCircle } from 'react-icons/hi'
+import { capitalCase } from 'change-case'
 
 function getPriorityColor(priority: Priority) {
   const priorityColor = {
@@ -53,7 +54,7 @@ export default function Todo(
       <div className="flex items-center justify-between w-full">
         <HStack>
           <Tag fontSize={'xx-small'} colorScheme={getPriorityColor(props.priority)}>
-            {props.priority} PRIORITY
+            {capitalCase(`${props.priority} PRIORITY`)}
           </Tag>
           {(isOverDue || isUpcoming) && !props.completed && (
             <Tag fontSize={'xx-small'} colorScheme={isUpcoming ? 'green' : 'red'}>
