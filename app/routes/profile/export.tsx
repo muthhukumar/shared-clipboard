@@ -13,7 +13,6 @@ export const meta: MetaFunction = () => {
 
 type LoaderData = {
   clipboards: number
-  notes: number
   votes: number
   birthdays: number
   todos: number
@@ -22,7 +21,6 @@ type LoaderData = {
 
 export const enum Item {
   Clipboards = 'clipboards',
-  Notes = 'notes',
   Votes = 'votes',
   Birthdays = 'birthdays',
   Todos = 'todos',
@@ -36,10 +34,6 @@ export const loader: LoaderFunction = async ({ request }) => {
   const user = (await authenticator.isAuthenticated(request, { failureRedirect: '/login' })) as User
 
   const clipboards = await prisma.clipboardContent.count({
-    where: { userEmail: user.email },
-  })
-
-  const notes = await prisma.note.count({
     where: { userEmail: user.email },
   })
 
@@ -60,7 +54,6 @@ export const loader: LoaderFunction = async ({ request }) => {
   const data = {
     user: userData,
     clipboards,
-    notes,
     todos,
     votes,
     birthdays,
@@ -105,11 +98,6 @@ export default function General() {
       title: 'Clipboard',
       content: `${data.clipboards} clipboard items`,
       pathname: Item.Clipboards,
-    },
-    {
-      title: 'Notes',
-      content: `${data.notes} notes items`,
-      pathname: Item.Notes,
     },
     {
       title: 'Todos',

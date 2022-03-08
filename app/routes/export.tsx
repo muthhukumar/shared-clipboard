@@ -19,7 +19,6 @@ const getData = async (name: Item | '', user: User) => {
     [Item.Clipboards]: await prisma.clipboardContent.findMany({ where: { userEmail: user.email } }),
     [Item.QuickContent]: user.quickContent,
     [Item.QuickRedirect]: user.quickRedirect,
-    [Item.Notes]: await prisma.note.findMany({ where: { userEmail: user.email } }),
     [Item.Todos]: await prisma.todo.findMany({ where: { userEmail: user.email } }),
     [Item.Votes]: await prisma.vote.findMany({ where: { userEmail: user.email } }),
     [Item.Birthdays]: await prisma.birthday.findMany({ where: { userEmail: user.email } }),
