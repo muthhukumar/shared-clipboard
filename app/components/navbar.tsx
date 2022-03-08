@@ -42,8 +42,8 @@ const links: Array<{ title: string; to: string }> = [
     to: '/notes',
   },
   {
-    title: 'TickList',
-    to: '/tick-list',
+    title: 'Todo',
+    to: '/todo',
   },
   {
     title: 'HabitsRank',

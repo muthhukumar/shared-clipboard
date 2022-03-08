@@ -18,7 +18,7 @@ import {
   MenuItem,
   MenuList,
 } from '@chakra-ui/react'
-import { Label, LabelsOnTickList, TickList, User } from '@prisma/client'
+import { Label, LabelsOnTodo, Todo, User } from '@prisma/client'
 import moment from 'moment'
 import { IoMdAdd } from 'react-icons/io'
 import { RiSearchLine } from 'react-icons/ri'
@@ -32,7 +32,7 @@ import {
   useNavigate,
   useSubmit,
 } from 'remix'
-import { Wrapper, NoItems, TickItem } from '~/components'
+import { Wrapper, NoItems, Todo } from '~/components'
 import { authenticator } from '~/utils/auth.server'
 import { prisma } from '~/utils/prisma.server'
 import { IoIosOptions } from 'react-icons/io'
@@ -53,8 +53,8 @@ const enum SortByOptions {
 }
 
 type LoaderType = {
-  tickList: (TickList & {
-    labels: (LabelsOnTickList & {
+  todo: (Todo & {
+    labels: (LabelsOnTodo & {
       Label: Label | null
     })[]
   })[]
@@ -65,7 +65,7 @@ type LoaderType = {
 
 export const meta: MetaFunction = () => {
   return {
-    title: 'Tick list',
+    title: 'Todo',
   }
 }
 
@@ -139,7 +139,7 @@ export const loader: LoaderFunction = async ({ request }) => {
   }
 
   if (query) {
-    const searchMatchResult = await prisma.tickList.findMany({
+    const searchMatchResult = await prisma.todo.findMany({
       where: {
         userEmail: user.email,
         title: {
@@ -161,10 +161,10 @@ export const loader: LoaderFunction = async ({ request }) => {
       },
     })
 
-    return json({ tickList: searchMatchResult, filterBy, sortBy })
+    return json({ todo: searchMatchResult, filterBy, sortBy })
   }
 
-  const tickList = await prisma.tickList.findMany({
+  const todo = await prisma.todo.findMany({
     where: {
       userEmail: user.email,
       ...addiontalQuery,
@@ -181,13 +181,13 @@ export const loader: LoaderFunction = async ({ request }) => {
     },
   })
 
-  return json({ tickList, filterBy, sortBy, show })
+  return json({ todo, filterBy, sortBy, show })
 }
 
-export default function TickList() {
+export default function Todo() {
   const navigation = useNavigate()
 
-  const { tickList, filterBy, sortBy, show } = useLoaderData<LoaderType>()
+  const { todo, filterBy, sortBy, show } = useLoaderData<LoaderType>()
 
   const submit = useSubmit()
 
@@ -270,7 +270,7 @@ export default function TickList() {
                 colorScheme={'twitter'}
                 w={['full', 'full', 'initial', 'initial']}
                 size="md"
-                onClick={() => navigation('/tick-list/new')}
+                onClick={() => navigation('/todo/new')}
               >
                 Add
               </Button>
@@ -288,9 +288,9 @@ export default function TickList() {
           </VStack>
         </Form>
 
-        {tickList.length === 0 && (
+        {todo.length === 0 && (
           <div className="mt-8">
-            <NoItems title="No tick list items found!!!" />
+            <NoItems title="No todo list items found!!!" />
           </div>
         )}
         <VStack
@@ -298,9 +298,9 @@ export default function TickList() {
           mt="8"
           divider={<StackDivider borderColor={borderColor} />}
         >
-          {tickList.length > 0 &&
-            tickList.map((tickList) => {
-              return <TickItem {...tickList} key={tickList.id} />
+          {todo.length > 0 &&
+            todo.map((todo) => {
+              return <Todo {...todo} key={todo.id} />
             })}
         </VStack>
       </Wrapper>

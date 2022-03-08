@@ -28,25 +28,25 @@ import {
   Select as CSelect,
 } from '@chakra-ui/react'
 import { z } from 'zod'
-import { Label, TickList, User } from '@prisma/client'
+import { Priority, Todo, User } from '@prisma/client'
 import { formatFieldErrorsNew } from '~/utils'
 import { authenticator } from '~/utils/auth.server'
 import { prisma } from '~/utils/prisma.server'
 import moment from 'moment'
-import Select from 'react-select'
+import { composePriority } from '../new'
 
-const TickListSchema = z.object({
+const TodoSchema = z.object({
   title: z.string().min(5).max(500),
   description: z.string().max(150).optional(),
   completed: z.boolean().optional(),
   dueDate: z.date().optional(),
-  labels: z.array(z.number()).optional(),
+  priority: z.nativeEnum(Priority).optional(),
 })
 
 type ActionDataType = {
-  values: z.infer<typeof TickListSchema> | Record<string, unknown>
+  values: z.infer<typeof TodoSchema> | Record<string, unknown>
   errors: Record<
-    keyof z.infer<typeof TickListSchema>,
+    keyof z.infer<typeof TodoSchema>,
     {
       message: string
       isInvalid: boolean
@@ -56,16 +56,8 @@ type ActionDataType = {
 
 export const meta: MetaFunction = () => {
   return {
-    title: 'Tick List | Edit',
+    title: 'Todo | Edit',
   }
-}
-
-const composeLabels = (labels: unknown) => {
-  if (!Array.isArray(labels)) {
-    return []
-  }
-
-  return labels.filter((label) => label).map((label) => +label)
 }
 
 export const action: ActionFunction = async ({ request, params }) => {
@@ -82,24 +74,24 @@ export const action: ActionFunction = async ({ request, params }) => {
       description: { isInvalid: true, message: '' },
       completed: { isInvalid: true, message: '' },
       dueDate: { isInvalid: true, message: '' },
-      labels: { isInvalid: true, message: '' },
+      priority: { isInvalid: true, message: '' },
     },
   }
 
-  const tickListData: Partial<z.infer<typeof TickListSchema>> = {
+  const todoData: Partial<z.infer<typeof TodoSchema>> = {
     title: String(formData.get('title')),
     description: String(formData.get('description')),
     completed: formData.get('completed') === 'true' ? true : false,
     dueDate: formData.get('dueDate') ? new Date(String(formData.get('dueDate'))) : undefined,
-    labels: composeLabels(formData.getAll('labels')),
+    priority: composePriority(String(formData.get('priority')) as Priority),
   }
 
-  const todoValidationResult = TickListSchema.safeParse(tickListData)
+  const todoValidationResult = TodoSchema.safeParse(todoData)
 
   if (!todoValidationResult.success) {
-    actionData.values = { ...tickListData }
+    actionData.values = { ...todoData }
     actionData.errors = {
-      ...formatFieldErrorsNew(tickListData, todoValidationResult.error.formErrors.fieldErrors),
+      ...formatFieldErrorsNew(todoData, todoValidationResult.error.formErrors.fieldErrors),
     }
 
     return actionData
@@ -112,25 +104,18 @@ export const action: ActionFunction = async ({ request, params }) => {
     dueDate: todoValidationResult.data.dueDate
       ? moment(todoValidationResult.data.dueDate.toLocaleDateString()).format('YYYY-MM-DD')
       : moment().format('YYYY-MM-DD'),
+    priority: todoValidationResult.data.priority,
   }
 
   try {
-    await prisma.tickList.update({
+    await prisma.todo.update({
       where: {
         id: String(params.id),
       },
-      data: {
-        ...payload,
-        userEmail: user.email,
-        labels: {
-          createMany: {
-            data: todoValidationResult.data.labels?.map((label) => ({ labelId: label })) ?? [],
-          },
-        },
-      },
+      data: { ...payload, userEmail: user.email },
     })
 
-    return redirect(`/tick-list`)
+    return redirect(`/todo`)
   } catch {
     throw redirect('/')
   }
@@ -141,33 +126,27 @@ export const loader: LoaderFunction = async ({ request, params }) => {
     failureRedirect: '/login',
   })) as User
 
-  const tickList = await prisma.tickList.findUnique({
+  const todo = await prisma.todo.findUnique({
     where: {
       id: String(params.id),
     },
   })
 
-  const labels = await prisma.label.findMany({
-    where: {
-      userEmail: user.email,
-    },
-  })
-
-  if (!tickList) {
-    throw json({ message: `The tickList you're looking for doesn't exists` }, { status: 404 })
+  if (!todo) {
+    throw json({ message: `The todo you're looking for doesn't exists` }, { status: 404 })
   }
 
-  if (tickList.userEmail !== user.email) {
+  if (todo.userEmail !== user.email) {
     throw json(
-      { message: `Unauthorized access. You're not allowed to see this tickList` },
+      { message: `Unauthorized access. You're not allowed to see this todo` },
       { status: 401 },
     )
   }
 
-  return json({ tickList, labels })
+  return json(todo)
 }
 
-export default function TickListEdit() {
+export default function TodoEdit() {
   const navigation = useNavigate()
 
   const onClose = () => navigation(-1)
@@ -180,14 +159,14 @@ export default function TickListEdit() {
 
   const actionData = useActionData<ActionDataType>()
 
-  const data = useLoaderData<{ tickList: TickList; labels: Label[] }>()
+  const todo = useLoaderData<Todo>()
 
   return (
     <>
       <Modal initialFocusRef={initialRef} isOpen={true} onClose={onClose} isCentered size="3xl">
         <ModalOverlay bg="none" backdropFilter="auto" backdropInvert="80%" backdropBlur="2px" />
         <ModalContent>
-          <ModalHeader>Create new Tick List</ModalHeader>
+          <ModalHeader>Create new Todo</ModalHeader>
           <ModalCloseButton />
           <Form method="post">
             <ModalBody pb={6}>
@@ -199,7 +178,7 @@ export default function TickListEdit() {
                   placeholder="Title"
                   type="text"
                   name="title"
-                  defaultValue={data.tickList.title}
+                  defaultValue={todo.title}
                   isInvalid={actionData?.errors.title.isInvalid}
                 />
                 <FormErrorMessage>{actionData?.errors.title.message}</FormErrorMessage>
@@ -209,7 +188,7 @@ export default function TickListEdit() {
                 <FormLabel>Description</FormLabel>
                 <Textarea
                   isRequired={false}
-                  defaultValue={String(data.tickList.description) ?? ''}
+                  defaultValue={String(todo.description) ?? ''}
                   name="description"
                   placeholder="Description..."
                   isInvalid={actionData?.errors.description.isInvalid}
@@ -217,31 +196,32 @@ export default function TickListEdit() {
                 <FormErrorMessage>{actionData?.errors.description.message}</FormErrorMessage>
               </FormControl>
 
-              <FormControl mt={4} isInvalid={actionData?.errors.labels.isInvalid}>
-                <FormLabel htmlFor="labels">Labels</FormLabel>
-
-                <Select
-                  isMulti
-                  name="labels"
-                  options={data.labels.map((label) => {
-                    return {
-                      label: label.label,
-                      value: label.id,
-                    }
-                  })}
-                />
-              </FormControl>
-
               <FormControl mt={4} isInvalid={actionData?.errors.completed.isInvalid}>
                 <FormLabel>Completed</FormLabel>
                 <CSelect
                   name="completed"
                   placeholder="Select option"
-                  defaultValue={String(data.tickList.completed) ?? 'false'}
+                  defaultValue={String(todo.completed) ?? 'false'}
                   isInvalid={actionData?.errors.completed.isInvalid}
                 >
                   <option value="true">True</option>
                   <option value="false">False</option>
+                </CSelect>
+                <FormErrorMessage>{actionData?.errors.completed.message}</FormErrorMessage>
+              </FormControl>
+
+              <FormControl mt={4} isInvalid={actionData?.errors.priority.isInvalid}>
+                <FormLabel>Priority</FormLabel>
+                <CSelect
+                  name="priority"
+                  placeholder="Select priority"
+                  defaultValue={todo.priority}
+                  isInvalid={actionData?.errors.priority.isInvalid}
+                >
+                  <option value={Priority.LOW}>Low</option>
+                  <option value={Priority.NORMAL}>Normal</option>
+                  <option value={Priority.MEDIUM}>Medium</option>
+                  <option value={Priority.HIGH}>High</option>
                 </CSelect>
                 <FormErrorMessage>{actionData?.errors.completed.message}</FormErrorMessage>
               </FormControl>
@@ -253,7 +233,7 @@ export default function TickListEdit() {
                   name="dueDate"
                   isRequired={false}
                   type="date"
-                  defaultValue={moment(data.tickList.dueDate).format('YYYY-MM-DD')}
+                  defaultValue={moment(todo.dueDate).format('YYYY-MM-DD')}
                   isInvalid={actionData?.errors.dueDate.isInvalid}
                 />
                 <FormErrorMessage>{actionData?.errors.dueDate.message}</FormErrorMessage>

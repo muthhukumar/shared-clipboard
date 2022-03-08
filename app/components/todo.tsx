@@ -1,5 +1,5 @@
 import { HStack, IconButton, Menu, MenuButton, MenuItem, MenuList, Tag } from '@chakra-ui/react'
-import { Label, LabelsOnTickList, Priority, TickList } from '@prisma/client'
+import { Label, LabelsOnTodo, Priority, Todo } from '@prisma/client'
 import moment from 'moment'
 import { Form, useNavigate, useTransition } from 'remix'
 import { BsThreeDotsVertical } from 'react-icons/bs'
@@ -21,9 +21,9 @@ function getPriorityColor(priority: Priority) {
   return priorityColor[priority]
 }
 
-export default function TickItem(
-  props: TickList & {
-    labels: (LabelsOnTickList & {
+export default function Todo(
+  props: Todo & {
+    labels: (LabelsOnTodo & {
       Label: Label | null
     })[]
   },
@@ -38,7 +38,7 @@ export default function TickItem(
   const transition = useTransition()
 
   const isSubmitting =
-    transition.location?.pathname === `/tick-list/${props.id}/toggle` &&
+    transition.location?.pathname === `/todo/${props.id}/toggle` &&
     transition.state === 'submitting' &&
     transition.type === 'actionSubmission'
 
@@ -79,7 +79,7 @@ export default function TickItem(
               {moment(props.updatedAt).calendar()}
             </Tag>
           ) : null}
-          <Form method="post" action={`/tick-list/${props.id}/toggle`}>
+          <Form method="post" action={`/todo/${props.id}/toggle`}>
             <IconButton
               variant={'ghost'}
               type="submit"
@@ -102,10 +102,8 @@ export default function TickItem(
               <BsThreeDotsVertical />
             </MenuButton>
             <MenuList>
-              <MenuItem onClick={() => navigation(`/tick-list/${props.id}/edit`)}>Edit</MenuItem>
-              <MenuItem onClick={() => navigation(`/tick-list/${props.id}/delete`)}>
-                Delete
-              </MenuItem>
+              <MenuItem onClick={() => navigation(`/todo/${props.id}/edit`)}>Edit</MenuItem>
+              <MenuItem onClick={() => navigation(`/todo/${props.id}/delete`)}>Delete</MenuItem>
             </MenuList>
           </Menu>
         </HStack>
