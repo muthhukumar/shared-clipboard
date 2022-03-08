@@ -2,7 +2,7 @@ import { HStack, StackDivider, Tag, useColorModeValue, VStack } from '@chakra-ui
 import { Birthday, Label, LabelsOnTodo, Todo, User, Vote } from '@prisma/client'
 import moment from 'moment'
 import { json, LoaderFunction, useLoaderData } from 'remix'
-import { Card, TodoItem, VoteItem, Wrapper } from '~/components'
+import { Card, NoItems, TodoItem, VoteItem, Wrapper } from '~/components'
 import { getToday } from '~/utils'
 
 import { authenticator } from '~/utils/auth.server'
@@ -94,6 +94,7 @@ export default function Index() {
                 </div>
               ))}
             </VStack>
+            {data.birthdays.length === 0 && <NoItems title="No birthdays today!!!" />}
           </Card>
           <Card>
             <div className="flex items-center justify-between pb-2 mb-4 border-b">
@@ -110,6 +111,7 @@ export default function Index() {
                 <TodoItem {...todo} key={todo.id} />
               ))}
             </VStack>
+            {data.todos.length === 0 && <NoItems title="No todos for today!!!" />}
           </Card>
           <Card>
             <div className="flex items-center justify-between pb-2 mb-4 border-b">
@@ -120,6 +122,7 @@ export default function Index() {
                 <VoteItem {...vote} key={vote.id} />
               ))}
             </VStack>
+            {data.votes.length === 0 && <NoItems title="No habit rank votes found for today!!!" />}
           </Card>
         </VStack>
       </Wrapper>
