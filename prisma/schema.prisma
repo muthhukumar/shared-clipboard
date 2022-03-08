@@ -26,22 +26,12 @@ model User {
   name              String?
   profileUrl        String?
   clipboardContents ClipboardContent[]
-  notes             Note[]
   todos             Todo[]
   votes             Vote[]
   birthdays         Birthday[]
   labels            Label[]
   quickContent      String?
   quickRedirect     String?
-}
-
-model Note {
-  note      String
-  title     String
-  id        Int      @id @default(autoincrement())
-  User      User     @relation(fields: [userEmail], references: [email])
-  userEmail String
-  createdAt DateTime @default(now())
 }
 
 model Vote {
@@ -82,7 +72,7 @@ model Label {
   label     String
   User      User?          @relation(fields: [userEmail], references: [email])
   userEmail String?
-  todos LabelsOnTodo[]
+  todos     LabelsOnTodo[]
 }
 
 model LabelsOnTodo {
