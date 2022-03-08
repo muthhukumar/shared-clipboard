@@ -14,11 +14,11 @@ const links: Array<{ icon: IconType; to: string }> = [
   },
   {
     icon: HiClipboardCopy,
-    to: '/quick-copy',
+    to: '/copy',
   },
   {
     icon: TiArrowShuffle,
-    to: '/quick-redirect',
+    to: '/redirect',
   },
 ]
 

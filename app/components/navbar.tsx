@@ -31,11 +31,11 @@ const links: Array<{ title: string; to: string }> = [
   },
   {
     title: 'Copy',
-    to: '/quick-copy',
+    to: '/copy',
   },
   {
     title: 'Redirect',
-    to: '/quick-redirect',
+    to: '/redirect',
   },
   {
     title: 'Notes',
@@ -90,7 +90,7 @@ export default function Navbar({ user }: { user: User }) {
               </MenuButton>
               <MenuList alignItems={'center'} p={0}>
                 <MenuItem>
-                  <RLink to="/profile">Account settings</RLink>
+                  <RLink to="/profile/general">Account settings</RLink>
                 </MenuItem>
                 <MenuItem>
                   <RLink to="/logout">Logout</RLink>

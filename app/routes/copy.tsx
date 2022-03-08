@@ -52,7 +52,7 @@ export const action: ActionFunction = async ({ request }) => {
     },
   })
 
-  return redirect('/quick-copy')
+  return redirect('/copy')
 }
 
 export const loader: LoaderFunction = async ({ request }) => {

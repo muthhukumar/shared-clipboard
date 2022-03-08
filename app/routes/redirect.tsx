@@ -75,7 +75,7 @@ export const action: ActionFunction = async ({ request }) => {
     },
   })
 
-  return redirect('/quick-redirect')
+  return redirect('/redirect')
 }
 
 export const loader: LoaderFunction = async ({ request }) => {
