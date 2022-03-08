@@ -6,7 +6,7 @@ export const loader: LoaderFunction = async ({ request }) => {
   await authenticator.isAuthenticated(request, {
     failureRedirect: '/login',
   })
-  return redirect('/clipboard')
+  return redirect('/home')
 }
 
 export default function Copy() {

@@ -1,4 +1,5 @@
 import { Transition } from '@remix-run/react/transition'
+import moment from 'moment'
 
 export function formatFieldErrors(fieldErrors: Record<string, Array<string>>) {
   const result: Record<keyof typeof fieldErrors, string> = {}
@@ -63,4 +64,8 @@ export const getTransitionTypes = (transition: Transition) => {
   }
 
   return 'Unknown'
+}
+
+export const getToday = () => {
+  return moment().format('YYYY-MM-DD')
 }

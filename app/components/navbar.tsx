@@ -26,6 +26,10 @@ import { getTransitionTypes } from '~/utils'
 
 const links: Array<{ title: string; to: string }> = [
   {
+    title: 'Home',
+    to: '/',
+  },
+  {
     title: 'Clipboard',
     to: '/clipboard',
   },
@@ -162,7 +166,8 @@ function StickyHeader() {
                   key={link.to}
                   className={clsx('pb-3 border-b-2', {
                     [borderColor]: location.pathname.includes(link.to),
-                    'border-transparent': !location.pathname.includes(link.to),
+                    'border-transparent':
+                      !location.pathname.includes(link.to) || location.pathname === '/',
                     [textColor]: location.pathname.includes(link.to),
                   })}
                 >

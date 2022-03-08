@@ -1,25 +1,17 @@
 import {
   InputGroup,
-  IconButton,
   InputLeftElement,
   Input,
   Button,
-  HStack,
   FormControl,
   FormErrorMessage,
   VStack,
   useColorModeValue,
   StackDivider,
-  Menu,
-  MenuButton,
-  MenuItem,
-  MenuList,
-  Tag,
 } from '@chakra-ui/react'
 import { User, Vote } from '@prisma/client'
 import { IoMdAdd } from 'react-icons/io'
 import { RiSearchLine } from 'react-icons/ri'
-import { BsThreeDotsVertical, BsArrowDown, BsArrowUp } from 'react-icons/bs'
 import {
   useLoaderData,
   useSubmit,
@@ -32,14 +24,12 @@ import {
   Outlet,
   ActionFunction,
   redirect,
-  useNavigate,
 } from 'remix'
-import { NoItems, Wrapper } from '~/components'
+import { VoteItem, NoItems, Wrapper } from '~/components'
 import { authenticator } from '~/utils/auth.server'
 import { prisma } from '~/utils/prisma.server'
 import { z } from 'zod'
 import { formatFieldErrorsNew } from '~/utils'
-import moment from 'moment'
 
 export const meta: MetaFunction = () => {
   return {
@@ -149,8 +139,6 @@ export default function ClipbaordContent() {
 
   const transition = useTransition()
 
-  const navigation = useNavigate()
-
   const actionData = useActionData<ActionDataType>()
 
   const borderColor = useColorModeValue('gray.200', 'gray.700')
@@ -192,67 +180,7 @@ export default function ClipbaordContent() {
           </Form>
           <VStack alignItems={'flex-start'} divider={<StackDivider borderColor={borderColor} />}>
             {votes.map((vote) => {
-              return (
-                <div
-                  key={vote.id}
-                  className="flex flex-col items-start w-full py-2 rounded-md gap-y-1"
-                >
-                  <p className="text-lg">{vote.title}</p>
-                  <div className="flex items-center justify-between w-full">
-                    <HStack>
-                      <Tag fontSize={'x-small'} colorScheme={'purple'}>
-                        {vote.votes} votes
-                      </Tag>
-                      {vote.label ? (
-                        <Tag fontSize={'x-small'} colorScheme="whatsapp">
-                          {vote.label}
-                        </Tag>
-                      ) : null}
-                    </HStack>
-                    <HStack pl="2" spacing={2}>
-                      {vote.updatedAt ? (
-                        <Tag ml="auto" fontSize={'x-small'} colorScheme={'linkedin'}>
-                          {moment(vote.updatedAt).calendar()}
-                        </Tag>
-                      ) : null}
-                      <Form method="post" action={`/habits-rank/vote/${vote.id}/upvote`}>
-                        <IconButton
-                          variant={'outline'}
-                          aria-label="Upvote"
-                          type="submit"
-                          icon={<BsArrowUp />}
-                          size="sm"
-                        />
-                      </Form>
-                      <Form method="post" action={`/habits-rank/vote/${vote.id}/downvote`}>
-                        <IconButton
-                          variant={'outline'}
-                          type="submit"
-                          aria-label="Down vote"
-                          icon={<BsArrowDown />}
-                          size="sm"
-                        />
-                      </Form>
-
-                      <Menu>
-                        <MenuButton>
-                          <BsThreeDotsVertical />
-                        </MenuButton>
-                        <MenuList>
-                          <MenuItem onClick={() => navigation(`/habits-rank/vote/${vote.id}/edit`)}>
-                            Edit
-                          </MenuItem>
-                          <MenuItem
-                            onClick={() => navigation(`/habits-rank/vote/${vote.id}/delete`)}
-                          >
-                            Delete
-                          </MenuItem>
-                        </MenuList>
-                      </Menu>
-                    </HStack>
-                  </div>
-                </div>
-              )
+              return <VoteItem {...vote} key={vote.id} />
             })}
             {votes.length === 0 && <NoItems title="No Votees found. Please add some!!!" />}
           </VStack>
