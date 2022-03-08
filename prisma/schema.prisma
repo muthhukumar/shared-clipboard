@@ -37,7 +37,6 @@ model User {
 model Vote {
   title     String
   id        Int       @id @default(autoincrement())
-  votes     Int       @default(0)
   upvotes   Int       @default(0)
   downvotes   Int       @default(0)
   User      User?     @relation(fields: [userEmail], references: [email])

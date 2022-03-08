@@ -2,17 +2,29 @@ import { HStack, Tag, IconButton, Menu, MenuButton, MenuList, MenuItem } from '@
 import { Vote } from '@prisma/client'
 import moment from 'moment'
 import { BsArrowUp, BsArrowDown, BsThreeDotsVertical } from 'react-icons/bs'
-import { Form, useNavigate } from 'remix'
+import { useFetcher, useNavigate } from 'remix'
 
 export default function Vote(props: Vote) {
   const navigation = useNavigate()
+  const upvotesFetcher = useFetcher()
+  const downvoteFetcher = useFetcher()
+
+  const isUpvoting = upvotesFetcher.state === 'submitting'
+  const isDownvoting = downvoteFetcher.state === 'submitting'
+
   return (
     <div className="flex flex-col items-start w-full py-2 rounded-md gap-y-1">
       <p className="text-lg">{props.title}</p>
       <div className="flex items-center justify-between w-full">
         <HStack>
           <Tag fontSize={'x-small'} colorScheme={'purple'}>
-            {props.votes} votes
+            {props.upvotes + -props.downvotes} votes
+          </Tag>
+          <Tag fontSize={'x-small'} colorScheme={'twitter'}>
+            {props.upvotes} upvotes
+          </Tag>
+          <Tag fontSize={'x-small'} colorScheme={'red'}>
+            {props.downvotes > 0 ? -props.downvotes : props.downvotes} downvotes
           </Tag>
           {props.label ? (
             <Tag fontSize={'x-small'} colorScheme="whatsapp">
@@ -26,24 +38,26 @@ export default function Vote(props: Vote) {
               {moment(props.updatedAt).calendar()}
             </Tag>
           ) : null}
-          <Form method="post" action={`/habits-rank/vote/${props.id}/upvote`}>
+          <upvotesFetcher.Form method="post" action={`/habits-rank/vote/${props.id}/upvote`}>
             <IconButton
+              isLoading={isUpvoting}
               variant={'outline'}
               aria-label="Upvote"
               type="submit"
               icon={<BsArrowUp />}
               size="sm"
             />
-          </Form>
-          <Form method="post" action={`/habits-rank/vote/${props.id}/downvote`}>
+          </upvotesFetcher.Form>
+          <downvoteFetcher.Form method="post" action={`/habits-rank/vote/${props.id}/downvote`}>
             <IconButton
               variant={'outline'}
+              isLoading={isDownvoting}
               type="submit"
               aria-label="Down vote"
               icon={<BsArrowDown />}
               size="sm"
             />
-          </Form>
+          </downvoteFetcher.Form>
 
           <Menu>
             <MenuButton>

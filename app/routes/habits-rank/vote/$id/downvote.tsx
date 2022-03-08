@@ -1,5 +1,5 @@
 import { User } from '@prisma/client'
-import { ActionFunction, redirect } from 'remix'
+import { ActionFunction, json, redirect } from 'remix'
 import { authenticator } from '~/utils/auth.server'
 import { prisma } from '~/utils/prisma.server'
 
@@ -26,12 +26,12 @@ export const action: ActionFunction = async ({ params, request }) => {
         id,
       },
       data: {
-        votes: {
-          decrement: 1,
+        downvotes: {
+          increment: 1,
         },
       },
     })
-    return redirect(`/habits-rank`)
+    return json({ ok: true })
   } catch (err) {
     throw redirect('/')
   }

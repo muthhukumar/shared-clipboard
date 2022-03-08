@@ -113,7 +113,7 @@ export const loader: LoaderFunction = async ({ request }) => {
         },
       },
       orderBy: {
-        votes: 'desc',
+        upvotes: 'desc',
       },
     })
 
@@ -125,7 +125,7 @@ export const loader: LoaderFunction = async ({ request }) => {
       userEmail: user.email,
     },
     orderBy: {
-      votes: 'desc',
+      upvotes: 'desc',
     },
   })
 
