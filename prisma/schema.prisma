@@ -27,7 +27,7 @@ model User {
   profileUrl        String?
   clipboardContents ClipboardContent[]
   notes             Note[]
-  tickLists         TickList[]
+  todos             Todo[]
   votes             Vote[]
   birthdays         Birthday[]
   labels            Label[]
@@ -63,34 +63,34 @@ model Birthday {
   userEmail String?
 }
 
-model TickList {
+model Todo {
   title       String
-  id          String             @unique @default(uuid())
+  id          String         @unique @default(uuid())
   description String?
-  completed   Boolean            @default(false)
+  completed   Boolean        @default(false)
   dueDate     String
-  User        User               @relation(fields: [userEmail], references: [email])
+  User        User           @relation(fields: [userEmail], references: [email])
   userEmail   String
-  createdAt   DateTime           @default(now())
-  updatedAt   DateTime           @updatedAt
-  priority    Priority           @default(NORMAL)
-  labels      LabelsOnTickList[]
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+  priority    Priority       @default(NORMAL)
+  labels      LabelsOnTodo[]
 }
 
 model Label {
-  id            Int                @id @default(autoincrement())
-  label         String
-  User          User?              @relation(fields: [userEmail], references: [email])
-  userEmail     String?
-  tickListItems LabelsOnTickList[]
+  id        Int            @id @default(autoincrement())
+  label     String
+  User      User?          @relation(fields: [userEmail], references: [email])
+  userEmail String?
+  todos LabelsOnTodo[]
 }
 
-model LabelsOnTickList {
-  TickList   TickList? @relation(fields: [tickListId], references: [id])
-  tickListId String
-  Label      Label?    @relation(fields: [labelId], references: [id])
-  labelId    Int
-  id         Int       @id @default(autoincrement())
+model LabelsOnTodo {
+  Todo    Todo?  @relation(fields: [todoId], references: [id])
+  todoId  String
+  Label   Label? @relation(fields: [labelId], references: [id])
+  labelId Int
+  id      Int    @id @default(autoincrement())
 }
 
 enum Priority {

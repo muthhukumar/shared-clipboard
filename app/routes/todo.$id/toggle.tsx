@@ -10,27 +10,27 @@ export const action: ActionFunction = async ({ request, params }) => {
 
   const id = params.id
 
-  const tickList = await prisma.tickList.findUnique({
+  const todo = await prisma.todo.findUnique({
     where: {
       id: String(id),
     },
   })
 
-  if (!tickList || user.email !== tickList?.userEmail) {
-    return redirect(`/tick-list`)
+  if (!todo || user.email !== todo?.userEmail) {
+    return redirect(`/todo`)
   }
 
   try {
-    await prisma.tickList.update({
+    await prisma.todo.update({
       data: {
-        completed: !tickList.completed,
+        completed: !todo.completed,
       },
       where: {
         id: id,
       },
     })
-    // return redirect(`/tick-list/${clipboardContent.id}`)
-    return redirect(`/tick-list`)
+    // return redirect(`/todo/${clipboardContent.id}`)
+    return redirect(`/todo`)
   } catch (err) {
     throw redirect('/')
   }

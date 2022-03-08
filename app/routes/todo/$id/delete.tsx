@@ -15,7 +15,7 @@ import { prisma } from '~/utils/prisma.server'
 
 export const meta: MetaFunction = () => {
   return {
-    title: 'Tick List | Delete',
+    title: 'Todo | Delete',
   }
 }
 
@@ -26,21 +26,21 @@ export const action: ActionFunction = async ({ request, params }) => {
 
   const id = String(params.id)
 
-  const isCurrentUsers = await prisma.tickList.findUnique({
+  const isCurrentUsers = await prisma.todo.findUnique({
     where: {
       id,
     },
   })
 
   if (isCurrentUsers && isCurrentUsers.userEmail === user.email) {
-    await prisma.tickList.delete({
+    await prisma.todo.delete({
       where: {
         id,
       },
     })
   }
 
-  return redirect('/tick-list')
+  return redirect('/todo')
 }
 
 export default function Delete() {
@@ -55,9 +55,9 @@ export default function Delete() {
     <Modal isOpen={true} onClose={onClose}>
       <ModalOverlay />
       <ModalContent>
-        <ModalHeader>Delete Tick List</ModalHeader>
+        <ModalHeader>Delete Todo</ModalHeader>
         <ModalCloseButton />
-        <ModalBody>Are you sure to delete this Tick List?</ModalBody>
+        <ModalBody>Are you sure to delete this Todo?</ModalBody>
 
         <ModalFooter>
           <Form method="delete">

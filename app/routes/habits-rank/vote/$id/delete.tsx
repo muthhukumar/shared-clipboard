@@ -15,7 +15,7 @@ import { prisma } from '~/utils/prisma.server'
 
 export const meta: MetaFunction = () => {
   return {
-    title: 'Tick List | Delete',
+    title: 'Todo | Delete',
   }
 }
 

@@ -96,7 +96,7 @@ export const loader: LoaderFunction = async ({ request }) => {
   })
 }
 
-export default function TickListNew() {
+export default function TodoNew() {
   const navigation = useNavigate()
 
   const onClose = () => navigation(-1)
