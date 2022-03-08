@@ -1,7 +1,7 @@
 import { HStack, StackDivider, Tag, useColorModeValue, VStack } from '@chakra-ui/react'
 import { Birthday, Label, LabelsOnTodo, Todo, User, Vote } from '@prisma/client'
 import moment from 'moment'
-import { json, LoaderFunction, useLoaderData } from 'remix'
+import { json, LoaderFunction, MetaFunction, useLoaderData } from 'remix'
 import { Card, NoItems, TodoItem, VoteItem, Wrapper } from '~/components'
 import { getToday } from '~/utils'
 
@@ -18,6 +18,12 @@ type LoaderType = {
   >
   votes: Array<Vote>
   birthdays: Array<Birthday>
+}
+
+export const meta: MetaFunction = () => {
+  return {
+    title: 'Home',
+  }
 }
 
 export const loader: LoaderFunction = async ({ request }) => {
@@ -102,8 +108,7 @@ export default function Index() {
               <HStack>
                 <Tag>{incompleteTask}</Tag>
                 <span>/</span>
-                <Tag colorScheme={'cyan'}>{data.todos.length}</Tag>
-                <p>completed</p>
+                <Tag colorScheme={'cyan'}>{data.todos.length} completed</Tag>
               </HStack>
             </div>
             <VStack alignItems={'flex-start'} divider={<StackDivider borderColor={borderColor} />}>
