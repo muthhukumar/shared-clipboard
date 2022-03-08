@@ -18,7 +18,7 @@ import {
   MenuItem,
   MenuList,
 } from '@chakra-ui/react'
-import { Label, LabelsOnTodo, Todo, User } from '@prisma/client'
+import { Label, LabelsOnTodo, Todo as TodoType, User } from '@prisma/client'
 import moment from 'moment'
 import { IoMdAdd } from 'react-icons/io'
 import { RiSearchLine } from 'react-icons/ri'
@@ -32,7 +32,7 @@ import {
   useNavigate,
   useSubmit,
 } from 'remix'
-import { Wrapper, NoItems, Todo } from '~/components'
+import { Wrapper, NoItems, TodoItem } from '~/components'
 import { authenticator } from '~/utils/auth.server'
 import { prisma } from '~/utils/prisma.server'
 import { IoIosOptions } from 'react-icons/io'
@@ -53,7 +53,7 @@ const enum SortByOptions {
 }
 
 type LoaderType = {
-  todo: (Todo & {
+  todo: (TodoType & {
     labels: (LabelsOnTodo & {
       Label: Label | null
     })[]
@@ -300,7 +300,7 @@ export default function Todo() {
         >
           {todo.length > 0 &&
             todo.map((todo) => {
-              return <Todo {...todo} key={todo.id} />
+              return <TodoItem {...todo} key={todo.id} />
             })}
         </VStack>
       </Wrapper>
