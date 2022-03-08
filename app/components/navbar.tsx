@@ -27,7 +27,7 @@ import { getTransitionTypes } from '~/utils'
 const links: Array<{ title: string; to: string }> = [
   {
     title: 'Home',
-    to: '/',
+    to: '/home',
   },
   {
     title: 'Clipboard',
