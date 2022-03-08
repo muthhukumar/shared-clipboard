@@ -1,7 +1,7 @@
 import { HStack, IconButton, Menu, MenuButton, MenuItem, MenuList, Tag } from '@chakra-ui/react'
 import { Label, LabelsOnTodo, Priority, Todo } from '@prisma/client'
 import moment from 'moment'
-import { Form, useNavigate, useTransition } from 'remix'
+import { useFetcher, useNavigate } from 'remix'
 import { BsThreeDotsVertical } from 'react-icons/bs'
 import { RiCheckboxBlankCircleLine } from 'react-icons/ri'
 import { HiCheckCircle } from 'react-icons/hi'
@@ -35,12 +35,9 @@ export default function Todo(
   const isOverDue = moment(today).isAfter(dueDate)
   const isUpcoming = moment(today).isBefore(dueDate)
 
-  const transition = useTransition()
+  const fetcher = useFetcher()
 
-  const isSubmitting =
-    transition.location?.pathname === `/todo/${props.id}/toggle` &&
-    transition.state === 'submitting' &&
-    transition.type === 'actionSubmission'
+  const isSubmitting = fetcher.state === 'submitting'
 
   const labels = props.labels.map((label) => ({ label: label.Label?.label, id: label.labelId }))
 
@@ -79,7 +76,7 @@ export default function Todo(
               {moment(props.updatedAt).calendar()}
             </Tag>
           ) : null}
-          <Form method="post" action={`/todo/${props.id}/toggle`}>
+          <fetcher.Form method="post" action={`/todo/${props.id}/toggle`}>
             <IconButton
               variant={'ghost'}
               type="submit"
@@ -95,7 +92,7 @@ export default function Todo(
               }
               size="sm"
             />
-          </Form>
+          </fetcher.Form>
 
           <Menu>
             <MenuButton>
