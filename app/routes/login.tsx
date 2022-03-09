@@ -1,19 +1,7 @@
-import {
-  Button,
-  Checkbox,
-  Flex,
-  FormControl,
-  FormLabel,
-  Heading,
-  Input,
-  Link,
-  Stack,
-  Image,
-  Text,
-} from '@chakra-ui/react'
-import { Form, LoaderFunction, MetaFunction, useTransition } from 'remix'
+import { Button, Flex, Heading, Stack, Image, Text } from '@chakra-ui/react'
+import { LoaderFunction, MetaFunction, useFetcher } from 'remix'
 import { authenticator } from '~/utils/auth.server'
-import { BsGithub } from 'react-icons/bs'
+import { BsGoogle, BsGithub } from 'react-icons/bs'
 
 export const meta: MetaFunction = () => {
   return {
@@ -27,60 +15,52 @@ export const loader: LoaderFunction = async ({ request }) => {
 }
 
 export default function SimpleCard() {
-  const transition = useTransition()
+  const githubAuthFetcher = useFetcher()
+  const googleAuthFetcher = useFetcher()
 
-  const isAuthenticating =
-    transition.state === 'submitting' &&
-    transition.type === 'actionSubmission' &&
-    transition.submission.action === '/auth/github'
+  const isGithubAuthenticating = githubAuthFetcher.state === 'submitting'
+  const isGoogleAuthenticating = googleAuthFetcher.state === 'submitting'
 
   return (
     <Stack minH={'100vh'} direction={{ base: 'column', md: 'row' }}>
-      <Form
-        className="flex items-center justify-center flex-1 p-8"
-        action="/auth/github"
-        method="post"
-      >
+      <div className="flex items-center justify-center flex-1 p-8">
         <Stack spacing={4} w={'full'} maxW={'md'}>
           <Heading fontSize={'2xl'} mb="4">
             Sign in to your account
           </Heading>
-          <FormControl id="email">
-            <FormLabel>Email address</FormLabel>
-            <Input type="email" disabled />
-          </FormControl>
-          <FormControl id="password">
-            <FormLabel>Password</FormLabel>
-            <Input type="password" disabled />
-          </FormControl>
           <Stack spacing={4}>
-            <Stack
-              direction={{ base: 'column', sm: 'row' }}
-              align={'start'}
-              justify={'space-between'}
-            >
-              <Checkbox>Remember me</Checkbox>
-              <Link color={'blue.500'}>Forgot password?</Link>
-            </Stack>
-            <Button colorScheme={'blue'} variant={'solid'} disabled>
-              Sign in
-            </Button>
+            <githubAuthFetcher.Form action="/auth/github" method="post" className="w-full">
+              <Button
+                isLoading={isGithubAuthenticating}
+                loadingText="Authenticating"
+                colorScheme={'telegram'}
+                variant={'solid'}
+                w="full"
+                leftIcon={<BsGithub />}
+                type="submit"
+              >
+                Sign In (or up) with Github
+              </Button>
+            </githubAuthFetcher.Form>
             <Text textAlign="center" color="gray.300">
               Or
             </Text>
-            <Button
-              isLoading={isAuthenticating}
-              loadingText="Authenticating"
-              colorScheme={'telegram'}
-              variant={'solid'}
-              leftIcon={<BsGithub />}
-              type="submit"
-            >
-              Sign In (or up) with Github
-            </Button>
+            <googleAuthFetcher.Form action="/auth/google" method="post" className="w-full">
+              <Button
+                isLoading={isGoogleAuthenticating}
+                loadingText="Authenticating"
+                colorScheme={'telegram'}
+                variant={'solid'}
+                w="full"
+                leftIcon={<BsGoogle />}
+                type="submit"
+              >
+                Sign In (or up) with Google
+              </Button>
+            </googleAuthFetcher.Form>
           </Stack>
         </Stack>
-      </Form>
+      </div>
       <Flex flex={1}>
         <Image
           alt={'Login Image'}
