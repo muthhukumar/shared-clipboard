@@ -241,16 +241,17 @@ export default function TodoEdit() {
             </ModalBody>
 
             <ModalFooter>
+              <Button onClick={onClose} mr={3}>
+                Cancel
+              </Button>
               <Button
                 colorScheme="blue"
-                mr={3}
                 isLoading={submitting}
                 loadingText={'Saving'}
                 type="submit"
               >
                 Save
               </Button>
-              <Button onClick={onClose}>Cancel</Button>
             </ModalFooter>
           </Form>
         </ModalContent>

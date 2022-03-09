@@ -60,18 +60,14 @@ export default function Delete() {
         <ModalBody>Are you sure to delete this Todo?</ModalBody>
 
         <ModalFooter>
+          <Button onClick={onClose} mr={3}>
+            Cancel
+          </Button>
           <Form method="delete">
-            <Button
-              mr={3}
-              colorScheme="red"
-              isLoading={deleting}
-              loadingText="Deleting"
-              type="submit"
-            >
+            <Button colorScheme="red" isLoading={deleting} loadingText="Deleting" type="submit">
               Delete
             </Button>
           </Form>
-          <Button onClick={onClose}>Cancel</Button>
         </ModalFooter>
       </ModalContent>
     </Modal>
