@@ -75,7 +75,7 @@ export default function QuickCopy() {
   const saving = transition.state === 'submitting'
 
   React.useEffect(() => {
-    const url = new URL(`${window.location.host}/c/q`)
+    const url = new URL(`${window.location.href}/c/q`)
     setUrl(composeUrl(url))
   }, [])
 

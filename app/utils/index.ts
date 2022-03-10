@@ -71,9 +71,7 @@ export const getToday = () => {
 }
 
 export const composeUrl = (url: URL) => {
-  const protocol = url.protocol?.includes('localhost') ? 'http' : 'https'
+  const protocol = url.protocol?.includes('http') ? 'http' : 'https'
 
-  const host = url.protocol?.includes('localhost') ? 'localhost:' : url.host
-
-  return `${protocol}://${host}${url.pathname}`
+  return `${protocol}://${url.host}${url.pathname}`
 }

@@ -84,7 +84,7 @@ export default function Copy() {
   const toast = useToast()
 
   React.useEffect(() => {
-    const url = new URL(`${window.location.host}/c/${id}`)
+    const url = new URL(`${window.location.href}/c/${id}`)
     setUrl(composeUrl(url))
   }, [])
 
