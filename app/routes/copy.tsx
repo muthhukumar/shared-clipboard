@@ -27,6 +27,7 @@ import { PageTitle, QRCode, Wrapper } from '~/components'
 import { authenticator } from '~/utils/auth.server'
 import { prisma } from '~/utils/prisma.server'
 import { copyToClipboard } from '~/utils/browser'
+import { composeUrl } from '~/utils'
 
 export const meta: MetaFunction = () => {
   return {
@@ -74,7 +75,8 @@ export default function QuickCopy() {
   const saving = transition.state === 'submitting'
 
   React.useEffect(() => {
-    setUrl(`${window.location.host}/c/q`)
+    const url = new URL(`${window.location.host}/c/q`)
+    setUrl(composeUrl(url))
   }, [])
 
   const content = useLoaderData<string>()

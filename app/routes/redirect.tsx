@@ -25,6 +25,7 @@ import { authenticator } from '~/utils/auth.server'
 import { prisma } from '~/utils/prisma.server'
 import Validator from 'validator'
 import { copyToClipboard } from '~/utils/browser'
+import { composeUrl } from '~/utils'
 
 type ActionDataType = {
   value: string
@@ -95,7 +96,8 @@ export default function QuickCopy() {
   const [quickUrl, setQuickUrl] = React.useState<string>('')
 
   React.useEffect(() => {
-    setQuickUrl(`${window.location.host}/r`)
+    const url = new URL(`${window.location.host}/r`)
+    setQuickUrl(composeUrl(url))
   }, [])
 
   const transition = useTransition()

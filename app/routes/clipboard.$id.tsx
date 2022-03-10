@@ -36,6 +36,7 @@ import { prisma } from '~/utils/prisma.server'
 import { PageTitle, QRCode, Wrapper } from '~/components'
 import { copyToClipboard } from '~/utils/browser'
 import { ChevronDownIcon } from '@chakra-ui/icons'
+import { composeUrl } from '~/utils'
 
 export const meta: MetaFunction = () => {
   return {
@@ -83,7 +84,8 @@ export default function Copy() {
   const toast = useToast()
 
   React.useEffect(() => {
-    setUrl(`${window.location.host}/c/${id}`)
+    const url = new URL(`${window.location.host}/c/${id}`)
+    setUrl(composeUrl(url))
   }, [])
 
   const copy = () => {
@@ -96,7 +98,6 @@ export default function Copy() {
   }
 
   const share = () => {
-    const url = `${window.location.host}/c/${id}`
     copyToClipboard(url, () => {
       toast({
         title: 'URL copied to clipboard',

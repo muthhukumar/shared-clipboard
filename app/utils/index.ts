@@ -69,3 +69,11 @@ export const getTransitionTypes = (transition: Transition) => {
 export const getToday = () => {
   return moment().format('YYYY-MM-DD')
 }
+
+export const composeUrl = (url: URL) => {
+  const protocol = url.protocol?.includes('localhost') ? 'http' : 'https'
+
+  const host = url.protocol?.includes('localhost') ? 'localhost:' : url.host
+
+  return `${protocol}://${host}${url.pathname}`
+}
