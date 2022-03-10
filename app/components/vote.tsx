@@ -14,30 +14,9 @@ export default function Vote(props: Vote) {
 
   return (
     <div className="flex flex-col items-start w-full py-2 rounded-md gap-y-1">
-      <p className="text-lg">{props.title}</p>
       <div className="flex items-center justify-between w-full">
+        <p className="text-lg">{props.title}</p>
         <HStack>
-          <Tag fontSize={'x-small'} colorScheme={'purple'}>
-            {props.upvotes + -props.downvotes} votes
-          </Tag>
-          <Tag fontSize={'x-small'} colorScheme={'twitter'}>
-            {props.upvotes} upvotes
-          </Tag>
-          <Tag fontSize={'x-small'} colorScheme={'red'}>
-            {props.downvotes > 0 ? -props.downvotes : props.downvotes} downvotes
-          </Tag>
-          {props.label ? (
-            <Tag fontSize={'x-small'} colorScheme="whatsapp">
-              {props.label}
-            </Tag>
-          ) : null}
-        </HStack>
-        <HStack pl="2" spacing={2}>
-          {props.updatedAt ? (
-            <Tag ml="auto" fontSize={'x-small'} colorScheme={'linkedin'}>
-              {moment(props.updatedAt).calendar()}
-            </Tag>
-          ) : null}
           <upvotesFetcher.Form method="post" action={`/habits-rank/vote/${props.id}/upvote`}>
             <IconButton
               isLoading={isUpvoting}
@@ -72,6 +51,31 @@ export default function Vote(props: Vote) {
               </MenuItem>
             </MenuList>
           </Menu>
+        </HStack>
+      </div>
+      <div className="flex items-center justify-between w-full mt-2">
+        <HStack>
+          <Tag fontSize={'x-small'} colorScheme={'purple'}>
+            {props.upvotes + -props.downvotes} votes
+          </Tag>
+          <Tag fontSize={'x-small'} colorScheme={'twitter'}>
+            {props.upvotes} upvotes
+          </Tag>
+          <Tag fontSize={'x-small'} colorScheme={'red'}>
+            {props.downvotes > 0 ? -props.downvotes : props.downvotes} downvotes
+          </Tag>
+          {props.label ? (
+            <Tag fontSize={'x-small'} colorScheme="whatsapp">
+              {props.label}
+            </Tag>
+          ) : null}
+        </HStack>
+        <HStack pl="2" spacing={2}>
+          {props.updatedAt ? (
+            <Tag ml="auto" fontSize={'x-small'} colorScheme={'linkedin'}>
+              {moment(props.updatedAt).calendar()}
+            </Tag>
+          ) : null}
         </HStack>
       </div>
     </div>
