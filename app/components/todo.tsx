@@ -50,33 +50,9 @@ export default function Todo(
 
   return (
     <div className="flex flex-col items-start w-full py-2 rounded-md gap-y-1">
-      <p className="text-lg">{props.title}</p>
       <div className="flex items-center justify-between w-full">
-        <HStack>
-          <Tag fontSize={'xx-small'} colorScheme={getPriorityColor(props.priority)}>
-            {capitalCase(`${props.priority} PRIORITY`)}
-          </Tag>
-          {(isOverDue || isUpcoming) && !props.completed && (
-            <Tag fontSize={'xx-small'} colorScheme={isUpcoming ? 'green' : 'red'}>
-              {isOverDue ? `Overdue ${dueString}` : `Due ${dueString}`}
-            </Tag>
-          )}
-          {hasLabels
-            ? labels.map((label) => {
-                return (
-                  <Tag fontSize={'xx-small'} colorScheme="whatsapp" key={label.id}>
-                    {label.label}
-                  </Tag>
-                )
-              })
-            : null}
-        </HStack>
-        <HStack pl="2" spacing={2}>
-          {props.updatedAt ? (
-            <Tag ml="auto" fontSize={'xx-small'} colorScheme={'linkedin'}>
-              {moment(props.updatedAt).calendar()}
-            </Tag>
-          ) : null}
+        <p className="text-lg">{props.title}</p>
+        <HStack spacing={2}>
           <fetcher.Form method="post" action={`/todo/${props.id}/toggle`}>
             <IconButton
               variant={'ghost'}
@@ -104,6 +80,34 @@ export default function Todo(
               <MenuItem onClick={() => navigation(`/todo/${props.id}/delete`)}>Delete</MenuItem>
             </MenuList>
           </Menu>
+        </HStack>
+      </div>
+      <div className="flex items-center justify-between w-full mt-2">
+        <HStack>
+          <Tag fontSize={'xx-small'} colorScheme={getPriorityColor(props.priority)}>
+            {capitalCase(`${props.priority} PRIORITY`)}
+          </Tag>
+          {(isOverDue || isUpcoming) && !props.completed && (
+            <Tag fontSize={'xx-small'} colorScheme={isUpcoming ? 'green' : 'red'}>
+              {isOverDue ? `Overdue ${dueString}` : `Due ${dueString}`}
+            </Tag>
+          )}
+          {hasLabels
+            ? labels.map((label) => {
+                return (
+                  <Tag fontSize={'xx-small'} colorScheme="whatsapp" key={label.id}>
+                    {label.label}
+                  </Tag>
+                )
+              })
+            : null}
+        </HStack>
+        <HStack pl="2" spacing={2}>
+          {props.updatedAt ? (
+            <Tag ml="auto" fontSize={'xx-small'} colorScheme={'linkedin'}>
+              {moment(props.updatedAt).calendar()}
+            </Tag>
+          ) : null}
         </HStack>
       </div>
     </div>
