@@ -70,8 +70,12 @@ export const getToday = () => {
   return moment().format('YYYY-MM-DD')
 }
 
-export const composeUrl = (url: URL) => {
+export const composeUrl = (url: URL, options?: { includePathname?: boolean }) => {
   const protocol = url.protocol?.includes('http') ? 'http' : 'https'
+
+  if (!options?.includePathname) {
+    return `${protocol}://${url.host}`
+  }
 
   return `${protocol}://${url.host}${url.pathname}`
 }

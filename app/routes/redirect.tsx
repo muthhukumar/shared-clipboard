@@ -96,8 +96,12 @@ export default function QuickCopy() {
   const [quickUrl, setQuickUrl] = React.useState<string>('')
 
   React.useEffect(() => {
-    const url = new URL(`${window.location.href}/r`)
-    setQuickUrl(composeUrl(url))
+    const url = new URL(`${window.location.href}`)
+    setQuickUrl(
+      composeUrl(url, {
+        includePathname: false,
+      }) + '/r',
+    )
   }, [])
 
   const transition = useTransition()
