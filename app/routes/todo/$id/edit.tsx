@@ -65,6 +65,22 @@ export const action: ActionFunction = async ({ request, params }) => {
     failureRedirect: '/login',
   })) as User
 
+  const id = params.id
+
+  const todo = await prisma.todo.findUnique({
+    where: {
+      id,
+    },
+  })
+
+  if (!todo) {
+    throw redirect('/todo')
+  }
+
+  if (todo.userEmail !== user.email) {
+    throw json({ message: 'You are not authorized to edit this content' }, { status: 401 })
+  }
+
   const formData = await request.formData()
 
   const actionData: ActionDataType = {

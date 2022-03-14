@@ -1,4 +1,16 @@
-import { HStack, IconButton, Menu, MenuButton, MenuItem, MenuList, Tag } from '@chakra-ui/react'
+import * as React from 'react'
+import {
+  Button,
+  HStack,
+  IconButton,
+  Menu,
+  MenuButton,
+  MenuDivider,
+  MenuGroup,
+  MenuItem,
+  MenuList,
+  Tag,
+} from '@chakra-ui/react'
 import { Label, LabelsOnTodo, Priority, Todo } from '@prisma/client'
 import moment from 'moment'
 import { useFetcher, useNavigate } from 'remix'
@@ -6,6 +18,8 @@ import { BsThreeDotsVertical } from 'react-icons/bs'
 import { RiCheckboxBlankCircleLine } from 'react-icons/ri'
 import { HiCheckCircle } from 'react-icons/hi'
 import { capitalCase } from 'change-case'
+import { getToday, getTomorrow } from '~/utils'
+import Calendar from 'react-calendar'
 
 function getPriorityColor(priority: Priority) {
   const priorityColor = {
@@ -38,7 +52,15 @@ export default function Todo(
 
   const fetcher = useFetcher()
 
-  const isSubmitting = fetcher.state === 'submitting'
+  const rescheduleFether = useFetcher()
+
+  const isSubmitting =
+    fetcher.state === 'submitting' ||
+    (fetcher.state === 'loading' && fetcher.type === 'actionReload')
+
+  const isRescheduling =
+    rescheduleFether.state === 'submitting' ||
+    (rescheduleFether.state === 'loading' && rescheduleFether.type === 'actionReload')
 
   const labels = props.labels.map((label) => ({ label: label.Label?.label, id: label.labelId }))
 
@@ -47,6 +69,16 @@ export default function Todo(
   const dueString = isOverDue
     ? moment(props.dueDate).startOf('day').fromNow()
     : moment(props.dueDate).endOf('day').fromNow()
+
+  const reschule = (dueDate: string) => {
+    rescheduleFether.submit(
+      { dueDate },
+      {
+        method: 'post',
+        action: `/todo/${props.id}/reschedule`,
+      },
+    )
+  }
 
   return (
     <div className="flex flex-col items-start w-full py-2 rounded-md gap-y-1">
@@ -70,6 +102,33 @@ export default function Todo(
               size="sm"
             />
           </fetcher.Form>
+
+          {isOverDue && (
+            <Menu>
+              <MenuButton as={Button} size="xs" disabled={isRescheduling}>
+                {isRescheduling ? 'Rescheduling...' : 'Reschedule'}
+              </MenuButton>
+              <MenuList>
+                <MenuGroup>
+                  <MenuItem onClick={() => reschule(getToday())}>Today</MenuItem>
+
+                  <MenuItem onClick={() => reschule(getTomorrow())}>Tomorrow</MenuItem>
+                </MenuGroup>
+                <MenuDivider />
+                <MenuItem closeOnSelect={false}>
+                  <div className="bg-white">
+                    <Calendar
+                      onChange={(value: Date) => {
+                        const newDueDate = new Date(value)
+                        reschule(moment(newDueDate).format('YYYY-MM-DD'))
+                      }}
+                      minDate={new Date(getToday())}
+                    />
+                  </div>
+                </MenuItem>
+              </MenuList>
+            </Menu>
+          )}
 
           <Menu>
             <MenuButton>

@@ -24,6 +24,7 @@ import {
   Outlet,
   ActionFunction,
   redirect,
+  useFetcher,
 } from 'remix'
 import { VoteItem, NoItems, Wrapper } from '~/components'
 import { authenticator } from '~/utils/auth.server'
@@ -143,6 +144,10 @@ export default function ClipbaordContent() {
 
   const borderColor = useColorModeValue('gray.200', 'gray.700')
 
+  const addVoteFetcher = useFetcher()
+
+  const isAdding = addVoteFetcher.state === 'submitting'
+
   return (
     <div className="flex w-full py-8">
       <Wrapper>
@@ -159,7 +164,7 @@ export default function ClipbaordContent() {
         </Form>
 
         <div className="p-4 mt-4 border rounded-md">
-          <Form
+          <addVoteFetcher.Form
             className="flex items-center justify-between w-full mb-6"
             method="post"
             action="/habits-rank"
@@ -174,10 +179,19 @@ export default function ClipbaordContent() {
               />
               <FormErrorMessage>{actionData?.errors.title.message}</FormErrorMessage>
             </FormControl>
-            <Button leftIcon={<IoMdAdd />} ml="2" variant="solid" w="17%" size="md" type="submit">
+            <Button
+              leftIcon={<IoMdAdd />}
+              ml="2"
+              variant="solid"
+              w="17%"
+              size="md"
+              type="submit"
+              isLoading={isAdding}
+              loadingText="Adding"
+            >
               Add
             </Button>
-          </Form>
+          </addVoteFetcher.Form>
           <VStack alignItems={'flex-start'} divider={<StackDivider borderColor={borderColor} />}>
             {votes.map((vote) => {
               return <VoteItem {...vote} key={vote.id} />

@@ -9,8 +9,12 @@ export default function Vote(props: Vote) {
   const upvotesFetcher = useFetcher()
   const downvoteFetcher = useFetcher()
 
-  const isUpvoting = upvotesFetcher.state === 'submitting'
-  const isDownvoting = downvoteFetcher.state === 'submitting'
+  const isUpvoting =
+    upvotesFetcher.state === 'submitting' ||
+    (upvotesFetcher.state === 'loading' && upvotesFetcher.type === 'actionReload')
+  const isDownvoting =
+    downvoteFetcher.state === 'submitting' ||
+    (downvoteFetcher.state === 'loading' && downvoteFetcher.type === 'actionReload')
 
   return (
     <div className="flex flex-col items-start w-full py-2 rounded-md gap-y-1">
