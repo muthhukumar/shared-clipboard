@@ -105,7 +105,7 @@ export default function Todo(
 
           {isOverDue && (
             <Menu>
-              <MenuButton as={Button} size="xs" disabled={isRescheduling}>
+              <MenuButton as={Button} size="xs" disabled={isRescheduling} colorScheme="purple">
                 {isRescheduling ? 'Rescheduling...' : 'Reschedule'}
               </MenuButton>
               <MenuList>
