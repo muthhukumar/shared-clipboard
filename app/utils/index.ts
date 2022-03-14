@@ -11,11 +11,11 @@ export function formatFieldErrors(fieldErrors: Record<string, Array<string>>) {
   return result
 }
 
-export function formatFieldErrorsNew(
-  fields: Record<string, unknown>,
+export function formatFieldErrorsNew<FormFieldType>(
+  fields: { [key in keyof FormFieldType]: unknown },
   fieldErrors: Record<string, Array<string>>,
 ) {
-  const result: Record<string, { message: string; isInvalid: boolean }> = {}
+  const result: Partial<{ [key: string]: { message: string; isInvalid: boolean } }> = {}
 
   Object.keys(fields).forEach((key) => {
     if (fieldErrors[key]) {

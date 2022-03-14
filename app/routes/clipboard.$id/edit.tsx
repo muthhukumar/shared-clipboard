@@ -5,33 +5,18 @@ import {
   redirect,
   useActionData,
   useNavigate,
-  useTransition,
-  Form,
   json,
   useLoaderData,
   MetaFunction,
 } from 'remix'
-import {
-  Button,
-  Textarea,
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalHeader,
-  ModalCloseButton,
-  ModalBody,
-  ModalFooter,
-  FormControl,
-  FormLabel,
-  Input,
-  FormErrorMessage,
-  Select,
-} from '@chakra-ui/react'
+import { ModalHeader, ModalCloseButton, ModalBody } from '@chakra-ui/react'
 import { z } from 'zod'
 import { ClipboardContent, User } from '@prisma/client'
 import { formatFieldErrorsNew } from '~/utils'
 import { authenticator } from '~/utils/auth.server'
 import { prisma } from '~/utils/prisma.server'
+import ClipboardForm, { ClipboardFormProps } from '~/components/forms/clipboard'
+import { Dialog } from '~/components'
 
 const ClipboardContentSchema = z.object({
   title: z.string().min(5),
@@ -148,79 +133,36 @@ export default function ClipboardContentNew() {
 
   const onClose = () => navigation(-1)
 
-  const initialRef = React.useRef<HTMLInputElement>()
-
-  const transition = useTransition()
-
-  const submitting = transition.state === 'submitting'
-
   const actionData = useActionData<ActionDataType>()
 
   const content = useLoaderData<ClipboardContent>()
 
+  const clipboardFormProps: ClipboardFormProps = {
+    title: {
+      invalid: actionData?.errors.title.isInvalid,
+      errorMessage: actionData?.errors.title.message,
+      value: content.title,
+    },
+    content: {
+      invalid: actionData?.errors.content.isInvalid,
+      errorMessage: actionData?.errors.content.message,
+      value: content.content,
+    },
+    private: {
+      invalid: actionData?.errors.private.isInvalid,
+      errorMessage: actionData?.errors.private.message,
+      value: content.private,
+    },
+    submittingText: 'Saving',
+  }
+
   return (
-    <>
-      <Modal initialFocusRef={initialRef} isOpen={true} onClose={onClose} isCentered size="xl">
-        <ModalOverlay bg="none" backdropFilter="auto" backdropInvert="80%" backdropBlur="2px" />
-        <ModalContent>
-          <ModalHeader>Create new Clipboard content</ModalHeader>
-          <ModalCloseButton />
-          <Form method="post">
-            <ModalBody pb={6}>
-              <FormControl isInvalid={actionData?.errors.title.isInvalid}>
-                <FormLabel>Title</FormLabel>
-                <Input
-                  ref={initialRef}
-                  placeholder="Title"
-                  type="text"
-                  name="title"
-                  isInvalid={actionData?.errors.title.isInvalid}
-                  defaultValue={content.title}
-                />
-                <FormErrorMessage>{actionData?.errors.title.message}</FormErrorMessage>
-              </FormControl>
-
-              <FormControl mt={4} isInvalid={actionData?.errors.content.isInvalid}>
-                <FormLabel>Content</FormLabel>
-                <Textarea
-                  name="content"
-                  placeholder="Content to copy"
-                  isInvalid={actionData?.errors.content.isInvalid}
-                  defaultValue={content.content}
-                />
-                <FormErrorMessage>{actionData?.errors.content.message}</FormErrorMessage>
-              </FormControl>
-              <FormControl mt={4} isInvalid={actionData?.errors.private.isInvalid}>
-                <FormLabel>Is Private</FormLabel>
-                <Select
-                  name="private"
-                  placeholder="Select option"
-                  defaultValue={`${content.private}` ?? 'true'}
-                  isInvalid={actionData?.errors.private.isInvalid}
-                >
-                  <option value="false">Public</option>
-                  <option value="true">Private</option>
-                </Select>
-                <FormErrorMessage>{actionData?.errors.private.message}</FormErrorMessage>
-              </FormControl>
-            </ModalBody>
-
-            <ModalFooter>
-              <Button onClick={onClose} mr={3}>
-                Cancel
-              </Button>
-              <Button
-                colorScheme="blue"
-                isLoading={submitting}
-                loadingText={'Saving'}
-                type="submit"
-              >
-                Save
-              </Button>
-            </ModalFooter>
-          </Form>
-        </ModalContent>
-      </Modal>
-    </>
+    <Dialog isOpen={true} onClose={onClose}>
+      <ModalHeader>Edit Clipboard content</ModalHeader>
+      <ModalCloseButton />
+      <ModalBody pb={6}>
+        <ClipboardForm {...clipboardFormProps} />
+      </ModalBody>
+    </Dialog>
   )
 }
