@@ -1,15 +1,6 @@
-import {
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalHeader,
-  ModalCloseButton,
-  ModalBody,
-  ModalFooter,
-  Button,
-} from '@chakra-ui/react'
 import { User } from '@prisma/client'
-import { ActionFunction, Form, MetaFunction, redirect, useNavigate, useTransition } from 'remix'
+import { ActionFunction, MetaFunction, redirect } from 'remix'
+import { DeleteDialog } from '~/components'
 import { authenticator } from '~/utils/auth.server'
 import { prisma } from '~/utils/prisma.server'
 
@@ -44,32 +35,5 @@ export const action: ActionFunction = async ({ request, params }) => {
 }
 
 export default function Delete() {
-  const navigation = useNavigate()
-  const onClose = () => navigation(-1)
-
-  const transition = useTransition()
-
-  const deleting = transition.state === 'submitting'
-
-  return (
-    <Modal isOpen={true} onClose={onClose}>
-      <ModalOverlay />
-      <ModalContent>
-        <ModalHeader>Delete Birthday</ModalHeader>
-        <ModalCloseButton />
-        <ModalBody>Are you sure to delete this Birthday?</ModalBody>
-
-        <ModalFooter>
-          <Button onClick={onClose} mr={3}>
-            Cancel
-          </Button>
-          <Form method="delete">
-            <Button colorScheme="red" isLoading={deleting} loadingText="Deleting" type="submit">
-              Delete
-            </Button>
-          </Form>
-        </ModalFooter>
-      </ModalContent>
-    </Modal>
-  )
+  return <DeleteDialog title="Delete Birthday" message="Are you sure to delete this Birthday?" />
 }
