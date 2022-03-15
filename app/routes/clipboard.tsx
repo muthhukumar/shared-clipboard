@@ -16,7 +16,7 @@ import { RiSearchLine } from 'react-icons/ri'
 
 import { authenticator } from '~/utils/auth.server'
 import { prisma } from '~/utils/prisma.server'
-import { ClipboardContent, NoItems, Wrapper } from '~/components'
+import { ClipboardContent as ClipboardContentComp, NoItems, Wrapper } from '~/components'
 
 export const meta: MetaFunction = () => {
   return {
@@ -56,7 +56,7 @@ export const loader: LoaderFunction = async ({ request }) => {
   return json(clipboardContents)
 }
 
-export default function ClipbaordContent() {
+export default function ClipboardContent() {
   const contents = useLoaderData<Array<ClipboardContentType>>()
   const navigation = useNavigate()
 
@@ -94,7 +94,7 @@ export default function ClipbaordContent() {
                   key={content.id}
                   className="w-full transition-all border rounded-md hover:border-white"
                 >
-                  <ClipboardContent {...content} key={content.id} />
+                  <ClipboardContentComp {...content} key={content.id} />
                 </Link>
               )
             })}

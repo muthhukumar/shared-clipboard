@@ -1,6 +1,8 @@
 import { Transition } from '@remix-run/react/transition'
 import moment from 'moment'
+import { Params } from 'react-router'
 
+// TODO - After refactoring check whether we are using this some where if not then just remove it.
 export function formatFieldErrors(fieldErrors: Record<string, Array<string>>) {
   const result: Record<keyof typeof fieldErrors, string> = {}
 
@@ -11,11 +13,12 @@ export function formatFieldErrors(fieldErrors: Record<string, Array<string>>) {
   return result
 }
 
-export function formatFieldErrorsNew(
-  fields: Record<string, unknown>,
+// TODO - After refactoring check whether we are using this some where if not then just remove it.
+export function formatFieldErrorsNew<FormFieldType>(
+  fields: { [key in keyof FormFieldType]: unknown },
   fieldErrors: Record<string, Array<string>>,
 ) {
-  const result: Record<string, { message: string; isInvalid: boolean }> = {}
+  const result: Partial<{ [key: string]: { message: string; isInvalid: boolean } }> = {}
 
   Object.keys(fields).forEach((key) => {
     if (fieldErrors[key]) {
@@ -82,4 +85,8 @@ export const composeUrl = (url: URL, options?: { includePathname?: boolean }) =>
   }
 
   return `${protocol}://${url.host}${url.pathname}`
+}
+
+export const composeNumberId = (params: Params<string>) => {
+  return params.id ? +params.id : undefined
 }

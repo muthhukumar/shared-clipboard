@@ -1,3 +1,7 @@
+// TODO - Might want to refactor this... Especially the form
+
+import { ClipboardContent as ClipboardContentType, User } from '@prisma/client'
+
 import * as React from 'react'
 import {
   FormControl,
@@ -18,7 +22,6 @@ import {
   TabPanels,
   Tabs,
 } from '@chakra-ui/react'
-import { ClipboardContent as ClipboardContentType, User } from '@prisma/client'
 import {
   json,
   LoaderFunction,
@@ -30,12 +33,12 @@ import {
   useNavigate,
   MetaFunction,
 } from 'remix'
+import { ChevronDownIcon } from '@chakra-ui/icons'
 
 import { authenticator } from '~/utils/auth.server'
 import { prisma } from '~/utils/prisma.server'
 import { PageTitle, QRCode, Wrapper } from '~/components'
 import { copyToClipboard } from '~/utils/browser'
-import { ChevronDownIcon } from '@chakra-ui/icons'
 import { composeUrl } from '~/utils'
 
 export const meta: MetaFunction = () => {
@@ -56,6 +59,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
   })
 
   if (!clipboardContents) {
+    // TODO - Handle this with the error boundary and catch boundary
     throw json(
       { message: `The Clipboard content you're looking for doesn't exists` },
       { status: 404 },
@@ -63,6 +67,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
   }
 
   if (clipboardContents.userEmail !== user.email) {
+    // TODO - Handle this with the error boundary and catch boundary
     throw json(
       { message: `Unauthorized access. You're not allowed to see this content` },
       { status: 401 },

@@ -9,7 +9,7 @@ type DialogProps = {
 
 export default function Dialog(props: DialogProps) {
   return (
-    <Modal isOpen={props.isOpen} onClose={props.onClose}>
+    <Modal isOpen={props.isOpen} onClose={props.onClose} isCentered size="xl">
       <ModalOverlay />
       <ModalContent>{props.children}</ModalContent>
     </Modal>
