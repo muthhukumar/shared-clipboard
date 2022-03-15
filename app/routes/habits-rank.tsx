@@ -1,3 +1,7 @@
+import { ActionType } from '~/types/common'
+import { User, Vote } from '@prisma/client'
+import { VoteSchema, VoteType } from '~/types/vote'
+
 import {
   InputGroup,
   InputLeftElement,
@@ -9,7 +13,6 @@ import {
   useColorModeValue,
   StackDivider,
 } from '@chakra-ui/react'
-import { User, Vote } from '@prisma/client'
 import { IoMdAdd } from 'react-icons/io'
 import { RiSearchLine } from 'react-icons/ri'
 import {
@@ -19,18 +22,16 @@ import {
   json,
   LoaderFunction,
   MetaFunction,
-  useActionData,
   useTransition,
   Outlet,
   ActionFunction,
-  redirect,
   useFetcher,
 } from 'remix'
+
 import { VoteItem, NoItems, Wrapper } from '~/components'
 import { authenticator } from '~/utils/auth.server'
 import { prisma } from '~/utils/prisma.server'
-import { z } from 'zod'
-import { formatFieldErrorsNew } from '~/utils'
+import { getFormData, getFinalFormData } from '~/utils/form'
 
 export const meta: MetaFunction = () => {
   return {
@@ -38,19 +39,10 @@ export const meta: MetaFunction = () => {
   }
 }
 
-const VoteSchema = z.object({
-  title: z.string().min(5),
-})
-
-export type ActionDataType = {
-  values: z.infer<typeof VoteSchema> | Record<string, unknown>
-  errors: Record<
-    keyof z.infer<typeof VoteSchema>,
-    {
-      message: string
-      isInvalid: boolean
-    }
-  >
+interface VoteActionType {
+  data: ActionType<VoteType> | undefined | null
+  success: boolean
+  errorMessage: string | ''
 }
 
 export const action: ActionFunction = async ({ request }) => {
@@ -60,38 +52,34 @@ export const action: ActionFunction = async ({ request }) => {
 
   const formData = await request.formData()
 
-  const actionData: ActionDataType = {
-    values: {},
-    errors: {
-      title: { isInvalid: true, message: '' },
-    },
-  }
+  const voteData = getFormData<VoteType>(formData, [{ key: 'title', defaultValue: '' }])
 
-  const VoteContentData = {
-    title: formData.get('title'),
-  }
+  const voteValidationResult = VoteSchema.safeParse(voteData)
 
-  const VoteValidationResult = VoteSchema.safeParse(VoteContentData)
-
-  if (!VoteValidationResult.success) {
-    actionData.values = { ...VoteContentData }
-    actionData.errors = {
-      ...formatFieldErrorsNew(VoteContentData, VoteValidationResult.error.formErrors.fieldErrors),
+  if (!voteValidationResult.success) {
+    const result = getFinalFormData<VoteType>(
+      voteData,
+      voteValidationResult.error.formErrors.fieldErrors,
+    )
+    return {
+      success: false,
+      data: result,
+      errorMessage: result.title?.errorMessage,
     }
-
-    return actionData
   }
 
   try {
     await prisma.vote.create({
       data: {
-        title: VoteValidationResult.data.title,
+        title: voteValidationResult.data.title,
         userEmail: user.email,
       },
     })
-    return redirect(`/habits-rank`)
+    return json({ success: true, data: null, errorMessage: '' })
   } catch (err) {
-    return redirect('/')
+    // TODO - Handle this with catch and error boundary
+    return json({ success: false, data: null, errorMessage: 'Something went wrong.' })
+    // return redirect('/')
   }
 }
 
@@ -140,11 +128,11 @@ export default function ClipbaordContent() {
 
   const transition = useTransition()
 
-  const actionData = useActionData<ActionDataType>()
-
   const borderColor = useColorModeValue('gray.200', 'gray.700')
 
   const addVoteFetcher = useFetcher()
+
+  const actionData = addVoteFetcher.data as VoteActionType
 
   const isAdding = addVoteFetcher.state === 'submitting'
 
@@ -170,14 +158,14 @@ export default function ClipbaordContent() {
             action="/habits-rank"
             key={transition.location?.key}
           >
-            <FormControl isInvalid={actionData?.errors.title.isInvalid}>
+            <FormControl isInvalid={actionData?.data?.title?.invalid}>
               <Input
                 type="text"
                 name="title"
                 placeholder="Enter your Habit..."
-                isInvalid={actionData?.errors.title.isInvalid}
+                isInvalid={actionData?.data?.title?.invalid}
               />
-              <FormErrorMessage>{actionData?.errors.title.message}</FormErrorMessage>
+              <FormErrorMessage>{actionData?.data?.title?.errorMessage}</FormErrorMessage>
             </FormControl>
             <Button
               leftIcon={<IoMdAdd />}

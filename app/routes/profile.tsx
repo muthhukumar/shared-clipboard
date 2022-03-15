@@ -1,6 +1,7 @@
 import { Stack, useColorModeValue, VStack } from '@chakra-ui/react'
-import clsx from 'clsx'
 import { Link, MetaFunction, Outlet, useLocation } from 'remix'
+import clsx from 'clsx'
+
 import { PageTitle, Wrapper } from '~/components'
 
 const links: Array<{ title: string; to: string }> = [
@@ -42,9 +43,6 @@ export default function Profile() {
                   [lightTextColor]: !location.pathname.includes(link.to),
                   'font-bold': location.pathname.includes(link.to),
                 })}
-                // [borderColor]: location.pathname.includes(link.to),
-                // 'border-transparent': !location.pathname.includes(link.to),
-                // })}
               >
                 {link.title}
               </Link>

@@ -1,5 +1,7 @@
 import { User } from '@prisma/client'
+
 import { ActionFunction, json, redirect } from 'remix'
+
 import { authenticator } from '~/utils/auth.server'
 import { prisma } from '~/utils/prisma.server'
 
@@ -17,6 +19,7 @@ export const action: ActionFunction = async ({ params, request }) => {
   })
 
   if (!isCurrentUsers || isCurrentUsers.userEmail !== user.email) {
+    // TODO - Handle this with the error and catch boundary
     return redirect('/habits-rank')
   }
 
@@ -33,6 +36,7 @@ export const action: ActionFunction = async ({ params, request }) => {
     })
     return json({ ok: true })
   } catch (err) {
+    // TODO - Handle this with the error and catch boundary
     throw redirect('/')
   }
 }

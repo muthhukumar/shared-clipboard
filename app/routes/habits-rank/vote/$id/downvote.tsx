@@ -1,5 +1,8 @@
 import { User } from '@prisma/client'
+
 import { ActionFunction, json, redirect } from 'remix'
+import { composeNumberId } from '~/utils'
+
 import { authenticator } from '~/utils/auth.server'
 import { prisma } from '~/utils/prisma.server'
 
@@ -8,7 +11,7 @@ export const action: ActionFunction = async ({ params, request }) => {
     failureRedirect: '/login',
   })) as User
 
-  const id = params.id ? +params.id : undefined
+  const id = composeNumberId(params)
 
   const isCurrentUsers = await prisma.vote.findUnique({
     where: {
@@ -17,6 +20,7 @@ export const action: ActionFunction = async ({ params, request }) => {
   })
 
   if (!isCurrentUsers || isCurrentUsers.userEmail !== user.email) {
+    // TODO - Handle this with the error and catch boundary
     return redirect('/habits-rank')
   }
 

@@ -1,5 +1,7 @@
 import { User } from '@prisma/client'
+
 import { ActionFunction, MetaFunction, redirect } from 'remix'
+
 import { DeleteDialog } from '~/components'
 import { authenticator } from '~/utils/auth.server'
 import { prisma } from '~/utils/prisma.server'

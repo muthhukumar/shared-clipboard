@@ -1,7 +1,9 @@
+import { User } from '@prisma/client'
 import { ExternalLinkIcon } from '@chakra-ui/icons'
 import { Link, VStack } from '@chakra-ui/react'
-import { User } from '@prisma/client'
+
 import { json, LoaderFunction, MetaFunction, useLoaderData } from 'remix'
+
 import { authenticator } from '~/utils/auth.server'
 import { prisma } from '~/utils/prisma.server'
 

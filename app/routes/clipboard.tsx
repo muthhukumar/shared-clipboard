@@ -1,5 +1,6 @@
-import { Button, Input, InputGroup, InputLeftElement } from '@chakra-ui/react'
 import { ClipboardContent as ClipboardContentType, User } from '@prisma/client'
+
+import { Button, Input, InputGroup, InputLeftElement } from '@chakra-ui/react'
 import { IoMdAdd } from 'react-icons/io'
 import {
   LoaderFunction,

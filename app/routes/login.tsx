@@ -1,7 +1,8 @@
 import { Button, Flex, Heading, Stack, Image, Text } from '@chakra-ui/react'
 import { LoaderFunction, MetaFunction, useFetcher } from 'remix'
-import { authenticator } from '~/utils/auth.server'
 import { BsGoogle, BsGithub } from 'react-icons/bs'
+
+import { authenticator } from '~/utils/auth.server'
 
 export const meta: MetaFunction = () => {
   return {

@@ -1,3 +1,5 @@
+import { User } from '@prisma/client'
+
 import * as React from 'react'
 import {
   ActionFunction,
@@ -24,7 +26,7 @@ import {
   FormErrorMessage,
 } from '@chakra-ui/react'
 import { z } from 'zod'
-import { User } from '@prisma/client'
+
 import { formatFieldErrorsNew } from '~/utils'
 import { authenticator } from '~/utils/auth.server'
 import { prisma } from '~/utils/prisma.server'

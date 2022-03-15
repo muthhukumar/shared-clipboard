@@ -1,6 +1,8 @@
-import { InputGroup, InputLeftAddon, Input, VStack, Avatar } from '@chakra-ui/react'
 import { User } from '@prisma/client'
+
+import { InputGroup, InputLeftAddon, Input, VStack, Avatar } from '@chakra-ui/react'
 import { LoaderFunction, MetaFunction, useLoaderData } from 'remix'
+
 import { authenticator } from '~/utils/auth.server'
 
 export const meta: MetaFunction = () => {
