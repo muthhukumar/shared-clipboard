@@ -1,7 +1,7 @@
-import { ClipboardContent } from '@prisma/client'
+import { ClipboardContent as ClipboardContentType } from '@prisma/client'
 import moment from 'moment'
 
-export default function ClipboardContent(props: ClipboardContent) {
+export default function ClipboardContent(props: ClipboardContentType) {
   return (
     <div className="w-full p-4">
       <div className="flex flex-col gap-y-4">

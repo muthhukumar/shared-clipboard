@@ -1,4 +1,3 @@
-import * as React from 'react'
 import {
   Button,
   HStack,
@@ -36,7 +35,7 @@ function getPriorityColor(priority: Priority) {
   return priorityColor[priority]
 }
 
-export default function Todo(
+export default function TodoItem(
   props: Todo & {
     labels: (LabelsOnTodo & {
       Label: Label | null

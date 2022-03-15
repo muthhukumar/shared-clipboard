@@ -1,6 +1,6 @@
 // TODO - Might want to refactor stuff in this file
 
-import { Label, LabelsOnTodo, Todo as TodoType, User } from '@prisma/client'
+import { Label, LabelsOnTodo, Todo, Todo as TodoType, User } from '@prisma/client'
 
 import {
   InputGroup,
@@ -13,19 +13,10 @@ import {
   HStack,
   Select,
   Stack,
-  FormControl,
-  FormLabel,
-  Switch,
-  IconButton,
-  Menu,
-  MenuButton,
-  MenuItem,
-  MenuList,
 } from '@chakra-ui/react'
 import moment from 'moment'
 import { IoMdAdd } from 'react-icons/io'
 import { RiSearchLine } from 'react-icons/ri'
-import { IoIosOptions } from 'react-icons/io'
 import { RiDeleteBack2Line } from 'react-icons/ri'
 import {
   Form,
@@ -85,7 +76,6 @@ export const loader: LoaderFunction = async ({ request }) => {
   const sortBy = url.searchParams.get('sortBy') ?? SortByOptions.LATEST
   const show = url.searchParams.get('show') ?? 'pending'
 
-  // const today = moment().format('YYYY-MM-DD')
   const dueDate = moment().format('YYYY-MM-DD')
 
   let addiontalQuery = {}
@@ -131,17 +121,6 @@ export const loader: LoaderFunction = async ({ request }) => {
     addiontalQuery = {}
   }
 
-  if (show === 'completed') {
-    addiontalQuery = {
-      ...addiontalQuery,
-    }
-  } else {
-    addiontalQuery = {
-      ...addiontalQuery,
-      completed: false,
-    }
-  }
-
   if (query) {
     const searchMatchResult = await prisma.todo.findMany({
       where: {
@@ -165,7 +144,7 @@ export const loader: LoaderFunction = async ({ request }) => {
       },
     })
 
-    return json({ todo: searchMatchResult, filterBy, sortBy })
+    return json({ todo: searchMatchResult, filterBy, sortBy, show })
   }
 
   const todo = await prisma.todo.findMany({
@@ -188,14 +167,20 @@ export const loader: LoaderFunction = async ({ request }) => {
   return json({ todo, filterBy, sortBy, show })
 }
 
-export default function Todo() {
+export default function TodoIndex() {
   const navigation = useNavigate()
 
-  const { todo, filterBy, sortBy, show } = useLoaderData<LoaderType>()
+  const { todo, filterBy, sortBy } = useLoaderData<LoaderType>()
 
   const submit = useSubmit()
 
   const borderColor = useColorModeValue('gray.200', 'gray.800')
+
+  const completedTodos = todo.filter((todo) => todo.completed)
+
+  const hasCompletedSomeTodos = completedTodos.length > 0
+
+  const hasPendingTodos = todo.length > completedTodos.length
 
   return (
     <div className="w-full py-8">
@@ -241,7 +226,7 @@ export default function Todo() {
                     <option value={SortByOptions.PRIORITY}>Priority</option>
                     <option value={SortByOptions.LAST_UPDATED}>Last updated</option>
                   </Select>
-                  <Menu>
+                  {/* <Menu>
                     <MenuButton
                       as={IconButton}
                       aria-label="Options"
@@ -263,7 +248,7 @@ export default function Todo() {
                         </FormControl>
                       </MenuItem>
                     </MenuList>
-                  </Menu>
+                  </Menu> */}
                 </HStack>
               </div>
             </Stack>
@@ -297,14 +282,34 @@ export default function Todo() {
             <NoItems title="No todo list items found!!!" />
           </div>
         )}
+        {hasPendingTodos && <h2 className="pb-4 mt-10 text-xl font-bold border-b">Pending</h2>}
         <VStack
           alignItems={'flex-start'}
-          mt="8"
+          mt="6"
+          divider={<StackDivider borderColor={borderColor} />}
+        >
+          {hasPendingTodos &&
+            todo.map((todo) => {
+              if (!todo.completed) {
+                return <TodoItem {...todo} key={todo.id} />
+              }
+              return null
+            })}
+        </VStack>
+        {hasCompletedSomeTodos && (
+          <h2 className="pb-4 mt-10 text-xl font-bold border-b">Completed</h2>
+        )}
+        <VStack
+          alignItems={'flex-start'}
+          mt="6"
           divider={<StackDivider borderColor={borderColor} />}
         >
           {todo.length > 0 &&
             todo.map((todo) => {
-              return <TodoItem {...todo} key={todo.id} />
+              if (todo.completed) {
+                return <TodoItem {...todo} key={todo.id} />
+              }
+              return null
             })}
         </VStack>
       </Wrapper>
