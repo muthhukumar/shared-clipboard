@@ -91,7 +91,7 @@ export default function Copy() {
   React.useEffect(() => {
     const url = new URL(`${window.location.href}/c/${id}`)
     setUrl(composeUrl(url))
-  }, [])
+  }, [id])
 
   const copy = () => {
     copyToClipboard(clipboardContents.content, () => {

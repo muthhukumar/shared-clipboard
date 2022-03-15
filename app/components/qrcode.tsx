@@ -26,7 +26,7 @@ export default function QRCode({ value }: { value: string }) {
           status: 'error',
         })
       })
-  }, [ref])
+  }, [ref, toast])
 
   return (
     <div className="w-full">

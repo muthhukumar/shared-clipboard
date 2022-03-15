@@ -4,7 +4,7 @@ import moment from 'moment'
 import { BsArrowUp, BsArrowDown, BsThreeDotsVertical } from 'react-icons/bs'
 import { useFetcher, useNavigate } from 'remix'
 
-export default function Vote(props: Vote) {
+export default function VoteItem(props: Vote) {
   const navigation = useNavigate()
   const upvotesFetcher = useFetcher()
   const downvoteFetcher = useFetcher()

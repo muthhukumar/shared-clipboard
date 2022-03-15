@@ -10,8 +10,8 @@ module.exports = {
     //   },
     // },
     {
-      name: 'Vercel',
-      script: 'vercel dev',
+      name: 'Dev',
+      script: 'cross-env NODE_ENV=development remix build && run-p dev:*',
       ignore_watch: ['.'],
       env: {
         FORCE_COLOR: '1',

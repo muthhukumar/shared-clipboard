@@ -7,7 +7,7 @@
     "dev": "pm2-dev ./pm2.config.js",
     "watch:css": "postcss styles --base styles --dir app/styles -w",
     "build:css": "postcss styles --base styles --dir app/styles --env production",
-    "build:remix": "remix build",
+    "build:remix": "cross-env NODE_ENV=production remix build",
     "build:css:prod": "npm run build:css -- --env production",
     "format": "prettier --write \"**/*.+(js|jsx|json|yml|yaml|css|less|scss|ts|tsx|md|gql|graphql|mdx|vue)\"",
     "setup": "npm install && npm run build && npm run validate",
@@ -18,7 +18,10 @@
     "prebuild": "npm run clean && echo All clean",
     "clean": "npx rimraf public/build ./node_modules/.cache ./app/styles/**.css ./api/build* .cache",
     "postinstall": "remix setup node && npx prisma generate",
-    "migrate:deploy": "npx prisma migrate deploy"
+    "migrate:deploy": "npx prisma migrate deploy",
+    "start": "cross-env NODE_ENV=production node ./build/index.js",
+    "dev:node": "cross-env NODE_ENV=development nodemon ./build/index.js --watch ./build/index.js",
+    "dev:remix": "cross-env NODE_ENV=development remix watch"
   },
   "dependencies": {
     "@chakra-ui/icons": "^1.1.7",
@@ -47,7 +50,13 @@
     "remix-auth-github": "^1.0.0",
     "remix-auth-google": "^1.1.0",
     "validator": "^13.7.0",
-    "zod": "^3.13.4"
+    "zod": "^3.13.4",
+    "@remix-run/express": "^1.2.3",
+    "compression": "^1.7.4",
+    "cross-env": "^7.0.3",
+    "express": "^4.17.1",
+    "morgan": "^1.10.0",
+    "npm-run-all": "^4.1.5"
   },
   "devDependencies": {
     "@remix-run/dev": "^1.2.3",
@@ -69,7 +78,9 @@
     "prettier": "^2.5.1",
     "prisma": "^3.10.0",
     "tailwindcss": "^3.0.23",
-    "typescript": "^4.6.2"
+    "typescript": "^4.6.2",
+    "@remix-run/eslint-config": "^1.2.3",
+    "nodemon": "^2.0.15"
   },
   "engines": {
     "node": ">=14"
