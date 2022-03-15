@@ -1,5 +1,7 @@
 import { User } from '@prisma/client'
+
 import { ActionFunction, MetaFunction, redirect } from 'remix'
+
 import { DeleteDialog } from '~/components'
 import { authenticator } from '~/utils/auth.server'
 import { prisma } from '~/utils/prisma.server'
@@ -15,7 +17,7 @@ export const action: ActionFunction = async ({ request, params }) => {
     failureRedirect: '/login',
   })) as User
 
-  const id = String(params.id)
+  const id = params.id
 
   const isCurrentUsers = await prisma.todo.findUnique({
     where: {

@@ -80,6 +80,7 @@ export default function ClipboardContentNew() {
   const clipboardFormProps: ClipboardFormProps = {
     ...actionData,
     submittingText: 'Creating',
+    okButtonText: 'Create',
   }
 
   return (

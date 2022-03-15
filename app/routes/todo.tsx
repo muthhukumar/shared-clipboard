@@ -1,3 +1,5 @@
+import { Label, LabelsOnTodo, Todo as TodoType, User } from '@prisma/client'
+
 import {
   InputGroup,
   InputLeftElement,
@@ -18,10 +20,11 @@ import {
   MenuItem,
   MenuList,
 } from '@chakra-ui/react'
-import { Label, LabelsOnTodo, Todo as TodoType, User } from '@prisma/client'
 import moment from 'moment'
 import { IoMdAdd } from 'react-icons/io'
 import { RiSearchLine } from 'react-icons/ri'
+import { IoIosOptions } from 'react-icons/io'
+import { RiDeleteBack2Line } from 'react-icons/ri'
 import {
   Form,
   json,
@@ -32,11 +35,10 @@ import {
   useNavigate,
   useSubmit,
 } from 'remix'
+
 import { Wrapper, NoItems, TodoItem } from '~/components'
 import { authenticator } from '~/utils/auth.server'
 import { prisma } from '~/utils/prisma.server'
-import { IoIosOptions } from 'react-icons/io'
-import { RiDeleteBack2Line } from 'react-icons/ri'
 
 const enum FilterByOptions {
   SHOW_ALL = 'showall',

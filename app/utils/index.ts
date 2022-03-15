@@ -1,3 +1,4 @@
+import { Priority } from '@prisma/client'
 import { Transition } from '@remix-run/react/transition'
 import moment from 'moment'
 import { Params } from 'react-router'
@@ -89,4 +90,27 @@ export const composeUrl = (url: URL, options?: { includePathname?: boolean }) =>
 
 export const composeNumberId = (params: Params<string>) => {
   return params.id ? +params.id : undefined
+}
+
+export const composeLabels = (labels: unknown) => {
+  if (!Array.isArray(labels)) {
+    return []
+  }
+
+  return labels.filter((label) => label).map((label) => +label)
+}
+
+export const composePriority = (priority: Priority) => {
+  const priorities = {
+    [Priority.HIGH]: Priority.HIGH,
+    [Priority.LOW]: Priority.LOW,
+    [Priority.MEDIUM]: Priority.MEDIUM,
+    [Priority.NORMAL]: Priority.NORMAL,
+  }
+
+  if (!priorities[priority]) {
+    return Priority.NORMAL
+  }
+
+  return priorities[priority]
 }

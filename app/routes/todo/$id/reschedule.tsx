@@ -1,9 +1,13 @@
+// TODO - If free check this again.
 import { User } from '@prisma/client'
+
 import { ActionFunction, json, LoaderFunction, redirect } from 'remix'
-import { authenticator } from '~/utils/auth.server'
-import { prisma } from '~/utils/prisma.server'
+
 import { z } from 'zod'
 import moment from 'moment'
+
+import { authenticator } from '~/utils/auth.server'
+import { prisma } from '~/utils/prisma.server'
 
 const DueDateSchema = z.date()
 
@@ -25,6 +29,7 @@ export const action: ActionFunction = async ({ request, params }) => {
   }
 
   if (todo.userEmail !== user.email) {
+    // TODO - Handle this with the error boundary and catch boundary
     throw json({ message: 'You are not authorized to edit this content' }, { status: 401 })
   }
 
@@ -35,6 +40,7 @@ export const action: ActionFunction = async ({ request, params }) => {
   const dueDateValidationResult = DueDateSchema.safeParse(dueDate)
 
   if (!dueDateValidationResult.success) {
+    // TODO - Handle this with the error boundary and catch boundary
     return json({ success: false, message: 'Invalid due date passed. Please pass valid due date.' })
   }
 
@@ -50,6 +56,7 @@ export const action: ActionFunction = async ({ request, params }) => {
 
     return json({ success: true })
   } catch (err) {
+    // TODO - Handle this with the error boundary and catch boundary
     return json({ success: false, message: 'Updating due date failed' })
   }
 }

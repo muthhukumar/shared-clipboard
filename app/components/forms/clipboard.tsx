@@ -10,25 +10,12 @@ import {
 } from '@chakra-ui/react'
 import { Form, useNavigate, useTransition } from 'remix'
 import { ClipboardContentType } from '~/types/clipboard'
+import { FormPropsType } from '~/types/common'
 import { composeToBoolean } from '~/utils/form'
 
-export type ClipboardFormProps = {
-  title?: {
-    invalid?: boolean
-    value?: ClipboardContentType['title']
-    errorMessage?: string
-  }
-  content?: {
-    invalid?: boolean
-    value?: ClipboardContentType['content']
-    errorMessage?: string
-  }
-  private?: {
-    invalid?: boolean
-    value?: ClipboardContentType['private']
-    errorMessage?: string
-  }
+export interface ClipboardFormProps extends FormPropsType<ClipboardContentType> {
   submittingText: string
+  okButtonText: string
 }
 
 export default function ClipboardForm(props: ClipboardFormProps) {
@@ -84,7 +71,7 @@ export default function ClipboardForm(props: ClipboardFormProps) {
           loadingText={props?.submittingText ?? 'Submitting'}
           type="submit"
         >
-          Create
+          {props.okButtonText ?? 'Create'}
         </Button>
       </HStack>
     </Form>

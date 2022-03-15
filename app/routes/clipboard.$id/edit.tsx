@@ -129,6 +129,7 @@ export default function ClipboardContentNew() {
       ...actionData?.private,
     },
     submittingText: 'Saving',
+    okButtonText: 'Save',
   }
 
   return (
