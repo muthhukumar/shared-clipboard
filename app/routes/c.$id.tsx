@@ -1,7 +1,11 @@
+// TODO - Might want to refactor this file
+
 import { User } from '.prisma/client'
-import { Button, useToast, VStack } from '@chakra-ui/react'
+
 import * as React from 'react'
+import { Button, useToast, VStack } from '@chakra-ui/react'
 import { json, LoaderFunction, MetaFunction, useLoaderData } from 'remix'
+
 import { PageTitle, Wrapper } from '~/components'
 import { authenticator } from '~/utils/auth.server'
 import { copyToClipboard } from '~/utils/browser'
@@ -19,6 +23,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
   const clipboardContentId = params.id
 
   if (!clipboardContentId) {
+    // TODO - Handle this with the error boundary and catch boundary
     throw json(
       { message: `Clipboard Content you're looking for does not exist` },
       {
@@ -40,6 +45,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
     })
 
     if (!clipboardContent) {
+      // TODO - Handle this with the error boundary and catch boundary
       throw json(
         { message: `Clipboard Content you're looking for does not exist` },
         {
@@ -61,6 +67,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
     })
 
     if (!currentUser) {
+      // TODO - Handle this with the error boundary and catch boundary
       throw json(
         { message: `Clipboard Content you're looking for does not exist` },
         {
@@ -77,6 +84,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
   })
 
   if (!clipboardContent) {
+    // TODO - Handle this with the error boundary and catch boundary
     throw json(
       { message: `Clipboard Content you're looking for does not exist` },
       {

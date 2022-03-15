@@ -1,4 +1,6 @@
-import { ClipboardContentSchema, ClipboardFormProps } from '~/components/forms/clipboard'
+import { ClipboardContentSchema, ClipboardContentType } from '~/types/clipboard'
+import { ActionType } from '~/types/common'
+import { User } from '@prisma/client'
 
 import {
   ActionFunction,
@@ -9,20 +11,14 @@ import {
   MetaFunction,
 } from 'remix'
 import { ModalHeader, ModalCloseButton, ModalBody } from '@chakra-ui/react'
-import { z } from 'zod'
-import { User } from '@prisma/client'
+
+import { ClipboardFormProps } from '~/components/forms/clipboard'
 import { authenticator } from '~/utils/auth.server'
 import { prisma } from '~/utils/prisma.server'
 import { ClipboardForm, Dialog } from '~/components'
 import { getFinalFormData, getFormData } from '~/utils/form'
 
-type ActionType = {
-  [key in keyof z.infer<typeof ClipboardContentSchema>]: {
-    value: z.infer<typeof ClipboardContentSchema>[key]
-    errorMessage: string | ''
-    invalid: boolean
-  }
-}
+type ClipboardActionType = ActionType<ClipboardContentType>
 
 export const meta: MetaFunction = () => {
   return {
@@ -37,7 +33,7 @@ export const action: ActionFunction = async ({ request }) => {
 
   const formData = await request.formData()
 
-  const clipboardContentData = getFormData<z.infer<typeof ClipboardContentSchema>>(formData, [
+  const clipboardContentData = getFormData<ClipboardContentType>(formData, [
     { key: 'title' },
     { key: 'content' },
     { key: 'private', defaultValue: false },
@@ -46,7 +42,7 @@ export const action: ActionFunction = async ({ request }) => {
   const clipboardContentValidationResult = ClipboardContentSchema.safeParse(clipboardContentData)
 
   if (!clipboardContentValidationResult.success) {
-    return getFinalFormData<z.infer<typeof ClipboardContentSchema>>(
+    return getFinalFormData<ClipboardContentType>(
       clipboardContentData,
       clipboardContentValidationResult.error.formErrors.fieldErrors,
     )
@@ -63,6 +59,7 @@ export const action: ActionFunction = async ({ request }) => {
     })
     return redirect(`/clipboard/${clipboardContent.id}`)
   } catch (err) {
+    // TODO - Handle this with the Errory boundary and catch boundary
     throw redirect('/')
   }
 }
@@ -78,7 +75,7 @@ export default function ClipboardContentNew() {
 
   const onClose = () => navigation(-1)
 
-  const actionData = useActionData<ActionType>()
+  const actionData = useActionData<ClipboardActionType>()
 
   const clipboardFormProps: ClipboardFormProps = {
     ...actionData,

@@ -9,29 +9,23 @@ import {
   Button,
 } from '@chakra-ui/react'
 import { Form, useNavigate, useTransition } from 'remix'
-import { z } from 'zod'
+import { ClipboardContentType } from '~/types/clipboard'
 import { composeToBoolean } from '~/utils/form'
-
-export const ClipboardContentSchema = z.object({
-  title: z.string().min(5),
-  content: z.string().min(5),
-  private: z.boolean(),
-})
 
 export type ClipboardFormProps = {
   title?: {
     invalid?: boolean
-    value?: z.infer<typeof ClipboardContentSchema>['title']
+    value?: ClipboardContentType['title']
     errorMessage?: string
   }
   content?: {
     invalid?: boolean
-    value?: z.infer<typeof ClipboardContentSchema>['content']
+    value?: ClipboardContentType['content']
     errorMessage?: string
   }
   private?: {
     invalid?: boolean
-    value?: z.infer<typeof ClipboardContentSchema>['private']
+    value?: ClipboardContentType['private']
     errorMessage?: string
   }
   submittingText: string

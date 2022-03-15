@@ -1,4 +1,6 @@
-import * as React from 'react'
+import { ActionType } from '~/types/common'
+import { ClipboardContent, User } from '@prisma/client'
+
 import {
   ActionFunction,
   LoaderFunction,
@@ -10,30 +12,16 @@ import {
   MetaFunction,
 } from 'remix'
 import { ModalHeader, ModalCloseButton, ModalBody } from '@chakra-ui/react'
-import { z } from 'zod'
-import { ClipboardContent, User } from '@prisma/client'
-import { formatFieldErrorsNew } from '~/utils'
+
+import { composeNumberId } from '~/utils'
 import { authenticator } from '~/utils/auth.server'
 import { prisma } from '~/utils/prisma.server'
-import ClipboardForm, { ClipboardFormProps } from '~/components/forms/clipboard'
 import { Dialog } from '~/components'
+import { ClipboardContentType, ClipboardContentSchema } from '~/types/clipboard'
+import { getFormData, getFinalFormData } from '~/utils/form'
+import ClipboardForm, { ClipboardFormProps } from '~/components/forms/clipboard'
 
-const ClipboardContentSchema = z.object({
-  title: z.string().min(5),
-  content: z.string().min(5),
-  private: z.boolean(),
-})
-
-type ActionDataType = {
-  values: z.infer<typeof ClipboardContentSchema> | Record<string, unknown>
-  errors: Record<
-    keyof z.infer<typeof ClipboardContentSchema>,
-    {
-      message: string
-      isInvalid: boolean
-    }
-  >
-}
+type ClipboardActionType = ActionType<ClipboardContentType>
 
 export const meta: MetaFunction = () => {
   return {
@@ -46,43 +34,30 @@ export const action: ActionFunction = async ({ request, params }) => {
     failureRedirect: '/login',
   })) as User
 
-  const id = params.id ? +params.id : undefined
+  const id = composeNumberId(params)
 
   const content = await prisma.clipboardContent.findUnique({ where: { id } })
 
   if (!content || content.userEmail !== user.email) {
+    // TODO - Handle this with the Errory boundary and catch boundary
     throw redirect('/clipboard')
   }
 
   const formData = await request.formData()
 
-  const actionData: ActionDataType = {
-    values: {},
-    errors: {
-      title: { isInvalid: true, message: '' },
-      content: { isInvalid: true, message: '' },
-      private: { isInvalid: true, message: '' },
-    },
-  }
-
-  const clipboardContentData = {
-    title: formData.get('title'),
-    content: formData.get('content'),
-    private: formData.get('private') === 'true' ? true : false,
-  }
+  const clipboardContentData = getFormData<ClipboardContentType>(formData, [
+    { key: 'title' },
+    { key: 'content' },
+    { key: 'private', defaultValue: false },
+  ])
 
   const clipboardContentValidationResult = ClipboardContentSchema.safeParse(clipboardContentData)
 
   if (!clipboardContentValidationResult.success) {
-    actionData.values = { ...clipboardContentData }
-    actionData.errors = {
-      ...formatFieldErrorsNew(
-        clipboardContentData,
-        clipboardContentValidationResult.error.formErrors.fieldErrors,
-      ),
-    }
-
-    return actionData
+    return getFinalFormData<ClipboardContentType>(
+      clipboardContentData,
+      clipboardContentValidationResult.error.formErrors.fieldErrors,
+    )
   }
 
   try {
@@ -96,6 +71,7 @@ export const action: ActionFunction = async ({ request, params }) => {
     })
     return redirect(`/clipboard/${clipboardContent.id}`)
   } catch (err) {
+    // TODO - Handle this with the Errory boundary and catch boundary
     throw redirect('/')
   }
 }
@@ -112,6 +88,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
   })
 
   if (!clipboardContents) {
+    // TODO - Handle this with the error boundary and catch boundary
     throw json(
       { message: `The Clipboard content you're looking for doesn't exists` },
       { status: 404 },
@@ -119,6 +96,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
   }
 
   if (clipboardContents.userEmail !== user.email) {
+    // TODO - Handle this with the error boundary and catch boundary
     throw json(
       { message: `Unauthorized access. You're not allowed to see this content` },
       { status: 401 },
@@ -133,25 +111,22 @@ export default function ClipboardContentNew() {
 
   const onClose = () => navigation(-1)
 
-  const actionData = useActionData<ActionDataType>()
+  const actionData = useActionData<ClipboardActionType>()
 
   const content = useLoaderData<ClipboardContent>()
 
   const clipboardFormProps: ClipboardFormProps = {
     title: {
-      invalid: actionData?.errors.title.isInvalid,
-      errorMessage: actionData?.errors.title.message,
       value: content.title,
+      ...actionData?.title,
     },
     content: {
-      invalid: actionData?.errors.content.isInvalid,
-      errorMessage: actionData?.errors.content.message,
       value: content.content,
+      ...actionData?.content,
     },
     private: {
-      invalid: actionData?.errors.private.isInvalid,
-      errorMessage: actionData?.errors.private.message,
       value: content.private,
+      ...actionData?.private,
     },
     submittingText: 'Saving',
   }

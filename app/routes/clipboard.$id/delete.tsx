@@ -1,6 +1,8 @@
 import { User } from '@prisma/client'
 import { ActionFunction, MetaFunction, redirect } from 'remix'
+
 import { DeleteDialog } from '~/components'
+import { composeNumberId } from '~/utils'
 import { authenticator } from '~/utils/auth.server'
 import { prisma } from '~/utils/prisma.server'
 
@@ -15,7 +17,7 @@ export const action: ActionFunction = async ({ request, params }) => {
     failureRedirect: '/login',
   })) as User
 
-  const id = params.id ? +params.id : undefined
+  const id = composeNumberId(params)
 
   const isCurrentUsers = await prisma.clipboardContent.findUnique({
     where: {
@@ -24,6 +26,7 @@ export const action: ActionFunction = async ({ request, params }) => {
   })
 
   if (isCurrentUsers && isCurrentUsers.userEmail === user.email) {
+    // TODO - Handle this with the error boundary and catch boundary
     await prisma.clipboardContent.delete({
       where: {
         id,
