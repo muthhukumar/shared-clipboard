@@ -1,3 +1,9 @@
+// TODO - Handle error boundary and catch boundary
+
+import { ActionType } from '~/types/common'
+import { RedirectType } from '~/types/redirect'
+import { User } from '@prisma/client'
+
 import * as React from 'react'
 import {
   FormControl,
@@ -9,7 +15,6 @@ import {
   HStack,
   useToast,
 } from '@chakra-ui/react'
-import { User } from '@prisma/client'
 import {
   ActionFunction,
   Form,
@@ -20,20 +25,16 @@ import {
   useLoaderData,
   useTransition,
 } from 'remix'
+import Validator from 'validator'
+
 import { PageTitle, QRCode, Wrapper } from '~/components'
 import { authenticator } from '~/utils/auth.server'
 import { prisma } from '~/utils/prisma.server'
-import Validator from 'validator'
 import { copyToClipboard } from '~/utils/browser'
 import { composeUrl } from '~/utils'
+import { getFinalFormData, getFormData } from '~/utils/form'
 
-type ActionDataType = {
-  value: string
-  errors: {
-    message: string
-    isInvalid: boolean
-  }
-}
+type RedirectActionType = ActionType<RedirectType>
 
 export const meta: MetaFunction = () => {
   return {
@@ -48,23 +49,12 @@ export const action: ActionFunction = async ({ request }) => {
 
   const formData = await request.formData()
 
-  const url = String(formData.get('url')) ?? ''
+  const urlData = getFormData<RedirectType>(formData, [{ key: 'url', defaultValue: '' }])
 
-  const urlValidationResult = Validator.isURL(url)
-
-  const actionData: ActionDataType = {
-    value: '',
-    errors: { isInvalid: true, message: '' },
-  }
+  const urlValidationResult = Validator.isURL(urlData.url)
 
   if (!urlValidationResult) {
-    actionData.value = url
-    actionData.errors = {
-      isInvalid: true,
-      message: 'Please enter valid URL.',
-    }
-
-    return actionData
+    return getFinalFormData(urlData, { url: ['Please enter valid URL'] })
   }
 
   await prisma.user.update({
@@ -72,7 +62,7 @@ export const action: ActionFunction = async ({ request }) => {
       email: user.email,
     },
     data: {
-      quickRedirect: url,
+      quickRedirect: urlData.url,
     },
   })
 
@@ -105,9 +95,10 @@ export default function QuickCopy() {
   }, [])
 
   const transition = useTransition()
+
   const saving = transition.state === 'submitting'
 
-  const actionData = useActionData<ActionDataType>()
+  const actionData = useActionData<RedirectActionType>()
 
   const url = useLoaderData<string>()
 
@@ -130,16 +121,16 @@ export default function QuickCopy() {
       <Wrapper>
         <VStack alignItems={'flex-start'} w="full" spacing={8} mt="8">
           <Form method="post" className="w-full">
-            <FormControl isInvalid={actionData?.errors.isInvalid}>
+            <FormControl isInvalid={actionData?.url.invalid}>
               <FormLabel>URL</FormLabel>
               <Input
                 placeholder="Url"
                 name="url"
                 w="full"
                 defaultValue={url}
-                isInvalid={actionData?.errors.isInvalid}
+                isInvalid={actionData?.url.invalid}
               />
-              <FormErrorMessage>{actionData?.errors.message}</FormErrorMessage>
+              <FormErrorMessage>{actionData?.url.errorMessage}</FormErrorMessage>
             </FormControl>
 
             <HStack mt="2">

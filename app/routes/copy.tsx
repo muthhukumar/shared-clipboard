@@ -1,3 +1,8 @@
+// TODO - Handle error boundary and catch boundary
+
+import { User } from '@prisma/client'
+import { CopyType } from '~/types/copy'
+
 import * as React from 'react'
 import {
   FormControl,
@@ -13,7 +18,6 @@ import {
   useToast,
   HStack,
 } from '@chakra-ui/react'
-import { User } from '@prisma/client'
 import {
   ActionFunction,
   Form,
@@ -23,11 +27,13 @@ import {
   useLoaderData,
   useTransition,
 } from 'remix'
+
 import { PageTitle, QRCode, Wrapper } from '~/components'
 import { authenticator } from '~/utils/auth.server'
 import { prisma } from '~/utils/prisma.server'
 import { copyToClipboard } from '~/utils/browser'
 import { composeUrl } from '~/utils'
+import { getFormData } from '~/utils/form'
 
 export const meta: MetaFunction = () => {
   return {
@@ -42,14 +48,14 @@ export const action: ActionFunction = async ({ request }) => {
 
   const formData = await request.formData()
 
-  const content = String(formData.get('content')) ?? ''
+  const contentData = getFormData<CopyType>(formData, [{ key: 'content', defaultValue: '' }])
 
   await prisma.user.update({
     where: {
       email: user.email,
     },
     data: {
-      quickContent: content,
+      quickContent: contentData.content,
     },
   })
 

@@ -1,5 +1,9 @@
+// TODO - Handle Error boundary and catch boundaru
+
 import { User } from '@prisma/client'
+
 import { LoaderFunction, redirect } from 'remix'
+
 import { authenticator } from '~/utils/auth.server'
 import { prisma } from '~/utils/prisma.server'
 

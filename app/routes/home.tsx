@@ -1,7 +1,11 @@
-import { HStack, StackDivider, Tag, useColorModeValue, VStack } from '@chakra-ui/react'
+// TODO - Handle 404 and error boundary and catch boundary
+
 import { Birthday, Label, LabelsOnTodo, Todo, User, Vote } from '@prisma/client'
+
+import { HStack, StackDivider, Tag, useColorModeValue, VStack } from '@chakra-ui/react'
 import moment from 'moment'
 import { json, LoaderFunction, MetaFunction, useLoaderData } from 'remix'
+
 import { Card, NoItems, TodoItem, VoteItem, Wrapper } from '~/components'
 import { getToday } from '~/utils'
 
