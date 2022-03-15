@@ -1,9 +1,8 @@
 // TODO - Handle 404 and error boundary and catch boundary
 
-import { Birthday, Label, LabelsOnTodo, Todo, User, Vote } from '@prisma/client'
+import { Label, LabelsOnTodo, Todo, User, Vote } from '@prisma/client'
 
 import { HStack, StackDivider, Tag, useColorModeValue, VStack } from '@chakra-ui/react'
-import moment from 'moment'
 import { json, LoaderFunction, MetaFunction, useLoaderData } from 'remix'
 
 import { Card, NoItems, TodoItem, VoteItem, Wrapper } from '~/components'
@@ -21,7 +20,6 @@ type LoaderType = {
     }
   >
   votes: Array<Vote>
-  birthdays: Array<Birthday>
 }
 
 export const meta: MetaFunction = () => {
@@ -64,14 +62,7 @@ export const loader: LoaderFunction = async ({ request }) => {
     take: 5,
   })
 
-  const birthdays = await prisma.birthday.findMany({
-    where: {
-      userEmail: user.email,
-      date: getToday(),
-    },
-  })
-
-  return json({ todos: todos ?? [], votes: votes ?? [], birthdays: birthdays ?? [] })
+  return json({ todos: todos ?? [], votes: votes ?? [] })
 }
 
 export default function Index() {
@@ -90,22 +81,6 @@ export default function Index() {
     <div className="w-full py-8">
       <Wrapper>
         <VStack alignItems={'flex-start'} w="full" spacing={6}>
-          <Card>
-            <div className="flex items-center justify-between pb-2 mb-4 border-b">
-              <h2 className="text-2xl font-bold">Today&apos;s Birthday</h2>
-            </div>
-            <VStack alignItems={'flex-start'} divider={<StackDivider borderColor={borderColor} />}>
-              {data.birthdays.map((birthday) => (
-                <div key={birthday.id} className="flex items-center justify-between w-full">
-                  <h2>{birthday.name}</h2>
-                  <Tag>
-                    <p>{moment(birthday.date).format('LL')}</p>
-                  </Tag>
-                </div>
-              ))}
-            </VStack>
-            {data.birthdays.length === 0 && <NoItems title="No birthdays today!!!" />}
-          </Card>
           <Card>
             <div className="flex items-center justify-between pb-2 mb-4 border-b">
               <h2 className="text-2xl font-bold">Todos</h2>

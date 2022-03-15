@@ -49,10 +49,6 @@ const links: Array<{ title: string; to: string }> = [
     title: 'HabitsRank',
     to: '/habits-rank',
   },
-  {
-    title: 'Birthday',
-    to: '/birthday',
-  },
 ]
 
 export default function Navbar({ user }: { user: User }) {

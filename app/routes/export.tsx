@@ -21,7 +21,6 @@ const getData = async (name: Item | '', user: User) => {
     [Item.QuickRedirect]: user.quickRedirect,
     [Item.Todos]: await prisma.todo.findMany({ where: { userEmail: user.email } }),
     [Item.Votes]: await prisma.vote.findMany({ where: { userEmail: user.email } }),
-    [Item.Birthdays]: await prisma.birthday.findMany({ where: { userEmail: user.email } }),
   }
 
   if (name === Item.All) {

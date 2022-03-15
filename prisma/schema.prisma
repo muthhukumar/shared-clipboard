@@ -28,7 +28,6 @@ model User {
   clipboardContents ClipboardContent[]
   todos             Todo[]
   votes             Vote[]
-  birthdays         Birthday[]
   labels            Label[]
   quickContent      String?
   quickRedirect     String?
@@ -38,20 +37,12 @@ model Vote {
   title     String
   id        Int       @id @default(autoincrement())
   upvotes   Int       @default(0)
-  downvotes   Int       @default(0)
+  downvotes Int       @default(0)
   User      User?     @relation(fields: [userEmail], references: [email])
   userEmail String?
   createdAt DateTime  @default(now())
   updatedAt DateTime? @updatedAt
   label     String?
-}
-
-model Birthday {
-  id        Int     @id @default(autoincrement())
-  name      String
-  date      String
-  User      User?   @relation(fields: [userEmail], references: [email])
-  userEmail String?
 }
 
 model Todo {

@@ -14,7 +14,6 @@ export const meta: MetaFunction = () => {
 type LoaderData = {
   clipboards: number
   votes: number
-  birthdays: number
   todos: number
   user: User
 }
@@ -22,7 +21,6 @@ type LoaderData = {
 export const enum Item {
   Clipboards = 'clipboards',
   Votes = 'votes',
-  Birthdays = 'birthdays',
   Todos = 'todos',
   User = 'todos',
   QuickRedirect = 'quickRedirect',
@@ -41,10 +39,6 @@ export const loader: LoaderFunction = async ({ request }) => {
     where: { userEmail: user.email },
   })
 
-  const birthdays = await prisma.birthday.count({
-    where: { userEmail: user.email },
-  })
-
   const todos = await prisma.todo.count({
     where: { userEmail: user.email },
   })
@@ -56,7 +50,6 @@ export const loader: LoaderFunction = async ({ request }) => {
     clipboards,
     todos,
     votes,
-    birthdays,
   }
 
   return json(data)
@@ -108,11 +101,6 @@ export default function General() {
       title: 'Votes',
       content: `${data.votes} votes items`,
       pathname: Item.Votes,
-    },
-    {
-      title: 'Birthday',
-      content: `${data.birthdays} birthday items`,
-      pathname: Item.Birthdays,
     },
   ]
 
