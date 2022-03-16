@@ -89,9 +89,9 @@ export default function Copy() {
   const toast = useToast()
 
   React.useEffect(() => {
-    const url = new URL(`${window.location.href}/c/${id}`)
-    setUrl(composeUrl(url))
-  }, [])
+    const url = new URL(`${window.location.href}`)
+    setUrl(`${composeUrl(url)}/c/${id}`)
+  }, [id])
 
   const copy = () => {
     copyToClipboard(clipboardContents.content, () => {
