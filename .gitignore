@@ -9,3 +9,4 @@ api/build
 
 app/styles/*
 .env
+build/
