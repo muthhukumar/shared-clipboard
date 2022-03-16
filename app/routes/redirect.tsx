@@ -25,7 +25,6 @@ import {
   MetaFunction,
   redirect,
   useActionData,
-  useCatch,
   useLoaderData,
   useTransition,
 } from 'remix'
@@ -34,8 +33,6 @@ import Validator from 'validator'
 import {
   DefaultCatchBoundary,
   DefaultErrorBoundary,
-  Page400,
-  Page500,
   PageTitle,
   QRCode,
   Wrapper,

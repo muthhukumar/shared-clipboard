@@ -110,18 +110,18 @@ export default function CopyId() {
 
   const toast = useToast()
 
-  React.useEffect(() => {
-    copy()
-  }, [])
-
-  const copy = () => {
+  const copy = React.useCallback(() => {
     copyToClipboard(content.content, () => {
       toast({
         title: 'Successfully copied to clipboard',
         status: 'success',
       })
     })
-  }
+  }, [content.content, toast])
+
+  React.useEffect(() => {
+    copy()
+  }, [copy])
 
   return (
     <div>
