@@ -102,7 +102,7 @@ export default function TodoItem(
             />
           </fetcher.Form>
 
-          {isOverDue && (
+          {isOverDue && !props.completed && (
             <Menu>
               <MenuButton as={Button} size="xs" disabled={isRescheduling} colorScheme="purple">
                 {isRescheduling ? 'Rescheduling...' : 'Reschedule'}
