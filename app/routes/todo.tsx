@@ -1,6 +1,6 @@
 // TODO - Might want to refactor stuff in this file
 
-import { Label, LabelsOnTodo, Todo, Todo as TodoType, User } from '@prisma/client'
+import { Label, LabelsOnTodo, Todo as TodoType, User } from '@prisma/client'
 
 import {
   InputGroup,
@@ -19,19 +19,21 @@ import { IoMdAdd } from 'react-icons/io'
 import { RiSearchLine } from 'react-icons/ri'
 import { RiDeleteBack2Line } from 'react-icons/ri'
 import {
+  ErrorBoundaryComponent,
   Form,
   json,
   LoaderFunction,
   MetaFunction,
-  Outlet,
+  useCatch,
   useLoaderData,
   useNavigate,
   useSubmit,
 } from 'remix'
 
-import { Wrapper, NoItems, TodoItem } from '~/components'
+import { Wrapper, NoItems, TodoItem, Page400, Page500, GoToHome } from '~/components'
 import { authenticator } from '~/utils/auth.server'
 import { prisma } from '~/utils/prisma.server'
+import { CatchBoundaryComponent } from '@remix-run/react/routeModules'
 
 const enum FilterByOptions {
   SHOW_ALL = 'showall',
@@ -163,6 +165,16 @@ export const loader: LoaderFunction = async ({ request }) => {
       ...orderBy,
     },
   })
+
+  if (todo.length === 0) {
+    throw json(
+      {
+        message: 'No todos found',
+        description: `It seems like you've not added any todos yet. Please press the below button to add some todos.`,
+      },
+      { status: 404 },
+    )
+  }
 
   return json({ todo, filterBy, sortBy, show })
 }
@@ -313,7 +325,36 @@ export default function TodoIndex() {
             })}
         </VStack>
       </Wrapper>
-      <Outlet />
     </div>
   )
+}
+
+export const CatchBoundary: CatchBoundaryComponent = () => {
+  const caught = useCatch()
+  const navigation = useNavigate()
+
+  let page = <Page500 />
+
+  if (caught.status === 404) {
+    page = (
+      <Page400 statusCode={404} message={caught.data.message} description={caught.data.description}>
+        <HStack>
+          <Button
+            leftIcon={<IoMdAdd />}
+            onClick={() => navigation('/todo/new')}
+            colorScheme="twitter"
+          >
+            Add Todo
+          </Button>
+          <GoToHome />
+        </HStack>
+      </Page400>
+    )
+  }
+
+  return <>{page}</>
+}
+
+export const ErrorBoundary: ErrorBoundaryComponent = () => {
+  return <Page500 />
 }

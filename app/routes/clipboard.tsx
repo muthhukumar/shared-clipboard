@@ -12,12 +12,20 @@ import {
   Form,
   useSubmit,
   MetaFunction,
+  ErrorBoundaryComponent,
 } from 'remix'
 import { RiSearchLine } from 'react-icons/ri'
 
 import { authenticator } from '~/utils/auth.server'
 import { prisma } from '~/utils/prisma.server'
-import { ClipboardContent as ClipboardContentComp, NoItems, Wrapper } from '~/components'
+import {
+  ClipboardContent as ClipboardContentComp,
+  DefaultCatchBoundary,
+  DefaultErrorBoundary,
+  NoItems,
+  Wrapper,
+} from '~/components'
+import { CatchBoundaryComponent } from '@remix-run/react/routeModules'
 
 export const meta: MetaFunction = () => {
   return {
@@ -107,3 +115,7 @@ export default function ClipboardContent() {
     </div>
   )
 }
+
+export const CatchBoundary: CatchBoundaryComponent = DefaultCatchBoundary
+
+export const ErrorBoundary: ErrorBoundaryComponent = DefaultErrorBoundary

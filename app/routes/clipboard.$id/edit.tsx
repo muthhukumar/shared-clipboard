@@ -10,16 +10,18 @@ import {
   json,
   useLoaderData,
   MetaFunction,
+  ErrorBoundaryComponent,
 } from 'remix'
 import { ModalHeader, ModalCloseButton, ModalBody } from '@chakra-ui/react'
 
 import { composeNumberId } from '~/utils'
 import { authenticator } from '~/utils/auth.server'
 import { prisma } from '~/utils/prisma.server'
-import { Dialog } from '~/components'
+import { DefaultCatchBoundary, DefaultErrorBoundary, Dialog } from '~/components'
 import { ClipboardContentType, ClipboardContentSchema } from '~/types/clipboard'
 import { getFormData, getFinalFormData } from '~/utils/form'
 import ClipboardForm, { ClipboardFormProps } from '~/components/forms/clipboard'
+import { CatchBoundaryComponent } from '@remix-run/react/routeModules'
 
 type ClipboardActionType = ActionType<ClipboardContentType>
 
@@ -142,3 +144,7 @@ export default function ClipboardContentNew() {
     </Dialog>
   )
 }
+
+export const CatchBoundary: CatchBoundaryComponent = DefaultCatchBoundary
+
+export const ErrorBoundary: ErrorBoundaryComponent = DefaultErrorBoundary

@@ -1,3 +1,5 @@
+import type { LinksFunction } from 'remix'
+
 import * as React from 'react'
 import {
   Links,
@@ -11,17 +13,16 @@ import {
   useLoaderData,
   useLocation,
 } from 'remix'
-import type { LinksFunction } from 'remix'
+import clsx from 'clsx'
 
 import globalStylesUrl from '~/styles/global.css'
 import tailwindStylesUrl from '~/styles/tailwind.css'
 import vendorsStylesUrl from '~/styles/vendors.css'
 
-import { Navbar, TransitionModal } from '~/components'
+import { Navbar, Page500, TransitionModal } from '~/components'
 import { Box, ChakraProvider, Heading, useColorModeValue } from '@chakra-ui/react'
 import { authenticator } from './utils/auth.server'
 import { User } from '@prisma/client'
-import clsx from 'clsx'
 import { theme } from './others/theme'
 
 export const links: LinksFunction = () => {
@@ -50,17 +51,8 @@ export default function App() {
   )
 }
 
-export function ErrorBoundary({ error }: { error: Error }) {
-  console.error(error)
-  return (
-    <Document title="Error!">
-      <ChakraProvider theme={theme}>
-        <Box>
-          <Heading as="h1">There was an error</Heading>
-        </Box>
-      </ChakraProvider>
-    </Document>
-  )
+export const ErrorBoundary: ErrorBoundaryComponent = () => {
+  return <Page500 />
 }
 
 export function CatchBoundary() {

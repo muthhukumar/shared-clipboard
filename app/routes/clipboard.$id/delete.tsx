@@ -1,7 +1,8 @@
 import { User } from '@prisma/client'
-import { ActionFunction, MetaFunction, redirect } from 'remix'
+import { CatchBoundaryComponent } from '@remix-run/react/routeModules'
+import { ActionFunction, ErrorBoundaryComponent, MetaFunction, redirect } from 'remix'
 
-import { DeleteDialog } from '~/components'
+import { DefaultCatchBoundary, DefaultErrorBoundary, DeleteDialog } from '~/components'
 import { composeNumberId } from '~/utils'
 import { authenticator } from '~/utils/auth.server'
 import { prisma } from '~/utils/prisma.server'
@@ -40,3 +41,7 @@ export const action: ActionFunction = async ({ request, params }) => {
 export default function Delete() {
   return <DeleteDialog title="Delete Content" message="Are you sure to delete this Content?" />
 }
+
+export const CatchBoundary: CatchBoundaryComponent = DefaultCatchBoundary
+
+export const ErrorBoundary: ErrorBoundaryComponent = DefaultErrorBoundary

@@ -10,6 +10,7 @@ import {
   useTransition,
   Form,
   MetaFunction,
+  ErrorBoundaryComponent,
 } from 'remix'
 import {
   Button,
@@ -30,6 +31,8 @@ import { z } from 'zod'
 import { formatFieldErrorsNew } from '~/utils'
 import { authenticator } from '~/utils/auth.server'
 import { prisma } from '~/utils/prisma.server'
+import { CatchBoundaryComponent } from '@remix-run/react/routeModules'
+import { DefaultCatchBoundary, DefaultErrorBoundary } from '~/components'
 
 const LabelSchema = z.object({
   label: z.string().min(5).max(20),
@@ -151,3 +154,7 @@ export default function TodoNew() {
     </>
   )
 }
+
+export const CatchBoundary: CatchBoundaryComponent = DefaultCatchBoundary
+
+export const ErrorBoundary: ErrorBoundaryComponent = DefaultErrorBoundary

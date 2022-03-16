@@ -18,23 +18,35 @@ import {
 } from '@chakra-ui/react'
 import {
   ActionFunction,
+  ErrorBoundaryComponent,
   Form,
+  json,
   LoaderFunction,
   MetaFunction,
   redirect,
   useActionData,
+  useCatch,
   useLoaderData,
   useTransition,
 } from 'remix'
 import Validator from 'validator'
 
-import { PageTitle, QRCode, Wrapper } from '~/components'
+import {
+  DefaultCatchBoundary,
+  DefaultErrorBoundary,
+  Page400,
+  Page500,
+  PageTitle,
+  QRCode,
+  Wrapper,
+} from '~/components'
 import { authenticator } from '~/utils/auth.server'
 import { prisma } from '~/utils/prisma.server'
 import { copyToClipboard } from '~/utils/browser'
 import { composeUrl } from '~/utils'
 import { getFinalFormData, getFormData } from '~/utils/form'
 import { ExternalLinkIcon } from '@chakra-ui/icons'
+import { CatchBoundaryComponent } from '@remix-run/react/routeModules'
 
 type RedirectActionType = ActionType<RedirectType>
 
@@ -80,6 +92,10 @@ export const loader: LoaderFunction = async ({ request }) => {
     where: { email: user.email },
     select: { quickRedirect: true },
   })
+
+  if (!quickRedirect) {
+    throw json({ message: `Quick redirect you're looking for doesn't exists.` }, { status: 404 })
+  }
 
   return quickRedirect?.quickRedirect ?? ''
 }
@@ -166,3 +182,7 @@ export default function QuickCopy() {
     </div>
   )
 }
+
+export const CatchBoundary: CatchBoundaryComponent = DefaultCatchBoundary
+
+export const ErrorBoundary: ErrorBoundaryComponent = DefaultErrorBoundary

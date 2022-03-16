@@ -11,6 +11,7 @@ import {
   json,
   useLoaderData,
   MetaFunction,
+  ErrorBoundaryComponent,
 } from 'remix'
 import { ModalHeader, ModalCloseButton, ModalBody } from '@chakra-ui/react'
 import moment from 'moment'
@@ -19,8 +20,9 @@ import { composePriority } from '~/utils'
 import { authenticator } from '~/utils/auth.server'
 import { prisma } from '~/utils/prisma.server'
 import { getFinalFormData, getFormData } from '~/utils/form'
-import { Dialog } from '~/components'
+import { DefaultCatchBoundary, DefaultErrorBoundary, Dialog } from '~/components'
 import TodoForm, { TodoFormProps } from '~/components/forms/todo'
+import { CatchBoundaryComponent } from '@remix-run/react/routeModules'
 
 type TodoActionType = ActionType<TodoType>
 
@@ -160,3 +162,7 @@ export default function TodoEdit() {
     </Dialog>
   )
 }
+
+export const CatchBoundary: CatchBoundaryComponent = DefaultCatchBoundary
+
+export const ErrorBoundary: ErrorBoundaryComponent = DefaultErrorBoundary

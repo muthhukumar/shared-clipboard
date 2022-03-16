@@ -3,13 +3,22 @@
 import { Label, LabelsOnTodo, Todo, User, Vote } from '@prisma/client'
 
 import { HStack, StackDivider, Tag, useColorModeValue, VStack } from '@chakra-ui/react'
-import { json, LoaderFunction, MetaFunction, useLoaderData } from 'remix'
+import { ErrorBoundaryComponent, json, LoaderFunction, MetaFunction, useLoaderData } from 'remix'
 
-import { Card, NoItems, TodoItem, VoteItem, Wrapper } from '~/components'
+import {
+  Card,
+  DefaultCatchBoundary,
+  DefaultErrorBoundary,
+  NoItems,
+  TodoItem,
+  VoteItem,
+  Wrapper,
+} from '~/components'
 import { getToday } from '~/utils'
 
 import { authenticator } from '~/utils/auth.server'
 import { prisma } from '~/utils/prisma.server'
+import { CatchBoundaryComponent } from '@remix-run/react/routeModules'
 
 type LoaderType = {
   todos: Array<
@@ -113,3 +122,7 @@ export default function Index() {
     </div>
   )
 }
+
+export const CatchBoundary: CatchBoundaryComponent = DefaultCatchBoundary
+
+export const ErrorBoundary: ErrorBoundaryComponent = DefaultErrorBoundary

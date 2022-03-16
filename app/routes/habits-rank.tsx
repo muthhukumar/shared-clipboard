@@ -20,11 +20,19 @@ import {
   MetaFunction,
   Outlet,
   useNavigate,
+  ErrorBoundaryComponent,
 } from 'remix'
 
-import { VoteItem, NoItems, Wrapper } from '~/components'
+import {
+  VoteItem,
+  NoItems,
+  Wrapper,
+  DefaultCatchBoundary,
+  DefaultErrorBoundary,
+} from '~/components'
 import { authenticator } from '~/utils/auth.server'
 import { prisma } from '~/utils/prisma.server'
+import { CatchBoundaryComponent } from '@remix-run/react/routeModules'
 
 export const meta: MetaFunction = () => {
   return {
@@ -116,3 +124,7 @@ export default function ClipbaordContent() {
     </div>
   )
 }
+
+export const CatchBoundary: CatchBoundaryComponent = DefaultCatchBoundary
+
+export const ErrorBoundary: ErrorBoundaryComponent = DefaultErrorBoundary

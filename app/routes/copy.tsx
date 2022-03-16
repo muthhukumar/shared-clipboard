@@ -20,6 +20,7 @@ import {
 } from '@chakra-ui/react'
 import {
   ActionFunction,
+  ErrorBoundaryComponent,
   Form,
   LoaderFunction,
   MetaFunction,
@@ -28,12 +29,19 @@ import {
   useTransition,
 } from 'remix'
 
-import { PageTitle, QRCode, Wrapper } from '~/components'
+import {
+  DefaultCatchBoundary,
+  DefaultErrorBoundary,
+  PageTitle,
+  QRCode,
+  Wrapper,
+} from '~/components'
 import { authenticator } from '~/utils/auth.server'
 import { prisma } from '~/utils/prisma.server'
 import { copyToClipboard } from '~/utils/browser'
 import { composeUrl } from '~/utils'
 import { getFormData } from '~/utils/form'
+import { CatchBoundaryComponent } from '@remix-run/react/routeModules'
 
 export const meta: MetaFunction = () => {
   return {
@@ -148,3 +156,7 @@ export default function QuickCopy() {
     </div>
   )
 }
+
+export const CatchBoundary: CatchBoundaryComponent = DefaultCatchBoundary
+
+export const ErrorBoundary: ErrorBoundaryComponent = DefaultErrorBoundary

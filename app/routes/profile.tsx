@@ -1,8 +1,9 @@
 import { Stack, useColorModeValue, VStack } from '@chakra-ui/react'
-import { Link, MetaFunction, Outlet, useLocation } from 'remix'
+import { ErrorBoundaryComponent, Link, MetaFunction, Outlet, useLocation } from 'remix'
 import clsx from 'clsx'
 
-import { PageTitle, Wrapper } from '~/components'
+import { DefaultCatchBoundary, DefaultErrorBoundary, PageTitle, Wrapper } from '~/components'
+import { CatchBoundaryComponent } from '@remix-run/react/routeModules'
 
 const links: Array<{ title: string; to: string }> = [
   {
@@ -56,3 +57,7 @@ export default function Profile() {
     </div>
   )
 }
+
+export const CatchBoundary: CatchBoundaryComponent = DefaultCatchBoundary
+
+export const ErrorBoundary: ErrorBoundaryComponent = DefaultErrorBoundary

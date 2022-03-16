@@ -114,3 +114,9 @@ export const composePriority = (priority: Priority) => {
 
   return priorities[priority]
 }
+
+export const intentionalThrow = () => {
+  if (process.env.NODE_ENV !== 'production') {
+    throw new Error('Intentionally throwing error')
+  }
+}

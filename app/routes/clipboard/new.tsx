@@ -9,14 +9,16 @@ import {
   useActionData,
   useNavigate,
   MetaFunction,
+  ErrorBoundaryComponent,
 } from 'remix'
 import { ModalHeader, ModalCloseButton, ModalBody } from '@chakra-ui/react'
 
 import { ClipboardFormProps } from '~/components/forms/clipboard'
 import { authenticator } from '~/utils/auth.server'
 import { prisma } from '~/utils/prisma.server'
-import { ClipboardForm, Dialog } from '~/components'
+import { ClipboardForm, DefaultCatchBoundary, DefaultErrorBoundary, Dialog } from '~/components'
 import { getFinalFormData, getFormData } from '~/utils/form'
+import { CatchBoundaryComponent } from '@remix-run/react/routeModules'
 
 type ClipboardActionType = ActionType<ClipboardContentType>
 
@@ -93,3 +95,7 @@ export default function ClipboardContentNew() {
     </Dialog>
   )
 }
+
+export const CatchBoundary: CatchBoundaryComponent = DefaultCatchBoundary
+
+export const ErrorBoundary: ErrorBoundaryComponent = DefaultErrorBoundary

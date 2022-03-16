@@ -10,16 +10,18 @@ import {
   useNavigate,
   json,
   useLoaderData,
+  ErrorBoundaryComponent,
 } from 'remix'
 import { ModalHeader, ModalCloseButton, ModalBody } from '@chakra-ui/react'
 
 import { composeNumberId } from '~/utils'
 import { authenticator } from '~/utils/auth.server'
 import { prisma } from '~/utils/prisma.server'
-import { Dialog, HabitForm } from '~/components'
+import { DefaultCatchBoundary, DefaultErrorBoundary, Dialog, HabitForm } from '~/components'
 import { VoteFormProps } from '~/components/forms/vote'
 import { getFinalFormData, getFormData } from '~/utils/form'
 import { VoteSchema, VoteType } from '~/types/vote'
+import { CatchBoundaryComponent } from '@remix-run/react/routeModules'
 
 export type VoteActionType = ActionType<TodoType>
 
@@ -112,3 +114,7 @@ export default function VoteEdit() {
     </Dialog>
   )
 }
+
+export const CatchBoundary: CatchBoundaryComponent = DefaultCatchBoundary
+
+export const ErrorBoundary: ErrorBoundaryComponent = DefaultErrorBoundary

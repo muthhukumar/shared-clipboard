@@ -32,14 +32,22 @@ import {
   Form,
   useNavigate,
   MetaFunction,
+  ErrorBoundaryComponent,
 } from 'remix'
 import { ChevronDownIcon } from '@chakra-ui/icons'
 
 import { authenticator } from '~/utils/auth.server'
 import { prisma } from '~/utils/prisma.server'
-import { PageTitle, QRCode, Wrapper } from '~/components'
+import {
+  DefaultCatchBoundary,
+  DefaultErrorBoundary,
+  PageTitle,
+  QRCode,
+  Wrapper,
+} from '~/components'
 import { copyToClipboard } from '~/utils/browser'
 import { composeUrl } from '~/utils'
+import { CatchBoundaryComponent } from '@remix-run/react/routeModules'
 
 export const meta: MetaFunction = () => {
   return {
@@ -192,3 +200,7 @@ export default function Copy() {
     </div>
   )
 }
+
+export const CatchBoundary: CatchBoundaryComponent = DefaultCatchBoundary
+
+export const ErrorBoundary: ErrorBoundaryComponent = DefaultErrorBoundary

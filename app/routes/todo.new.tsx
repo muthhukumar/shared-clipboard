@@ -12,6 +12,8 @@ import {
   useActionData,
   useNavigate,
   MetaFunction,
+  ErrorBoundaryComponent,
+  json,
 } from 'remix'
 import { ModalHeader, ModalCloseButton, ModalBody } from '@chakra-ui/react'
 import moment from 'moment'
@@ -19,8 +21,9 @@ import moment from 'moment'
 import { composePriority } from '~/utils'
 import { authenticator } from '~/utils/auth.server'
 import { prisma } from '~/utils/prisma.server'
-import { TodoForm, Dialog } from '~/components'
+import { TodoForm, Dialog, DefaultCatchBoundary, DefaultErrorBoundary } from '~/components'
 import { getFinalFormData, getFormData } from '~/utils/form'
+import { CatchBoundaryComponent } from '@remix-run/react/routeModules'
 
 type TodoActionType = ActionType<TodoType>
 
@@ -72,7 +75,13 @@ export const action: ActionFunction = async ({ request }) => {
     return redirect(`/todo`)
   } catch {
     // TODO - Handle this with the Errory boundary and catch boundary
-    throw redirect('/')
+    throw json(
+      {
+        message: 'Something went wrong.',
+        description: 'Unable to create new Todo please try again later.',
+      },
+      { status: 500 },
+    )
   }
 }
 
@@ -105,3 +114,7 @@ export default function TodoNew() {
     </Dialog>
   )
 }
+
+export const CatchBoundary: CatchBoundaryComponent = DefaultCatchBoundary
+
+export const ErrorBoundary: ErrorBoundaryComponent = DefaultErrorBoundary

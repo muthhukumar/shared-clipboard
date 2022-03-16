@@ -2,10 +2,12 @@ import { User } from '@prisma/client'
 import { ExternalLinkIcon } from '@chakra-ui/icons'
 import { Link, VStack } from '@chakra-ui/react'
 
-import { json, LoaderFunction, MetaFunction, useLoaderData } from 'remix'
+import { ErrorBoundaryComponent, json, LoaderFunction, MetaFunction, useLoaderData } from 'remix'
 
 import { authenticator } from '~/utils/auth.server'
 import { prisma } from '~/utils/prisma.server'
+import { CatchBoundaryComponent } from '@remix-run/react/routeModules'
+import { DefaultCatchBoundary, DefaultErrorBoundary } from '~/components'
 
 export const meta: MetaFunction = () => {
   return {
@@ -121,3 +123,7 @@ export default function General() {
     </div>
   )
 }
+
+export const CatchBoundary: CatchBoundaryComponent = DefaultCatchBoundary
+
+export const ErrorBoundary: ErrorBoundaryComponent = DefaultErrorBoundary
