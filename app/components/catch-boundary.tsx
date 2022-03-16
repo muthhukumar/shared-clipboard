@@ -6,10 +6,16 @@ import Page500 from './500'
 
 const CatchBoundary: CatchBoundaryComponent = () => {
   const caught = useCatch()
-  let page = <Page500 />
+  let page = (
+    <Page400
+      statusCode={caught.status}
+      message={caught.data?.message}
+      description={caught.data?.description}
+    />
+  )
 
-  if (caught.status === 404) {
-    page = <Page400 statusCode={caught.status} message={caught.data?.message} />
+  if (caught.status === 500) {
+    page = <Page500 />
   }
 
   return <>{page}</>

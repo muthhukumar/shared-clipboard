@@ -16,15 +16,17 @@ export default function Page400({
   return (
     <Wrapper>
       <Box bg={bg} my={8} p={8}>
-        <VStack alignItems={'flex-start'} spacing={4}>
-          <h2 className="font-bold text-7xl">{statusCode}</h2>
-          <Text fontSize={'lg'} fontWeight="bold">
+        <VStack spacing={4}>
+          <h2 className="font-bold text-7xl" color="purple.300">
+            {statusCode}
+          </h2>
+          <Text fontSize={'lg'} fontWeight="bold" color={'purple.600'}>
             Ooops!
           </Text>
-          <Text fontSize={'lg'} fontWeight="bold">
+          <Text fontSize={'lg'} fontWeight="bold" color="purple.600">
             {message}
           </Text>
-          <Text fontSize={'lg'} colorScheme="blackAlpha">
+          <Text fontSize={'lg'} color="gray.600">
             {description}
           </Text>
           {children}

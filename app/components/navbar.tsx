@@ -42,6 +42,10 @@ const links: Array<{ title: string; to: string }> = [
     to: '/redirect',
   },
   {
+    title: 'ShortURL',
+    to: '/shorturl',
+  },
+  {
     title: 'Todo',
     to: '/todo',
   },

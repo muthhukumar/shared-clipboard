@@ -27,6 +27,7 @@ model User {
   profileUrl        String?
   clipboardContents ClipboardContent[]
   todos             Todo[]
+  shortURLs         ShortURL[]
   votes             Vote[]
   labels            Label[]
   quickContent      String?
@@ -80,4 +81,15 @@ enum Priority {
   LOW
   MEDIUM
   NORMAL
+}
+
+model ShortURL {
+  title     String
+  url       String
+  slug      String    @unique
+  id        Int       @id @default(autoincrement())
+  createdAt DateTime  @default(now())
+  updatedAt DateTime? @updatedAt
+  User      User?     @relation(fields: [userEmail], references: [email])
+  userEmail String?
 }
