@@ -3,14 +3,9 @@ import { ErrorBoundaryComponent, json, LoaderFunction, redirect } from 'remix'
 import validator from 'validator'
 
 import { DefaultCatchBoundary, DefaultErrorBoundary } from '~/components'
-import { authenticator } from '~/utils/auth.server'
 import { prisma } from '~/utils/prisma.server'
 
 export const loader: LoaderFunction = async ({ request, params }) => {
-  await authenticator.isAuthenticated(request, {
-    failureRedirect: '/login',
-  })
-
   const slug = String(params.slug)
 
   const shortURL = await prisma.shortURL.findUnique({ where: { slug } })
