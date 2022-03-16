@@ -14,6 +14,7 @@ import {
   VStack,
   HStack,
   useToast,
+  Link,
 } from '@chakra-ui/react'
 import {
   ActionFunction,
@@ -33,6 +34,7 @@ import { prisma } from '~/utils/prisma.server'
 import { copyToClipboard } from '~/utils/browser'
 import { composeUrl } from '~/utils'
 import { getFinalFormData, getFormData } from '~/utils/form'
+import { ExternalLinkIcon } from '@chakra-ui/icons'
 
 type RedirectActionType = ActionType<RedirectType>
 
@@ -104,8 +106,8 @@ export default function QuickCopy() {
 
   const toast = useToast()
 
-  const copy = () => {
-    copyToClipboard(quickUrl, () => {
+  const copy = (url: string) => {
+    copyToClipboard(url, () => {
       toast({
         title: 'URL successfully copied to clipboard',
         status: 'success',
@@ -121,28 +123,26 @@ export default function QuickCopy() {
       <Wrapper>
         <VStack alignItems={'flex-start'} w="full" spacing={8} mt="8">
           <Form method="post" className="w-full">
-            <FormControl isInvalid={actionData?.url.invalid}>
+            <FormControl isInvalid={actionData?.url?.invalid}>
               <FormLabel>URL</FormLabel>
               <Input
                 placeholder="Url"
                 name="url"
                 w="full"
                 defaultValue={url}
-                isInvalid={actionData?.url.invalid}
+                isInvalid={actionData?.url?.invalid}
               />
-              <FormErrorMessage>{actionData?.url.errorMessage}</FormErrorMessage>
+              <FormErrorMessage>{actionData?.url?.errorMessage}</FormErrorMessage>
             </FormControl>
 
             <HStack mt="2">
               <Button type="submit" isLoading={saving} loadingText="Saving">
                 Save
               </Button>
-              <Button onClick={copy}>Copy URL</Button>
-              <Button>
-                <a href={url} target={'_blank'} rel="noreferrer">
-                  Visit
-                </a>
-              </Button>
+              <Button onClick={() => copy(url)}>Copy URL</Button>
+              <Link href={url} isExternal>
+                Visit <ExternalLinkIcon mx="2px" />
+              </Link>
             </HStack>
           </Form>
 
@@ -150,12 +150,10 @@ export default function QuickCopy() {
             <h2>Shareable URL</h2>
             <p className="w-full p-4 border rounded-md">{quickUrl}</p>
             <HStack>
-              <Button onClick={copy}>Copy URL</Button>
-              <Button>
-                <a href={quickUrl} target={'_blank'} rel="noreferrer">
-                  Visit
-                </a>
-              </Button>
+              <Button onClick={() => copy(quickUrl)}>Copy URL</Button>
+              <Link href={quickUrl} isExternal>
+                Visit <ExternalLinkIcon mx="2px" />
+              </Link>
             </HStack>
           </VStack>
 
