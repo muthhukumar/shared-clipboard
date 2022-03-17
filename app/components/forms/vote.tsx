@@ -10,7 +10,7 @@ export interface VoteFormProps extends FormPropsType<VoteType> {
 
 export default function HabitForm(props: VoteFormProps) {
   const navigation = useNavigate()
-  const onClose = () => navigation('/clipboard')
+  const onClose = () => navigation('/vote')
 
   const transition = useTransition()
 

@@ -17,6 +17,7 @@ import {
   VStack,
   useToast,
   HStack,
+  Link,
 } from '@chakra-ui/react'
 import {
   ActionFunction,
@@ -42,6 +43,7 @@ import { copyToClipboard } from '~/utils/browser'
 import { composeUrl } from '~/utils'
 import { getFormData } from '~/utils/form'
 import { CatchBoundaryComponent } from '@remix-run/react/routeModules'
+import { ExternalLinkIcon } from '@chakra-ui/icons'
 
 export const meta: MetaFunction = () => {
   return {
@@ -89,18 +91,18 @@ export default function QuickCopy() {
   const saving = transition.state === 'submitting'
 
   React.useEffect(() => {
-    const url = new URL(`${window.location.href}/c/q`)
-    setUrl(composeUrl(url))
+    const url = new URL(`${window.location.href}`)
+    setUrl(composeUrl(url) + '/c/q')
   }, [])
 
   const content = useLoaderData<string>()
 
   const toast = useToast()
 
-  const copy = () => {
-    copyToClipboard(url, () => {
+  const copy = (stuff: string) => {
+    copyToClipboard(stuff, () => {
       toast({
-        title: 'URL successfully copied to clipboard',
+        title: 'Copied to Clipboard',
         status: 'success',
       })
     })
@@ -118,21 +120,22 @@ export default function QuickCopy() {
               <FormLabel>Content</FormLabel>
               <Textarea placeholder="Title" name="content" defaultValue={content} />
             </FormControl>
-            <Button type="submit" isLoading={saving} loadingText="Saving" mt="2">
-              Save
-            </Button>
+            <HStack mt="2">
+              <Button type="submit" isLoading={saving} loadingText="Saving">
+                Save
+              </Button>
+              <Button onClick={() => copy(content)}>Copy Content</Button>
+            </HStack>
           </Form>
 
           <VStack w="full" alignItems={'flex-start'}>
             <h2>Shareable URL</h2>
             <p className="w-full p-4 border rounded-md">{url}</p>
             <HStack>
-              <Button onClick={copy}>Copy URL</Button>
-              <Button>
-                <a href={url} target={'_blank'} rel="noreferrer">
-                  Visit
-                </a>
-              </Button>
+              <Button onClick={() => copy(url)}>Copy URL</Button>
+              <Link href={url} isExternal>
+                Visit <ExternalLinkIcon mx="2px" />
+              </Link>
             </HStack>
           </VStack>
 

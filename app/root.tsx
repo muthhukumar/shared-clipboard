@@ -1,4 +1,4 @@
-import type { LinksFunction } from 'remix'
+import type { ErrorBoundaryComponent, LinksFunction } from 'remix'
 
 import * as React from 'react'
 import {

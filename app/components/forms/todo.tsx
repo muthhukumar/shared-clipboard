@@ -23,7 +23,7 @@ export interface TodoFormProps extends FormPropsType<TodoType> {
 
 export default function TodoForm(props: TodoFormProps) {
   const navigation = useNavigate()
-  const onClose = () => navigation('/clipboard')
+  const onClose = () => navigation('/todo')
 
   const transition = useTransition()
 
