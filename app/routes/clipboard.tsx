@@ -1,28 +1,25 @@
 import { ClipboardContent as ClipboardContentType, User } from '@prisma/client'
 
-import { Button, Input, InputGroup, InputLeftElement } from '@chakra-ui/react'
-import { IoMdAdd } from 'react-icons/io'
+import { HStack } from '@chakra-ui/react'
 import {
   LoaderFunction,
   json,
   useLoaderData,
-  useNavigate,
   Link,
   Outlet,
-  Form,
-  useSubmit,
   MetaFunction,
   ErrorBoundaryComponent,
 } from 'remix'
-import { RiSearchLine } from 'react-icons/ri'
 
 import { authenticator } from '~/utils/auth.server'
 import { prisma } from '~/utils/prisma.server'
 import {
   ClipboardContent as ClipboardContentComp,
   DefaultCatchBoundary,
+  AddButton,
   DefaultErrorBoundary,
   NoItems,
+  SearchBar,
   Wrapper,
 } from '~/components'
 import { CatchBoundaryComponent } from '@remix-run/react/routeModules'
@@ -67,33 +64,14 @@ export const loader: LoaderFunction = async ({ request }) => {
 
 export default function ClipboardContent() {
   const contents = useLoaderData<Array<ClipboardContentType>>()
-  const navigation = useNavigate()
-
-  const submit = useSubmit()
 
   return (
     <div className="flex w-full py-8">
       <Wrapper>
-        <Form
-          className="flex items-center justify-between w-full"
-          method="get"
-          onChange={(target) => submit(target.currentTarget)}
-        >
-          <InputGroup size="md" width="81%">
-            {/* eslint-disable-next-line react/no-children-prop*/}
-            <InputLeftElement pointerEvents="none" children={<RiSearchLine color="gray.300" />} />
-            <Input pr="4.5rem" type="text" name="q" placeholder="Search..." />
-          </InputGroup>
-          <Button
-            leftIcon={<IoMdAdd />}
-            variant="solid"
-            w="17%"
-            size="md"
-            onClick={() => navigation('/clipboard/new')}
-          >
-            Add
-          </Button>
-        </Form>
+        <HStack>
+          <SearchBar />
+          <AddButton url="/clipboard/new" />
+        </HStack>
         <div className="flex flex-col mt-6">
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
             {contents.map((content) => {

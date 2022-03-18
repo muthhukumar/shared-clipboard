@@ -1,25 +1,12 @@
 import { User, Vote } from '@prisma/client'
 
-import {
-  InputGroup,
-  InputLeftElement,
-  Input,
-  Button,
-  VStack,
-  useColorModeValue,
-  StackDivider,
-} from '@chakra-ui/react'
-import { IoMdAdd } from 'react-icons/io'
-import { RiSearchLine } from 'react-icons/ri'
+import { VStack, useColorModeValue, StackDivider, HStack } from '@chakra-ui/react'
 import {
   useLoaderData,
-  useSubmit,
-  Form,
   json,
   LoaderFunction,
   MetaFunction,
   Outlet,
-  useNavigate,
   ErrorBoundaryComponent,
 } from 'remix'
 
@@ -29,6 +16,8 @@ import {
   Wrapper,
   DefaultCatchBoundary,
   DefaultErrorBoundary,
+  AddButton,
+  SearchBar,
 } from '~/components'
 import { authenticator } from '~/utils/auth.server'
 import { prisma } from '~/utils/prisma.server'
@@ -81,36 +70,15 @@ export const loader: LoaderFunction = async ({ request }) => {
 export default function ClipbaordContent() {
   const votes = useLoaderData<Array<Vote>>()
 
-  const submit = useSubmit()
-
   const borderColor = useColorModeValue('gray.200', 'gray.700')
-
-  const navigation = useNavigate()
 
   return (
     <div className="flex w-full py-8">
       <Wrapper>
-        <Form
-          className="flex items-center justify-between w-full"
-          method="get"
-          onChange={(target) => submit(target.currentTarget)}
-        >
-          <InputGroup size="md" width="81%">
-            {/* eslint-disable-next-line react/no-children-prop*/}
-            <InputLeftElement pointerEvents="none" children={<RiSearchLine color="gray.300" />} />
-            <Input pr="4.5rem" type="text" name="q" placeholder="Search..." />
-          </InputGroup>
-          <Button
-            leftIcon={<IoMdAdd />}
-            variant="solid"
-            w="17%"
-            size="md"
-            onClick={() => navigation('/habits-rank/new')}
-          >
-            Add
-          </Button>
-        </Form>
-
+        <HStack>
+          <SearchBar />
+          <AddButton url="/habits-rank/new" />
+        </HStack>
         <div className="p-4 mt-4 border rounded-md">
           <VStack alignItems={'flex-start'} divider={<StackDivider borderColor={borderColor} />}>
             {votes.map((vote) => {

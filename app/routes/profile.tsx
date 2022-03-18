@@ -14,6 +14,10 @@ const links: Array<{ title: string; to: string }> = [
     title: 'Export',
     to: '/profile/export',
   },
+  {
+    title: 'Settings',
+    to: '/profile/settings',
+  },
 ]
 
 export const meta: MetaFunction = () => {

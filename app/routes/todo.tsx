@@ -1,5 +1,12 @@
 // TODO - Might want to refactor stuff in this file
 
+import {
+  TodoSortByOptions,
+  TodoFilterByOptions,
+  getTodoSortOption,
+  getTodoFilterByOptions,
+  getUserTodos,
+} from '~/utils/todo'
 import { Label, LabelsOnTodo, Todo as TodoType, User } from '@prisma/client'
 
 import {
@@ -14,7 +21,6 @@ import {
   Select,
   Stack,
 } from '@chakra-ui/react'
-import moment from 'moment'
 import { IoMdAdd } from 'react-icons/io'
 import { RiSearchLine } from 'react-icons/ri'
 import { RiDeleteBack2Line } from 'react-icons/ri'
@@ -30,33 +36,18 @@ import {
   useSubmit,
 } from 'remix'
 
-import { Wrapper, NoItems, TodoItem, Page400, Page500, GoToHome } from '~/components'
+import { Wrapper, NoItems, TodoItem, Page400, Page500, GoToHome, SearchBar } from '~/components'
 import { authenticator } from '~/utils/auth.server'
-import { prisma } from '~/utils/prisma.server'
 import { CatchBoundaryComponent } from '@remix-run/react/routeModules'
 
-const enum FilterByOptions {
-  SHOW_ALL = 'showall',
-  TODAY = 'today',
-  UPCOMING = 'upcoming',
-  OVERDUE = 'overdue',
-}
-
-const enum SortByOptions {
-  PRIORITY = 'priority',
-  LAST_UPDATED = 'lastupdated',
-  TITLE = 'title',
-  LATEST = 'latest',
-}
-
 type LoaderType = {
-  todo: (TodoType & {
+  todos: (TodoType & {
     labels: (LabelsOnTodo & {
       Label: Label | null
     })[]
   })[]
-  sortBy: SortByOptions
-  filterBy: FilterByOptions
+  sortBy: TodoSortByOptions
+  filterBy: TodoFilterByOptions
   show: 'completed' | 'pending'
 }
 
@@ -74,125 +65,32 @@ export const loader: LoaderFunction = async ({ request }) => {
   const url = new URL(request.url)
 
   const query = url.searchParams.get('q') ?? ''
-  const filterBy = url.searchParams.get('filterBy') ?? FilterByOptions.SHOW_ALL
-  const sortBy = url.searchParams.get('sortBy') ?? SortByOptions.LATEST
+  const filterBy = url.searchParams.get('filterBy') ?? TodoFilterByOptions.SHOW_ALL
+  const sortBy = url.searchParams.get('sortBy') ?? TodoSortByOptions.LATEST
   const show = url.searchParams.get('show') ?? 'pending'
 
-  const dueDate = moment().format('YYYY-MM-DD')
+  const addiontalQuery = getTodoFilterByOptions(filterBy as TodoFilterByOptions)
+  const orderBy = getTodoSortOption(sortBy as TodoSortByOptions)
 
-  let addiontalQuery = {}
-  let orderBy = {}
+  const todos = await getUserTodos(user, query, addiontalQuery, orderBy)
 
-  if (sortBy === SortByOptions.LATEST) {
-    orderBy = {
-      createdAt: 'desc',
-    }
-  } else if (sortBy === SortByOptions.TITLE) {
-    orderBy = {
-      title: 'asc',
-    }
-  } else if (sortBy === SortByOptions.PRIORITY) {
-    orderBy = {
-      priority: 'asc',
-    }
-  } else if (sortBy === SortByOptions.LAST_UPDATED) {
-    orderBy = {
-      updatedAt: 'desc',
-    }
-  }
-
-  if (filterBy === FilterByOptions.UPCOMING) {
-    addiontalQuery = {
-      dueDate: {
-        gt: dueDate,
-      },
-    }
-  } else if (filterBy === FilterByOptions.OVERDUE) {
-    addiontalQuery = {
-      dueDate: {
-        lt: dueDate,
-      },
-    }
-  } else if (filterBy === FilterByOptions.TODAY) {
-    addiontalQuery = {
-      dueDate: {
-        equals: dueDate,
-      },
-    }
-  } else if (filterBy === FilterByOptions.SHOW_ALL) {
-    addiontalQuery = {}
-  }
-
-  if (query) {
-    const searchMatchResult = await prisma.todo.findMany({
-      where: {
-        userEmail: user.email,
-        title: {
-          contains: query,
-          mode: 'insensitive',
-        },
-
-        ...addiontalQuery,
-      },
-      include: {
-        labels: {
-          include: {
-            Label: true,
-          },
-        },
-      },
-      orderBy: {
-        ...orderBy,
-      },
-    })
-
-    return json({ todo: searchMatchResult, filterBy, sortBy, show })
-  }
-
-  const todo = await prisma.todo.findMany({
-    where: {
-      userEmail: user.email,
-      ...addiontalQuery,
-    },
-    include: {
-      labels: {
-        include: {
-          Label: true,
-        },
-      },
-    },
-    orderBy: {
-      ...orderBy,
-    },
-  })
-
-  if (todo.length === 0) {
-    throw json(
-      {
-        message: 'No todos found',
-        description: `It seems like you've not added any todos yet. Please press the below button to add some todos.`,
-      },
-      { status: 404 },
-    )
-  }
-
-  return json({ todo, filterBy, sortBy, show })
+  return json({ todos, filterBy, sortBy, show })
 }
 
 export default function TodoIndex() {
   const navigation = useNavigate()
 
-  const { todo, filterBy, sortBy } = useLoaderData<LoaderType>()
+  const { todos, filterBy, sortBy } = useLoaderData<LoaderType>()
 
   const submit = useSubmit()
 
   const borderColor = useColorModeValue('gray.200', 'gray.800')
 
-  const completedTodos = todo.filter((todo) => todo.completed)
+  const completedTodos = todos.filter((todo) => todo.completed)
 
   const hasCompletedSomeTodos = completedTodos.length > 0
 
-  const hasPendingTodos = todo.length > completedTodos.length
+  const hasPendingTodos = todos.length > completedTodos.length
 
   return (
     <div className="w-full py-8">
@@ -220,23 +118,23 @@ export default function TodoIndex() {
 
               <div className="w-full">
                 <HStack flex={'2'} justifyContent="flex-start" w="100%">
-                  <Select name="filterBy" defaultValue={filterBy ?? FilterByOptions.SHOW_ALL}>
-                    <option disabled value={FilterByOptions.SHOW_ALL}>
+                  <Select name="filterBy" defaultValue={filterBy ?? TodoFilterByOptions.SHOW_ALL}>
+                    <option disabled value={TodoFilterByOptions.SHOW_ALL}>
                       Filter by
                     </option>
-                    <option value={FilterByOptions.SHOW_ALL}>Show All</option>
-                    <option value={FilterByOptions.TODAY}>Today</option>
-                    <option value={FilterByOptions.UPCOMING}>Upcoming</option>
-                    <option value={FilterByOptions.OVERDUE}>Overdue</option>
+                    <option value={TodoFilterByOptions.SHOW_ALL}>Show All</option>
+                    <option value={TodoFilterByOptions.TODAY}>Today</option>
+                    <option value={TodoFilterByOptions.UPCOMING}>Upcoming</option>
+                    <option value={TodoFilterByOptions.OVERDUE}>Overdue</option>
                   </Select>
-                  <Select name="sortBy" defaultValue={sortBy ?? SortByOptions.LATEST}>
-                    <option disabled value={SortByOptions.LATEST}>
+                  <Select name="sortBy" defaultValue={sortBy ?? TodoSortByOptions.LATEST}>
+                    <option disabled value={TodoSortByOptions.LATEST}>
                       Sort by
                     </option>
-                    <option value={SortByOptions.LATEST}>Latest</option>
-                    <option value={SortByOptions.TITLE}>Title</option>
-                    <option value={SortByOptions.PRIORITY}>Priority</option>
-                    <option value={SortByOptions.LAST_UPDATED}>Last updated</option>
+                    <option value={TodoSortByOptions.LATEST}>Latest</option>
+                    <option value={TodoSortByOptions.TITLE}>Title</option>
+                    <option value={TodoSortByOptions.PRIORITY}>Priority</option>
+                    <option value={TodoSortByOptions.LAST_UPDATED}>Last updated</option>
                   </Select>
                   {/* <Menu>
                     <MenuButton
@@ -289,7 +187,7 @@ export default function TodoIndex() {
           </VStack>
         </Form>
 
-        {todo.length === 0 && (
+        {todos.length === 0 && (
           <div className="mt-8">
             <NoItems title="No todo list items found!!!" />
           </div>
@@ -301,7 +199,7 @@ export default function TodoIndex() {
           divider={<StackDivider borderColor={borderColor} />}
         >
           {hasPendingTodos &&
-            todo.map((todo) => {
+            todos.map((todo) => {
               if (!todo.completed) {
                 return <TodoItem {...todo} key={todo.id} />
               }
@@ -316,8 +214,8 @@ export default function TodoIndex() {
           mt="6"
           divider={<StackDivider borderColor={borderColor} />}
         >
-          {todo.length > 0 &&
-            todo.map((todo) => {
+          {todos.length > 0 &&
+            todos.map((todo) => {
               if (todo.completed) {
                 return <TodoItem {...todo} key={todo.id} />
               }

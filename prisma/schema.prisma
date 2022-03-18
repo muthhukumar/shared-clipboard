@@ -21,17 +21,19 @@ model ClipboardContent {
 }
 
 model User {
-  email             String             @unique
-  id                String             @unique @default(uuid())
-  name              String?
-  profileUrl        String?
-  clipboardContents ClipboardContent[]
-  todos             Todo[]
-  shortURLs         ShortURL[]
-  votes             Vote[]
-  labels            Label[]
-  quickContent      String?
-  quickRedirect     String?
+  email              String             @unique
+  id                 String             @unique @default(uuid())
+  name               String?
+  profileUrl         String?
+  clipboardContents  ClipboardContent[]
+  todos              Todo[]
+  shortURLs          ShortURL[]
+  votes              Vote[]
+  labels             Label[]
+  quickContent       String?
+  quickRedirect      String?
+  isTodoPublic       Boolean            @default(false)
+  isHabitsRankPublic Boolean            @default(false)
 }
 
 model Vote {

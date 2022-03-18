@@ -1,21 +1,10 @@
 import { ShortURL as ShortURLType, User } from '@prisma/client'
 
-import {
-  InputGroup,
-  InputLeftElement,
-  Input,
-  Button,
-  HStack,
-  StackDivider,
-  VStack,
-  useColorModeValue,
-} from '@chakra-ui/react'
+import { Button, HStack, StackDivider, VStack, useColorModeValue } from '@chakra-ui/react'
 import { CatchBoundaryComponent } from '@remix-run/react/routeModules'
 import { IoMdAdd } from 'react-icons/io'
-import { RiSearchLine } from 'react-icons/ri'
 import {
   ErrorBoundaryComponent,
-  Form,
   json,
   LoaderFunction,
   MetaFunction,
@@ -23,15 +12,16 @@ import {
   useCatch,
   useLoaderData,
   useNavigate,
-  useSubmit,
 } from 'remix'
 
 import {
+  AddButton,
   DefaultErrorBoundary,
   GoToHome,
   NoItems,
   Page400,
   Page500,
+  SearchBar,
   ShortURLItem,
   Wrapper,
 } from '~/components'
@@ -87,36 +77,17 @@ export const loader: LoaderFunction = async ({ request }) => {
 }
 
 export default function ShortURL() {
-  const navigation = useNavigate()
-
   const shortURLs = useLoaderData<Array<ShortURLType>>()
 
   const borderColor = useColorModeValue('gray.200', 'gray.800')
 
-  const submit = useSubmit()
   return (
     <div className="flex w-full py-8">
       <Wrapper>
-        <Form
-          className="flex items-center justify-between w-full"
-          method="get"
-          onChange={(target) => submit(target.currentTarget)}
-        >
-          <InputGroup size="md" width="81%">
-            {/* eslint-disable-next-line react/no-children-prop*/}
-            <InputLeftElement pointerEvents="none" children={<RiSearchLine color="gray.300" />} />
-            <Input pr="4.5rem" type="text" name="q" placeholder="Search..." />
-          </InputGroup>
-          <Button
-            leftIcon={<IoMdAdd />}
-            variant="solid"
-            w="17%"
-            size="md"
-            onClick={() => navigation('/shorturl/new')}
-          >
-            Add
-          </Button>
-        </Form>
+        <HStack>
+          <SearchBar />
+          <AddButton url="/shorturl/new" />
+        </HStack>
         {shortURLs.length === 0 && (
           <div className="mt-8">
             <NoItems title="No Short URLs found!!!" />
