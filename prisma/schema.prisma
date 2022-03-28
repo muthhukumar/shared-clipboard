@@ -60,6 +60,7 @@ model Todo {
   updatedAt   DateTime       @updatedAt
   priority    Priority       @default(NORMAL)
   labels      LabelsOnTodo[]
+  event       Event?
 }
 
 model Label {
@@ -94,4 +95,23 @@ model ShortURL {
   updatedAt DateTime? @updatedAt
   User      User?     @relation(fields: [userEmail], references: [email])
   userEmail String?
+}
+
+model Event {
+  id     Int    @id @default(autoincrement())
+  Todo   Todo   @relation(fields: [todoId], references: [id])
+  todoId String @unique
+
+  repeatStart    Int
+  repeatInterval Int?
+  repeatYear     Int?
+  repeatMonth    Int?
+  repeatDay      Int?
+  repeatWeek     Int?
+  repeatWeekday  Int?
+  repeatEnd      Int
+}
+
+model Stack {
+  id Int @id @default(autoincrement())
 }
