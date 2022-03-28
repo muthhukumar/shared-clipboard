@@ -1,4 +1,4 @@
-import { User } from '@prisma/client'
+import { ShareOption, User } from '@prisma/client'
 import { ActionType } from '~/types/common'
 
 import {
@@ -28,7 +28,10 @@ export const action: ActionFunction = async ({ request }) => {
 
   const formData = await request.formData()
 
-  const voteData = getFormData<VoteType>(formData, [{ key: 'title', defaultValue: '' }])
+  const voteData = getFormData<VoteType>(formData, [
+    { key: 'title', defaultValue: '' },
+    { key: 'shareWith', defaultValue: ShareOption.PRIVATE },
+  ])
 
   const voteValidationResult = VoteSchema.safeParse(voteData)
 
@@ -41,6 +44,7 @@ export const action: ActionFunction = async ({ request }) => {
       data: {
         title: voteValidationResult.data.title,
         userEmail: user.email,
+        shareWith: voteValidationResult.data.shareWith,
       },
     })
     // return json({ success: true, data: null, errorMessage: '' })

@@ -1,4 +1,4 @@
-import { Stack, useColorModeValue, VStack } from '@chakra-ui/react'
+import { Stack, StackDivider, useColorModeValue, VStack } from '@chakra-ui/react'
 import { ErrorBoundaryComponent, Link, MetaFunction, Outlet, useLocation } from 'remix'
 import clsx from 'clsx'
 
@@ -18,6 +18,10 @@ const links: Array<{ title: string; to: string }> = [
     title: 'Settings',
     to: '/profile/settings',
   },
+  {
+    title: 'Personal ID',
+    to: '/profile/personal-id',
+  },
 ]
 
 export const meta: MetaFunction = () => {
@@ -32,19 +36,36 @@ export default function Profile() {
   const textColor = useColorModeValue('text-black', 'text-white')
   const lightTextColor = useColorModeValue('text-gray-400', 'text-gray-600')
 
+  const borderColor = useColorModeValue('gray.200', 'gray.800')
+
   return (
     <div className="w-full">
       <PageTitle>
         <h2 className="text-3xl font-bold">Personal Account Settings</h2>
       </PageTitle>
       <Wrapper>
-        <Stack direction={['column', 'column', 'row', 'row']} alignItems={'flex-start'} py={'10'}>
-          <VStack spacing="4" w={'25%'} alignItems={'flex-start'} mb={[8, 8, 0, 0]}>
+        <Stack
+          direction={['column', 'column', 'row', 'row']}
+          alignItems={'flex-start'}
+          py={'10'}
+          spacing={6}
+        >
+          <VStack
+            divider={<StackDivider borderColor={borderColor} />}
+            spacing="4"
+            w={'25%'}
+            alignItems={'flex-start'}
+            mb={[8, 8, 0, 0]}
+            border="1px"
+            borderColor={borderColor}
+            borderRadius="md"
+            py="4"
+          >
             {links.map((link) => (
               <Link
                 to={link.to}
                 key={link.to}
-                className={clsx(textColor, {
+                className={clsx('ml-4', textColor, {
                   [lightTextColor]: !location.pathname.includes(link.to),
                   'font-bold': location.pathname.includes(link.to),
                 })}

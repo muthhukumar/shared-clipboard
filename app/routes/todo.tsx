@@ -36,7 +36,7 @@ import {
   useSubmit,
 } from 'remix'
 
-import { Wrapper, NoItems, TodoItem, Page400, Page500, GoToHome, SearchBar } from '~/components'
+import { Wrapper, NoItems, TodoItem, Page400, Page500, GoToHome } from '~/components'
 import { authenticator } from '~/utils/auth.server'
 import { CatchBoundaryComponent } from '@remix-run/react/routeModules'
 

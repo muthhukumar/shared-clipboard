@@ -5,7 +5,7 @@ export default function Page400({
   children = null,
   statusCode = 400,
   message = 'Not found.',
-  description = `The thing you're looking for doesn't exsit.`,
+  description,
 }: {
   statusCode?: number
   children?: React.ReactNode
@@ -26,9 +26,11 @@ export default function Page400({
           <Text fontSize={'lg'} fontWeight="bold" color="purple.600">
             {message}
           </Text>
-          <Text fontSize={'lg'} color="gray.600">
-            {description}
-          </Text>
+          {description ? (
+            <Text fontSize={'lg'} color="gray.600">
+              {description}
+            </Text>
+          ) : null}
           {children}
         </VStack>
       </Box>

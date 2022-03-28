@@ -5,6 +5,8 @@ import Dialog from './dialog'
 type DeleteDialogProps = {
   title: string
   message: string
+  actionText?: string
+  actionLoadingText?: string
 }
 
 export default function DeleteDialog(props: DeleteDialogProps) {
@@ -26,8 +28,13 @@ export default function DeleteDialog(props: DeleteDialogProps) {
           Cancel
         </Button>
         <Form method="delete">
-          <Button colorScheme="red" isLoading={deleting} loadingText="Deleting" type="submit">
-            Delete
+          <Button
+            colorScheme="red"
+            isLoading={deleting}
+            loadingText={props.actionLoadingText ? props.actionLoadingText : 'Deleting'}
+            type="submit"
+          >
+            {props.actionText ? props.actionText : 'Delete'}
           </Button>
         </Form>
       </ModalFooter>
