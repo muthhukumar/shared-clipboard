@@ -1,6 +1,6 @@
-import { Vote, User } from '@prisma/client'
+import { Vote, User, ShareOption } from '@prisma/client'
 import { ActionType } from '~/types/common'
-import { TodoType } from '~/types/todo'
+import { VoteType, VoteSchema } from '~/types/vote'
 
 import {
   ActionFunction,
@@ -20,10 +20,9 @@ import { prisma } from '~/utils/prisma.server'
 import { DefaultCatchBoundary, DefaultErrorBoundary, Dialog, HabitForm } from '~/components'
 import { VoteFormProps } from '~/components/forms/vote'
 import { getFinalFormData, getFormData } from '~/utils/form'
-import { VoteSchema, VoteType } from '~/types/vote'
 import { CatchBoundaryComponent } from '@remix-run/react/routeModules'
 
-export type VoteActionType = ActionType<TodoType>
+export type VoteActionType = ActionType<VoteType>
 
 export const action: ActionFunction = async ({ params, request }) => {
   const user = (await authenticator.isAuthenticated(request, {
@@ -34,7 +33,7 @@ export const action: ActionFunction = async ({ params, request }) => {
 
   const formData = await request.formData()
 
-  const todoData = getFormData<TodoType>(formData, [{ key: 'title' }])
+  const todoData = getFormData<VoteType>(formData, [{ key: 'title' }, { key: 'shareWith' }])
 
   const VoteValidationResult = VoteSchema.safeParse(todoData)
 
@@ -49,6 +48,7 @@ export const action: ActionFunction = async ({ params, request }) => {
       },
       data: {
         title: VoteValidationResult.data.title,
+        shareWith: VoteValidationResult.data.shareWith,
         userEmail: user.email,
       },
     })
@@ -99,6 +99,10 @@ export default function VoteEdit() {
     title: {
       value: vote.title,
       ...actionData?.title,
+    },
+    shareWith: {
+      value: vote.shareWith ?? ShareOption.PRIVATE,
+      ...actionData?.shareWith,
     },
     submittingText: 'Saving',
     okButtonText: 'Save',

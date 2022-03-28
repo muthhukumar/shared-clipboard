@@ -1,4 +1,13 @@
-import { FormControl, FormLabel, Input, FormErrorMessage, HStack, Button } from '@chakra-ui/react'
+import {
+  FormControl,
+  FormLabel,
+  Input,
+  FormErrorMessage,
+  HStack,
+  Button,
+  Select,
+} from '@chakra-ui/react'
+import { ShareOption } from '@prisma/client'
 import { Form, useNavigate, useTransition } from 'remix'
 import { FormPropsType } from '~/types/common'
 import { VoteType } from '~/types/vote'
@@ -10,11 +19,12 @@ export interface VoteFormProps extends FormPropsType<VoteType> {
 
 export default function HabitForm(props: VoteFormProps) {
   const navigation = useNavigate()
-  const onClose = () => navigation('/vote')
+  const onClose = () => navigation('/habits-rank')
 
   const transition = useTransition()
 
   const submitting = transition.state === 'submitting'
+
   return (
     <Form method="post">
       <FormControl isInvalid={props?.title?.invalid}>
@@ -28,19 +38,20 @@ export default function HabitForm(props: VoteFormProps) {
         />
         <FormErrorMessage>{props?.title?.errorMessage}</FormErrorMessage>
       </FormControl>
-      {/* <FormControl isInvalid={actionData?.errors.label.isInvalid} mt="2">
-          <FormLabel>Label</FormLabel>
-          <Input
-            // isRequired
-            placeholder="Label"
-            type="text"
-            name="label"
-            defaultValue={vote.label ?? ''}
-            isInvalid={actionData?.errors.label.isInvalid}
-          />
-          <FormErrorMessage>{actionData?.errors.title.message}</FormErrorMessage>
-        </FormControl> */}
-
+      <FormControl isInvalid={props?.shareWith?.invalid} mt="4">
+        <FormLabel>Share with</FormLabel>
+        <Select
+          defaultValue={props.shareWith?.value ?? ShareOption.PRIVATE}
+          name="shareWith"
+          placeholder="Select option"
+          isInvalid={props?.shareWith?.invalid}
+        >
+          <option value={ShareOption.PRIVATE}>Private</option>
+          <option value={ShareOption.FRIENDS}>Friends</option>
+          <option value={ShareOption.PUBLIC}>Public</option>
+        </Select>
+        <FormErrorMessage>{props?.shareWith?.errorMessage}</FormErrorMessage>
+      </FormControl>
       <HStack justifyContent={'flex-end'} mt="8">
         <Button onClick={onClose}>Cancel</Button>
         <Button

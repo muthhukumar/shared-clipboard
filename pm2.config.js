@@ -1,17 +1,17 @@
 module.exports = {
   apps: [
-    // {
-    //   name: 'Remix',
-    //   script: 'remix dev',
-    //   ignore_watch: ['.'],
-    //   env: {
-    //     FORCE_COLOR: '1',
-    //     NODE_ENV: process.env.NODE_ENV ?? 'development',
-    //   },
-    // },
     {
-      name: 'Dev',
-      script: 'cross-env NODE_ENV=development remix build && run-p dev:*',
+      name: 'Node',
+      script: 'npm run dev:node',
+      watch: ['./build/index.js'],
+      env: {
+        FORCE_COLOR: '1',
+        NODE_ENV: process.env.NODE_ENV ?? 'development',
+      },
+    },
+    {
+      name: 'Remix',
+      script: 'npm run dev:remix',
       ignore_watch: ['.'],
       env: {
         FORCE_COLOR: '1',
@@ -19,9 +19,9 @@ module.exports = {
       },
     },
     {
+      ignore_watch: ['.'],
       name: 'Post css',
-      script: 'npm run watch:css',
-      watch: ['styles/postcss'],
+      script: 'npm run dev:css',
       autorestart: false,
       env: {
         NODE_ENV: process.env.NODE_ENV ?? 'development',

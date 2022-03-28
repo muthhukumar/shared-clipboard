@@ -2,7 +2,7 @@ import { Button } from '@chakra-ui/react'
 import { IoMdAdd } from 'react-icons/io'
 import { useNavigate } from 'remix'
 
-export default function AddButton({ url }: { url: string }) {
+export default function AddButton({ url, name }: { url: string; name?: string }) {
   const navigation = useNavigate()
   return (
     <Button
@@ -12,7 +12,7 @@ export default function AddButton({ url }: { url: string }) {
       w="17%"
       onClick={() => navigation(url)}
     >
-      Add
+      Add {name}
     </Button>
   )
 }

@@ -23,6 +23,11 @@ import { authenticator } from '~/utils/auth.server'
 import { prisma } from '~/utils/prisma.server'
 import { CatchBoundaryComponent } from '@remix-run/react/routeModules'
 
+type LoaderType = {
+  votes: Array<Vote>
+  friendsVotes: Array<Vote>
+}
+
 export const meta: MetaFunction = () => {
   return {
     title: 'Vote',
@@ -37,6 +42,14 @@ export const loader: LoaderFunction = async ({ request }) => {
   const url = new URL(request.url)
 
   const query = url.searchParams.get('q') ?? ''
+
+  const friends = await prisma.friend.findMany({
+    where: { status: 'Accepted', OR: [{ requestFrom: user.email }, { requestTo: user.email }] },
+  })
+
+  const allEmails = Array.from(
+    new Set(friends.map((friend) => [friend.requestFrom, friend.requestTo]).flat()),
+  )
 
   if (query) {
     const searchMatchResult = await prisma.vote.findMany({
@@ -64,11 +77,25 @@ export const loader: LoaderFunction = async ({ request }) => {
     },
   })
 
-  return json(votes)
+  const friendsVotes = await prisma.vote.findMany({
+    where: {
+      userEmail: {
+        in: allEmails,
+      },
+      AND: {
+        NOT: {
+          userEmail: user.email,
+        },
+      },
+      shareWith: 'FRIENDS',
+    },
+  })
+
+  return json({ votes, friendsVotes })
 }
 
 export default function ClipbaordContent() {
-  const votes = useLoaderData<Array<Vote>>()
+  const { votes, friendsVotes } = useLoaderData<LoaderType>()
 
   const borderColor = useColorModeValue('gray.200', 'gray.700')
 
@@ -79,12 +106,30 @@ export default function ClipbaordContent() {
           <SearchBar />
           <AddButton url="/habits-rank/new" />
         </HStack>
-        <div className="p-4 mt-4 border rounded-md">
-          <VStack alignItems={'flex-start'} divider={<StackDivider borderColor={borderColor} />}>
+        <div className="py-4 mt-4 border rounded-md">
+          <h2 className="px-4 pb-4 text-xl font-bold border-b">Personal</h2>
+          <VStack
+            px="4"
+            alignItems={'flex-start'}
+            divider={<StackDivider borderColor={borderColor} />}
+          >
             {votes.map((vote) => {
-              return <VoteItem {...vote} key={vote.id} />
+              return <VoteItem {...vote} key={vote.id} editable />
             })}
-            {votes.length === 0 && <NoItems title="No Votees found. Please add some!!!" />}
+            {votes.length === 0 && <NoItems title="No habits found. Please add some!!!" />}
+          </VStack>
+        </div>
+        <div className="py-4 mt-4 border rounded-md">
+          <h2 className="px-4 pb-4 text-xl font-bold border-b">Friend's Habits</h2>
+          <VStack
+            px="4"
+            alignItems={'flex-start'}
+            divider={<StackDivider borderColor={borderColor} />}
+          >
+            {friendsVotes.map((vote) => {
+              return <VoteItem {...vote} key={vote.id} editable={false} />
+            })}
+            {friendsVotes.length === 0 && <NoItems title="No friends habits found." />}
           </VStack>
         </div>
       </Wrapper>

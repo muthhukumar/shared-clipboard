@@ -23,7 +23,6 @@ export const loader: LoaderFunction = async ({ request, params }) => {
   const isValidShortURL = validator.isURL(shortURL.url)
 
   if (!isValidShortURL) {
-    console.log('here maybe because of the invalid', isValidShortURL)
     throw json(
       {
         message: `Forbidden`,
