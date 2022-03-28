@@ -181,8 +181,8 @@ export default function Friends() {
                   </div>
                 )
               })}
+              {friendRequestSend.length === 0 && <NoItems title="No Friend requests send." />}
             </VStack>
-            {friendRequestSend.length === 0 && <NoItems title="No Friend requests send." />}
           </div>
           <div className="py-4 border rounded-md">
             <h2 className="px-4 pb-4 mb-4 font-bold border-b">Friend requests </h2>
@@ -232,8 +232,8 @@ export default function Friends() {
                   </div>
                 )
               })}
+              {friendRequests.length === 0 && <NoItems title="No Friend request found." />}
             </VStack>
-            {friendRequests.length === 0 && <NoItems title="No Friend request found." />}
           </div>
         </div>
       </Wrapper>
