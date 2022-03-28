@@ -25,8 +25,6 @@ export default function HabitForm(props: VoteFormProps) {
 
   const submitting = transition.state === 'submitting'
 
-  console.log('here', props?.shareWith?.invalid)
-
   return (
     <Form method="post">
       <FormControl isInvalid={props?.title?.invalid}>

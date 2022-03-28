@@ -50,19 +50,9 @@ export const action: ActionFunction = async ({ request }) => {
 
   const friendData = getFormData<FriendActionType>(formData, [{ key: 'requestTo' }])
 
-  console.log('here', friendData)
-
   const friendValidationResult = FriendSchema.safeParse(friendData)
 
   if (!friendValidationResult.success) {
-    console.log(
-      'it is coming here for some reason',
-      getFinalFormData<FriendActionType>(
-        friendData,
-        friendValidationResult.error.formErrors.fieldErrors,
-      ),
-    )
-
     return getFinalFormData<FriendActionType>(
       friendData,
       friendValidationResult.error.formErrors.fieldErrors,
@@ -102,7 +92,6 @@ export const action: ActionFunction = async ({ request }) => {
     return redirect(`/friends`)
   } catch {
     // TODO - Handle this with the Errory boundary and catch boundary
-    console.log('thrown ere')
     throw json(
       {
         message: 'Something went wrong.',

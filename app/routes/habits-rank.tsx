@@ -91,8 +91,6 @@ export const loader: LoaderFunction = async ({ request }) => {
     },
   })
 
-  console.log('friendsVotes', friendsVotes)
-
   return json({ votes, friendsVotes })
 }
 
