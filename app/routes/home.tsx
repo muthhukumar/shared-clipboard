@@ -17,7 +17,7 @@ import {
 
 import { CatchBoundaryComponent } from '@remix-run/react/routeModules'
 import { getUserFriendsHabits, getUserHabits } from '~/models/vote.server'
-import { getUserTodayTodos } from '~/models/todo.server'
+import { getUserTodayTodos } from '~/models/todo'
 import { getUser } from '~/models/user.server'
 
 type LoaderType = {
