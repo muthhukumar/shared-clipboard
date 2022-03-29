@@ -7,7 +7,7 @@ import { z } from 'zod'
 import moment from 'moment'
 
 import { authenticator } from '~/utils/auth.server'
-import { prisma } from '~/utils/prisma.server'
+import { prisma } from '~/db.server'
 
 const DueDateSchema = z.date()
 

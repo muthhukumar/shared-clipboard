@@ -38,7 +38,7 @@ import {
   Wrapper,
 } from '~/components'
 import { authenticator } from '~/utils/auth.server'
-import { prisma } from '~/utils/prisma.server'
+import { prisma } from '~/db.server'
 import { copyToClipboard } from '~/utils/browser'
 import { composeUrl } from '~/utils'
 import { getFormData } from '~/utils/form'

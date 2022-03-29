@@ -16,7 +16,7 @@ import { ModalHeader, ModalCloseButton, ModalBody } from '@chakra-ui/react'
 
 import { composeNumberId } from '~/utils'
 import { authenticator } from '~/utils/auth.server'
-import { prisma } from '~/utils/prisma.server'
+import { prisma } from '~/db.server'
 import { DefaultCatchBoundary, DefaultErrorBoundary, Dialog, HabitForm } from '~/components'
 import { VoteFormProps } from '~/components/forms/vote'
 import { getFinalFormData, getFormData } from '~/utils/form'

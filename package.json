@@ -3,27 +3,33 @@
   "name": "remix-app-template",
   "description": "",
   "license": "",
+  "sideEffects": false,
   "scripts": {
-    "dev": "cross-env NODE_ENV=development remix build && run-p dev:*",
-    "watch:css": "postcss styles --base styles --dir app/styles -w",
-    "build:css": "postcss styles --base styles --dir app/styles --env production",
-    "build:remix": "cross-env NODE_ENV=production remix build",
-    "build:css:prod": "npm run build:css -- --env production",
-    "format": "prettier --write \"**/*.+(js|jsx|json|yml|yaml|css|less|scss|ts|tsx|md|gql|graphql|mdx|vue)\"",
-    "setup": "npm install && npm run build && npm run validate",
-    "prepare": "husky install",
-    "lint": "eslint . --ext ts --ext tsx --ext js",
-    "validate": "npm run lint",
-    "build": "npm run build:css:prod && npm run build:remix",
-    "prebuild": "npm run clean && echo All clean",
-    "clean": "npx rimraf public/build ./node_modules/.cache ./app/styles/**.css ./api/build* .cache",
-    "postinstall": "remix setup node && npx prisma generate",
-    "migrate:deploy": "npx prisma migrate deploy",
-    "start": "cross-env NODE_ENV=production node ./build/index.js",
-    "dev:node": "cross-env NODE_ENV=development nodemon ./build/index.js --watch ./build/index.js",
-    "dev:remix": "cross-env NODE_ENV=development remix watch",
-    "dev:css": "cross-env NODE_ENV=development postcss styles --base styles --dir app/styles -w"
+    "build": "run-s build:*",
+    "build:css": "npm run generate:css -- --minify",
+    "build:remix": "remix build",
+    "dev": "run-p dev:*",
+    "dev:css": "npm run generate:css -- --watch",
+    "dev:remix": "cross-env NODE_ENV=development binode --require ./mocks -- @remix-run/dev:remix dev",
+    "format": "prettier --write .",
+    "generate:css": "tailwindcss -o ./app/styles/tailwind.css",
+    "postinstall": "remix setup node",
+    "lint": "eslint --cache --cache-location ./node_modules/.cache/eslint .",
+    "setup": "prisma migrate dev && prisma db seed",
+    "start": "remix-serve build",
+    "start:mocks": "binode --require ./mocks -- @remix-run/serve:remix-serve build",
+    "test": "vitest",
+    "test:e2e:dev": "start-server-and-test dev http://localhost:3000 \"cypress open\"",
+    "pretest:e2e:run": "npm run build",
+    "test:e2e:run": "cross-env PORT=8811 start-server-and-test start:mocks http://localhost:8811 \"cypress run\"",
+    "typecheck": "tsc -b && tsc -b cypress",
+    "validate": "run-p \"test -- --run\" lint typecheck test:e2e:run"
   },
+  "eslintIgnore": [
+    "/node_modules",
+    "/build",
+    "/public/build"
+  ],
   "dependencies": {
     "@chakra-ui/icons": "^1.1.7",
     "@chakra-ui/react": "^1.8.6",
@@ -59,7 +65,8 @@
     "remix-auth-github": "^1.0.0",
     "remix-auth-google": "^1.1.0",
     "validator": "^13.7.0",
-    "zod": "^3.13.4"
+    "zod": "^3.13.4",
+    "tiny-invariant": "^1.2.0"
   },
   "devDependencies": {
     "@remix-run/dev": "^1.2.3",
@@ -86,15 +93,30 @@
     "prettier": "^2.6.0",
     "prisma": "^3.11.0",
     "tailwindcss": "^3.0.23",
-    "typescript": "^4.6.2"
+    "typescript": "^4.6.2",
+    "@faker-js/faker": "^6.0.0",
+    "@testing-library/cypress": "^8.0.2",
+    "@testing-library/jest-dom": "^5.16.3",
+    "@testing-library/react": "^12.1.4",
+    "@testing-library/user-event": "^13.5.0",
+    "@types/bcryptjs": "^2.4.2",
+    "@types/eslint": "^8.4.1",
+    "@vitejs/plugin-react": "^1.2.0",
+    "binode": "^1.0.5",
+    "c8": "^7.11.0",
+    "cross-env": "^7.0.3",
+    "cypress": "^9.5.2",
+    "happy-dom": "^2.50.0",
+    "msw": "^0.39.2",
+    "npm-run-all": "^4.1.5",
+    "prettier-plugin-tailwindcss": "^0.1.8",
+    "start-server-and-test": "^1.14.0",
+    "ts-node": "^10.7.0",
+    "tsconfig-paths": "^3.14.1",
+    "vite-tsconfig-paths": "^3.4.1",
+    "vitest": "^0.7.10"
   },
   "engines": {
     "node": ">=14"
-  },
-  "lint-staged": {
-    "*.+(js|jsx|json|yml|yaml|css|less|scss|ts|tsx|md|gql|graphql|mdx|vue)": [
-      "prettier --write"
-    ]
-  },
-  "sideEffects": false
+  }
 }

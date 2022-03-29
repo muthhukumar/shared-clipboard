@@ -3,7 +3,7 @@ import { User } from '@prisma/client'
 import { ActionFunction, json, redirect } from 'remix'
 
 import { authenticator } from '~/utils/auth.server'
-import { prisma } from '~/utils/prisma.server'
+import { prisma } from '~/db.server'
 
 export const action: ActionFunction = async ({ request, params }) => {
   const user = (await authenticator.isAuthenticated(request, {

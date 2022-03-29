@@ -12,7 +12,7 @@ import {
 } from 'remix'
 
 import { authenticator } from '~/utils/auth.server'
-import { prisma } from '~/utils/prisma.server'
+import { prisma } from '~/db.server'
 import {
   ClipboardContent as ClipboardContentComp,
   DefaultCatchBoundary,

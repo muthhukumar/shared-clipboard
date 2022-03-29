@@ -9,7 +9,7 @@ import { ErrorBoundaryComponent, json, LoaderFunction, MetaFunction, useLoaderDa
 import { DefaultCatchBoundary, DefaultErrorBoundary, PageTitle, Wrapper } from '~/components'
 import { authenticator } from '~/utils/auth.server'
 import { copyToClipboard } from '~/utils/browser'
-import { prisma } from '~/utils/prisma.server'
+import { prisma } from '~/db.server'
 import { CatchBoundaryComponent } from '@remix-run/react/routeModules'
 
 type LoaderType = { content: string; title: string }

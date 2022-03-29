@@ -19,7 +19,7 @@ import { ModalHeader, ModalCloseButton, ModalBody } from '@chakra-ui/react'
 import validator from 'validator'
 
 import { authenticator } from '~/utils/auth.server'
-import { prisma } from '~/utils/prisma.server'
+import { prisma } from '~/db.server'
 import { ShortURLForm, Dialog, DefaultCatchBoundary, DefaultErrorBoundary } from '~/components'
 import { getFinalFormData, getFormData } from '~/utils/form'
 import { CatchBoundaryComponent } from '@remix-run/react/routeModules'
