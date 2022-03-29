@@ -1,5 +1,4 @@
 export { default as Navbar } from './navbar'
-export { default as Sidebar } from './sidebar'
 export { default as ClipboardContent } from './clipboard'
 export { default as ErrorMessage } from './error-message'
 export { default as TransitionModal } from './transition-modal'
