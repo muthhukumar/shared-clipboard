@@ -30,7 +30,7 @@ import { prisma } from '~/utils/prisma.server'
 import { Dialog, DefaultCatchBoundary, DefaultErrorBoundary, NoItems } from '~/components'
 import { getFinalFormData, getFormData } from '~/utils/form'
 import { CatchBoundaryComponent } from '@remix-run/react/routeModules'
-import { getUser } from '~/utils/user'
+import { getUser } from '~/models/user.server'
 import { getFriendUser } from './resources/personal-id'
 
 type FriendActionType = ActionType<FriendType>

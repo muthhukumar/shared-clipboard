@@ -63,7 +63,11 @@ export default function VoteItem(props: VoteProps) {
               </MenuList>
             </Menu>
           </HStack>
-        ) : null}
+        ) : (
+          <Tag colorScheme={'cyan'} fontSize={'x-small'}>
+            {props.userEmail}'s
+          </Tag>
+        )}
       </div>
       <div className="flex items-center justify-between w-full mt-2">
         <HStack>
@@ -82,24 +86,22 @@ export default function VoteItem(props: VoteProps) {
             </Tag>
           ) : null}
         </HStack>
-        {props.editable ? (
-          <HStack pl="2" spacing={2}>
-            {props.shareWith === ShareOption.FRIENDS || props.shareWith === ShareOption.PUBLIC ? (
-              <Tag colorScheme={'cyan'} fontSize={'x-small'}>
-                Shared with {capitalCase(props.shareWith)}
-              </Tag>
-            ) : null}
-            {props.updatedAt ? (
-              <Tag ml="auto" fontSize={'x-small'} colorScheme={'linkedin'}>
-                {moment(props.updatedAt).calendar()}
-              </Tag>
-            ) : null}
-          </HStack>
-        ) : (
-          <Tag colorScheme={'cyan'} fontSize={'x-small'}>
-            {props.userEmail}
-          </Tag>
-        )}
+        <HStack>
+          {props.editable ? (
+            <HStack pl="2" spacing={2}>
+              {props.shareWith === ShareOption.FRIENDS || props.shareWith === ShareOption.PUBLIC ? (
+                <Tag colorScheme={'green'} fontSize={'x-small'}>
+                  Shared with {capitalCase(props.shareWith)}
+                </Tag>
+              ) : null}
+            </HStack>
+          ) : null}
+          {props.updatedAt ? (
+            <Tag ml="auto" fontSize={'x-small'} colorScheme={'linkedin'}>
+              {moment(props.updatedAt).calendar()}
+            </Tag>
+          ) : null}
+        </HStack>
       </div>
     </div>
   )

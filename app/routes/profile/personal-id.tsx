@@ -16,7 +16,7 @@ import { DefaultCatchBoundary, DefaultErrorBoundary, GoToHome } from '~/componen
 import { copyToClipboard } from '~/utils/browser'
 
 import { prisma } from '~/utils/prisma.server'
-import { getUser } from '~/utils/user'
+import { getUser } from '~/models/user.server'
 
 export const action: ActionFunction = async ({ request }) => {
   const user = await getUser(request)

@@ -31,8 +31,12 @@ import {
   SearchBar,
   Wrapper,
 } from '~/components'
-import { prisma } from '~/utils/prisma.server'
-import { getUser } from '~/utils/user'
+import {
+  getUserFriendRequest,
+  getUserFriendRequestSend,
+  getUserFriends,
+} from '~/models/friends.server'
+import { getUser } from '~/models/user.server'
 
 type UserData = {
   friendId: string | undefined
@@ -58,55 +62,13 @@ export const meta: MetaFunction = () => {
 export const loader: LoaderFunction = async ({ request }) => {
   const user = await getUser(request)
 
-  const allQuery = await prisma.friend.findMany({
-    where: { OR: [{ requestFrom: user.email }, { requestTo: user.email }] },
-  })
+  const friends = await getUserFriends(user)
 
-  const allEmails = allQuery.length
-    ? Array.from(
-        new Set(
-          allQuery
-            .map((query) => {
-              return [query.requestFrom, query.requestTo]
-            })
-            .flat(),
-        ),
-      ).filter((currentUser) => currentUser !== user.email)
-    : []
+  const friendRequestSend = await getUserFriendRequestSend(user)
 
-  const usersOfAllQuery = (
-    await prisma.user.findMany({
-      where: { email: { in: allEmails } },
-      select: { email: true, profileUrl: true },
-    })
-  ).map((user) => {
-    const result = allQuery.find(
-      (friend) => friend.requestFrom === user.email || friend.requestTo === user.email,
-    )
-    return {
-      ...user,
-      friendId: result?.id,
-      requestFrom: result?.requestFrom,
-      requestTo: result?.requestTo,
-      status: result?.status,
-    }
-  })
+  const friendRequests = await getUserFriendRequest(user)
 
-  const friendsDub = usersOfAllQuery.filter(
-    (currentUser) => currentUser.status === 'Accepted' && currentUser.email !== user.email,
-  )
-
-  const friendRequestSendDub = usersOfAllQuery.filter(
-    (currentUser) =>
-      (currentUser.status === 'Pending' || currentUser.status === 'Rejected') &&
-      currentUser.requestFrom === user.email,
-  )
-
-  const friendRequests = usersOfAllQuery.filter(
-    (currentUser) => currentUser.status === 'Pending' && currentUser.requestTo === user.email,
-  )
-
-  return json({ friends: friendsDub, friendRequestSend: friendRequestSendDub, friendRequests })
+  return json({ friends, friendRequestSend, friendRequests })
 }
 
 export default function Friends() {

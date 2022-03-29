@@ -3,7 +3,7 @@ import { User } from '@prisma/client'
 import { LoaderFunction, json } from 'remix'
 
 import { prisma } from '~/utils/prisma.server'
-import { getUser } from '~/utils/user'
+import { getUser } from '~/models/user.server'
 
 export const getFriendUser = (userId: User['id']) => {
   return prisma.user.findUnique({

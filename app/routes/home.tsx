@@ -1,6 +1,6 @@
 // TODO - Handle 404 and error boundary and catch boundary
 
-import { Label, LabelsOnTodo, Todo, User, Vote } from '@prisma/client'
+import { Label, LabelsOnTodo, Todo, Vote } from '@prisma/client'
 
 import { HStack, StackDivider, Tag, useColorModeValue, VStack } from '@chakra-ui/react'
 import { ErrorBoundaryComponent, json, LoaderFunction, MetaFunction, useLoaderData } from 'remix'
@@ -14,11 +14,11 @@ import {
   VoteItem,
   Wrapper,
 } from '~/components'
-import { getToday } from '~/utils'
 
-import { authenticator } from '~/utils/auth.server'
-import { prisma } from '~/utils/prisma.server'
 import { CatchBoundaryComponent } from '@remix-run/react/routeModules'
+import { getUserFriendsHabits, getUserHabits } from '~/models/vote.server'
+import { getUserTodayTodos } from '~/models/todo.server'
+import { getUser } from '~/models/user.server'
 
 type LoaderType = {
   todos: Array<
@@ -28,7 +28,8 @@ type LoaderType = {
       })[]
     }
   >
-  votes: Array<Vote>
+  habits: Array<Vote>
+  friendsHabits: Array<Vote>
 }
 
 export const meta: MetaFunction = () => {
@@ -38,40 +39,15 @@ export const meta: MetaFunction = () => {
 }
 
 export const loader: LoaderFunction = async ({ request }) => {
-  const user = (await authenticator.isAuthenticated(request, {
-    failureRedirect: '/login',
-  })) as User
+  const user = await getUser(request)
 
-  const todos = await prisma.todo.findMany({
-    where: {
-      userEmail: user.email,
-      dueDate: {
-        equals: getToday(),
-      },
-    },
-    include: {
-      labels: {
-        include: {
-          Label: true,
-        },
-      },
-    },
-    orderBy: {
-      completed: 'asc',
-    },
-  })
+  const todos = await getUserTodayTodos(user)
 
-  const votes = await prisma.vote.findMany({
-    where: {
-      userEmail: user.email,
-    },
-    orderBy: {
-      updatedAt: 'desc',
-    },
-    take: 5,
-  })
+  const habits = await getUserHabits(user, undefined, { take: 5 })
 
-  return json({ todos: todos ?? [], votes: votes ?? [] })
+  const friendsHabits = await getUserFriendsHabits(user)
+
+  return json({ todos, habits, friendsHabits })
 }
 
 export default function Index() {
@@ -108,14 +84,27 @@ export default function Index() {
           </Card>
           <Card>
             <div className="flex items-center justify-between pb-2 mb-4 border-b">
-              <h2 className="text-2xl font-bold">Habits Rank</h2>
+              <h2 className="text-2xl font-bold">Habits</h2>
             </div>
             <VStack alignItems={'flex-start'} divider={<StackDivider borderColor={borderColor} />}>
-              {data.votes.map((vote) => (
-                <VoteItem {...vote} key={vote.id} />
+              {data.habits.map((habit) => (
+                <VoteItem {...habit} key={habit.id} editable />
               ))}
             </VStack>
-            {data.votes.length === 0 && <NoItems title="No habit rank votes found for today!!!" />}
+            {data.habits.length === 0 && (
+              <NoItems title="No habit rank habits found for today!!!" />
+            )}
+          </Card>
+          <Card>
+            <div className="flex items-center justify-between pb-2 mb-4 border-b">
+              <h2 className="text-2xl font-bold">Friend's Habits</h2>
+            </div>
+            <VStack alignItems={'flex-start'} divider={<StackDivider borderColor={borderColor} />}>
+              {data.friendsHabits.map((habit) => (
+                <VoteItem {...habit} key={habit.id} />
+              ))}
+            </VStack>
+            {data.friendsHabits.length === 0 && <NoItems title="No friends habits found." />}
           </Card>
         </VStack>
       </Wrapper>

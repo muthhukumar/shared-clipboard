@@ -1,8 +1,9 @@
 import { User } from '@prisma/client'
 
 import moment from 'moment'
+import { getToday } from '~/utils'
 
-import { prisma } from './prisma.server'
+import { prisma } from '../utils/prisma.server'
 
 const enum TodoFilterByOptions {
   SHOW_ALL = 'showall',
@@ -119,10 +120,32 @@ const getUserTodos = async (
   })
 }
 
+const getUserTodayTodos = async (user: User) => {
+  return prisma.todo.findMany({
+    where: {
+      userEmail: user.email,
+      dueDate: {
+        equals: getToday(),
+      },
+    },
+    include: {
+      labels: {
+        include: {
+          Label: true,
+        },
+      },
+    },
+    orderBy: {
+      completed: 'asc',
+    },
+  })
+}
+
 export {
   getUserTodos,
   getTodoFilterByOptions,
   getTodoSortOption,
   TodoFilterByOptions,
   TodoSortByOptions,
+  getUserTodayTodos,
 }

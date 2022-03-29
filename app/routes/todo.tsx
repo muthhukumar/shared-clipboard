@@ -6,7 +6,7 @@ import {
   getTodoSortOption,
   getTodoFilterByOptions,
   getUserTodos,
-} from '~/utils/todo'
+} from '~/models/todo.server'
 import { Label, LabelsOnTodo, Todo as TodoType, User } from '@prisma/client'
 
 import {
