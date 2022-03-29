@@ -24,6 +24,7 @@ import { Box, ChakraProvider, Heading, useColorModeValue } from '@chakra-ui/reac
 import { authenticator } from './utils/auth.server'
 import { User } from '@prisma/client'
 import { theme } from './others/theme'
+import * as gtag from '~/utils/gtags.client'
 
 export const links: LinksFunction = () => {
   return [
@@ -40,6 +41,11 @@ export const loader: LoaderFunction = async ({ request }) => {
 }
 
 export default function App() {
+  const location = useLocation()
+
+  React.useEffect(() => {
+    gtag.pageview(location.pathname)
+  }, [location])
   return (
     <Document>
       <ChakraProvider theme={theme}>
@@ -82,6 +88,28 @@ function Document({ children, title }: { children: React.ReactNode; title?: stri
         <Links />
       </head>
       <body>
+        {process.env.NODE_ENV !== 'development' ? null : (
+          <>
+            <script
+              async
+              src={`https://www.googletagmanager.com/gtag/js?id=${gtag.GA_TRACKING_ID}`}
+            />
+            <script
+              async
+              id="gtag-init"
+              dangerouslySetInnerHTML={{
+                __html: `
+                window.dataLayer = window.dataLayer || [];
+                function gtag(){dataLayer.push(arguments);}
+                gtag('js', new Date());
+                gtag('config', '${gtag.GA_TRACKING_ID}', {
+                  page_path: window.location.pathname,
+                });
+              `,
+              }}
+            />
+          </>
+        )}
         {children}
         <ScrollRestoration />
         <Scripts />
