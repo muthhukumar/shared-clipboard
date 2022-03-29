@@ -84,24 +84,6 @@ export default function TodoItem(
       <div className="flex items-center justify-between w-full">
         <p className="text-lg">{props.title}</p>
         <HStack spacing={2}>
-          <fetcher.Form method="post" action={`/todo/${props.id}/toggle`}>
-            <IconButton
-              variant={'ghost'}
-              type="submit"
-              aria-label="Toogle task completion"
-              isLoading={isSubmitting}
-              colorScheme={props.completed ? 'green' : 'gray'}
-              icon={
-                props.completed ? (
-                  <HiCheckCircle size={24} />
-                ) : (
-                  <RiCheckboxBlankCircleLine size={24} />
-                )
-              }
-              size="sm"
-            />
-          </fetcher.Form>
-
           {isOverDue && !props.completed && (
             <Menu>
               <MenuButton as={Button} size="xs" disabled={isRescheduling} colorScheme="purple">
@@ -128,6 +110,24 @@ export default function TodoItem(
               </MenuList>
             </Menu>
           )}
+
+          <fetcher.Form method="post" action={`/todo/${props.id}/toggle`}>
+            <IconButton
+              variant={'ghost'}
+              type="submit"
+              aria-label="Toogle task completion"
+              isLoading={isSubmitting}
+              colorScheme={props.completed ? 'green' : 'gray'}
+              icon={
+                props.completed ? (
+                  <HiCheckCircle size={24} />
+                ) : (
+                  <RiCheckboxBlankCircleLine size={24} />
+                )
+              }
+              size="sm"
+            />
+          </fetcher.Form>
 
           <Menu>
             <MenuButton>
