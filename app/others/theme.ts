@@ -1,5 +1,6 @@
 import { extendTheme } from '@chakra-ui/react'
-import { mode } from '@chakra-ui/theme-tools'
+import { StyleFunctionProps, mode } from '@chakra-ui/theme-tools'
+import { Dict } from '@chakra-ui/utils'
 
 export const theme = extendTheme({
   config: {
@@ -13,7 +14,7 @@ export const theme = extendTheme({
     },
   },
   styles: {
-    global: (props) => ({
+    global: (props: Dict<any> | StyleFunctionProps) => ({
       body: {
         fontFamily: 'body',
         color: mode('gray.800', 'whiteAlpha.900')(props),

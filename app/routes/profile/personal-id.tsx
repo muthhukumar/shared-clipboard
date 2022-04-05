@@ -76,10 +76,10 @@ export default function PersonalId() {
   const toast = useToast()
   return (
     <div className="flex flex-col gap-y-4">
-      <div className="pb-2 border-b">
+      <div className="border-b pb-2">
         <h2>Personal ID</h2>
       </div>
-      <div className="p-4 border rounded-lg">{uniqueReference.personalId}</div>
+      <div className="rounded-lg border p-4">{uniqueReference.personalId}</div>
       <div>
         <Button
           onClick={() =>

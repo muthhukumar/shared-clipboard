@@ -158,10 +158,10 @@ export default function ShortURLNew() {
         </friendFetcher.Form>
 
         {userData ? (
-          <div className="flex flex-col p-4 mt-4 border rounded-md gap-y-4">
+          <div className="mt-4 flex flex-col gap-y-4 rounded-md border p-4">
             <HStack>
               <Avatar src={userData.profileUrl ?? ''} size="sm" />
-              <h2 className="font-bold truncate">{userData.email}</h2>
+              <h2 className="truncate font-bold">{userData.email}</h2>
             </HStack>
             <friendRequestSubmit.Form className="w-full" method="post" action="/friends/request">
               <input type="hidden" name="requestTo" defaultValue={userData.email} />

@@ -136,7 +136,7 @@ export default function CopyId() {
       <Wrapper>
         <VStack alignItems={'flex-start'} py={'6'} spacing={6}>
           <p className="mt-4">The content below is automatically copied.</p>
-          <p className="w-full p-4 border rounded-md">{content.content}</p>
+          <p className="w-full rounded-md border p-4">{content.content}</p>
         </VStack>
       </Wrapper>
     </div>
