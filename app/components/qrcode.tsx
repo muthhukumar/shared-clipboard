@@ -30,9 +30,9 @@ export default function QRCode({ value }: { value: string }) {
 
   return (
     <div className="w-full">
-      <div className="flex w-full items-center justify-center rounded-md border p-4">
-        <div className="fit-content mx-auto min-h-[200px] min-w-[200px]">
-          <div ref={ref} className="rounded-md bg-white p-4">
+      <div className="flex items-center justify-center w-full p-4 border rounded-md">
+        <div className="min-w-[200px] min-h-[200px] mx-auto fit-content">
+          <div ref={ref} className="p-4 bg-white rounded-md">
             <ReactQRCode value={value} size={200} renderAs="svg" />
           </div>
         </div>

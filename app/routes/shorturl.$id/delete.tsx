@@ -6,7 +6,7 @@ import { ActionFunction, ErrorBoundaryComponent, MetaFunction, redirect } from '
 import { DefaultCatchBoundary, DefaultErrorBoundary, DeleteDialog } from '~/components'
 import { composeNumberId } from '~/utils'
 import { authenticator } from '~/utils/auth.server'
-import { prisma } from '~/db.server'
+import { prisma } from '~/utils/prisma.server'
 
 export const meta: MetaFunction = () => {
   return {

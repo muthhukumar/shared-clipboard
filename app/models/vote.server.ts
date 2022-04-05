@@ -1,5 +1,5 @@
 import { User } from '@prisma/client'
-import { prisma } from '~/db.server'
+import { prisma } from '~/utils/prisma.server'
 import { getUserFriendsMetaData, getFriendsEmail } from './friends.server'
 
 const getUserHabits = async (user: User, query?: string, customFilters = {}) => {

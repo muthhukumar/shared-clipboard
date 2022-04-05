@@ -3,7 +3,7 @@ import { User } from '@prisma/client'
 import moment from 'moment'
 import { getToday } from '~/utils'
 
-import { prisma } from '../db.server'
+import { prisma } from '../utils/prisma.server'
 
 const enum TodoFilterByOptions {
   SHOW_ALL = 'showall',

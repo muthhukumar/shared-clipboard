@@ -3,7 +3,7 @@ import { User } from '@prisma/client'
 import { FormControl, FormLabel, Switch, VStack } from '@chakra-ui/react'
 import { ActionFunction, Form, LoaderFunction, redirect, useLoaderData, useSubmit } from 'remix'
 
-import { prisma } from '~/db.server'
+import { prisma } from '~/utils/prisma.server'
 import { getUser } from '~/models/user.server'
 
 type LoaderType = {

@@ -67,7 +67,7 @@ export default function Index() {
       <Wrapper>
         <VStack alignItems={'flex-start'} w="full" spacing={6}>
           <Card>
-            <div className="mb-4 flex items-center justify-between border-b pb-2">
+            <div className="flex items-center justify-between pb-2 mb-4 border-b">
               <h2 className="text-2xl font-bold">Todos</h2>
               <HStack>
                 <Tag>{incompleteTask}</Tag>
@@ -83,7 +83,7 @@ export default function Index() {
             {data.todos.length === 0 && <NoItems title="No todos for today!!!" />}
           </Card>
           <Card>
-            <div className="mb-4 flex items-center justify-between border-b pb-2">
+            <div className="flex items-center justify-between pb-2 mb-4 border-b">
               <h2 className="text-2xl font-bold">Habits</h2>
             </div>
             <VStack alignItems={'flex-start'} divider={<StackDivider borderColor={borderColor} />}>
@@ -96,7 +96,7 @@ export default function Index() {
             )}
           </Card>
           <Card>
-            <div className="mb-4 flex items-center justify-between border-b pb-2">
+            <div className="flex items-center justify-between pb-2 mb-4 border-b">
               <h2 className="text-2xl font-bold">Friend's Habits</h2>
             </div>
             <VStack alignItems={'flex-start'} divider={<StackDivider borderColor={borderColor} />}>

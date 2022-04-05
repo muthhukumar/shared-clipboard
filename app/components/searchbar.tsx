@@ -7,7 +7,7 @@ export default function SearchBar() {
 
   return (
     <Form
-      className="flex w-full items-center justify-between"
+      className="flex items-center justify-between w-full"
       method="get"
       onChange={(target) => submit(target.currentTarget)}
     >
