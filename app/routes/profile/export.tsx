@@ -5,7 +5,7 @@ import { Link, VStack } from '@chakra-ui/react'
 import { ErrorBoundaryComponent, json, LoaderFunction, MetaFunction, useLoaderData } from 'remix'
 
 import { authenticator } from '~/utils/auth.server'
-import { prisma } from '~/utils/prisma.server'
+import { prisma } from '~/db.server'
 import { CatchBoundaryComponent } from '@remix-run/react/routeModules'
 import { DefaultCatchBoundary, DefaultErrorBoundary } from '~/components'
 
@@ -67,9 +67,9 @@ type ExportType = {
 
 const ExportItem = ({ title, content, pathname }: ExportType) => {
   return (
-    <div className="flex flex-col w-full p-4 border rounded-md gap-y-2">
+    <div className="flex w-full flex-col gap-y-2 rounded-md border p-4">
       <h2 className="mb-2 text-xl font-bold">{title}</h2>
-      <p className="p-4 break-words border rounded-md">{content}</p>
+      <p className="break-words rounded-md border p-4">{content}</p>
       <Link href={`/export?name=${pathname}`} isExternal download={pathname}>
         Export <ExternalLinkIcon mx="2px" />
       </Link>

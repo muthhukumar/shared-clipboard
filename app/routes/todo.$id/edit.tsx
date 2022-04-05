@@ -18,7 +18,7 @@ import moment from 'moment'
 
 import { composePriority } from '~/utils'
 import { authenticator } from '~/utils/auth.server'
-import { prisma } from '~/utils/prisma.server'
+import { prisma } from '~/db.server'
 import { getFinalFormData, getFormData } from '~/utils/form'
 import { DefaultCatchBoundary, DefaultErrorBoundary, Dialog } from '~/components'
 import TodoForm, { TodoFormProps } from '~/components/forms/todo'

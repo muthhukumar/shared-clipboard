@@ -1,7 +1,7 @@
 export default function NoItems({ title = 'No items found!.' }: { title: string }) {
   return (
-    <div className="w-full p-8 my-2 border rounded-md">
-      <p className="font-bold text-center">{title}</p>
+    <div className="my-2 w-full rounded-md border p-8">
+      <p className="text-center font-bold">{title}</p>
     </div>
   )
 }

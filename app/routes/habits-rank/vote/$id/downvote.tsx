@@ -4,7 +4,7 @@ import { ActionFunction, json, redirect } from 'remix'
 import { composeNumberId } from '~/utils'
 
 import { authenticator } from '~/utils/auth.server'
-import { prisma } from '~/utils/prisma.server'
+import { prisma } from '~/db.server'
 
 export const action: ActionFunction = async ({ params, request }) => {
   const user = (await authenticator.isAuthenticated(request, {

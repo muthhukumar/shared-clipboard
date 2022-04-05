@@ -60,8 +60,8 @@ export default function ClipbaordContent() {
           <SearchBar />
           <AddButton url="/habits-rank/new" />
         </HStack>
-        <div className="py-4 mt-4 border rounded-md">
-          <h2 className="px-4 pb-4 text-xl font-bold border-b">Personal</h2>
+        <div className="mt-4 rounded-md border py-4">
+          <h2 className="border-b px-4 pb-4 text-xl font-bold">Personal</h2>
           <VStack
             px="4"
             alignItems={'flex-start'}
@@ -73,8 +73,8 @@ export default function ClipbaordContent() {
             {habits.length === 0 && <NoItems title="No habits found. Please add some!!!" />}
           </VStack>
         </div>
-        <div className="py-4 mt-4 border rounded-md">
-          <h2 className="px-4 pb-4 text-xl font-bold border-b">Friend's Habits</h2>
+        <div className="mt-4 rounded-md border py-4">
+          <h2 className="border-b px-4 pb-4 text-xl font-bold">Friend's Habits</h2>
           <VStack
             px="4"
             alignItems={'flex-start'}

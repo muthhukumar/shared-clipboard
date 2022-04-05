@@ -7,3 +7,8 @@ node_modules/
 /public/build
 /.vercel
 /server/build
+
+
+.env
+
+/app/styles/tailwind.css

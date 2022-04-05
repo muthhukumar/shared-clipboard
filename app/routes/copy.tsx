@@ -38,7 +38,7 @@ import {
   Wrapper,
 } from '~/components'
 import { authenticator } from '~/utils/auth.server'
-import { prisma } from '~/utils/prisma.server'
+import { prisma } from '~/db.server'
 import { copyToClipboard } from '~/utils/browser'
 import { composeUrl } from '~/utils'
 import { getFormData } from '~/utils/form'
@@ -130,7 +130,7 @@ export default function QuickCopy() {
 
           <VStack w="full" alignItems={'flex-start'}>
             <h2>Shareable URL</h2>
-            <p className="w-full p-4 border rounded-md">{url}</p>
+            <p className="w-full rounded-md border p-4">{url}</p>
             <HStack>
               <Button onClick={() => copy(url)}>Copy URL</Button>
               <Link href={url} isExternal>

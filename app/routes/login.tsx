@@ -26,7 +26,7 @@ export default function SimpleCard() {
 
   return (
     <Stack minH={'100vh'} direction={{ base: 'column', md: 'row' }}>
-      <div className="flex items-center justify-center flex-1 p-8">
+      <div className="flex flex-1 items-center justify-center p-8">
         <Stack spacing={4} w={'full'} maxW={'md'}>
           <Heading fontSize={'2xl'} mb="4">
             Sign in to your account

@@ -1,12 +1,12 @@
 node_modules
 
-.cache
-.vercel
-.output
-
-public/build
-api/build
-
-app/styles/*
+/build
+/public/build
 .env
-build/
+
+/cypress/screenshots
+/cypress/videos
+/prisma/data.db
+/prisma/data.db-journal
+
+/app/styles/tailwind.css

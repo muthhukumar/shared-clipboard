@@ -1,4 +1,4 @@
-import { prisma } from './prisma.server'
+import { prisma } from '../db.server'
 
 export const User = {
   async findOrCreate({ email, profileUrl }: { email: string; profileUrl: string }) {

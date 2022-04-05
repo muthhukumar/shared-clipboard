@@ -3,7 +3,7 @@ import { Status, User } from '@prisma/client'
 import { ActionFunction, json, MetaFunction } from 'remix'
 
 import { authenticator } from '~/utils/auth.server'
-import { prisma } from '~/utils/prisma.server'
+import { prisma } from '~/db.server'
 
 export const meta: MetaFunction = () => {
   return {

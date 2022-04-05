@@ -156,7 +156,7 @@ function StickyHeader() {
                 <HStack className="pb-3">
                   <AiOutlineAliwangwang size={20} />
                   <Tag size={'sm'}>
-                    <p className="w-16 text-center truncate">{getTransitionTypes(transition)}</p>
+                    <p className="w-16 truncate text-center">{getTransitionTypes(transition)}</p>
                   </Tag>
                 </HStack>
               ) : null}
@@ -164,7 +164,7 @@ function StickyHeader() {
                 <RLink
                   to={link.to}
                   key={link.to}
-                  className={clsx('pb-3 border-b-2', {
+                  className={clsx('border-b-2 pb-3', {
                     [borderColor]: location.pathname.includes(link.to),
                     'border-transparent':
                       !location.pathname.includes(link.to) || location.pathname === '/',
