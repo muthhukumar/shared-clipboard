@@ -23,8 +23,8 @@ export default function VoteItem(props: VoteProps) {
     (downvoteFetcher.state === 'loading' && downvoteFetcher.type === 'actionReload')
 
   return (
-    <div className="flex w-full flex-col items-start gap-y-1 rounded-md py-2">
-      <div className="flex w-full items-center justify-between">
+    <div className="flex flex-col items-start w-full py-2 rounded-md gap-y-1">
+      <div className="flex items-center justify-between w-full">
         <p className="text-lg">{props.title}</p>
         {props.editable ? (
           <HStack>
@@ -69,7 +69,7 @@ export default function VoteItem(props: VoteProps) {
           </Tag>
         )}
       </div>
-      <div className="mt-2 flex w-full items-center justify-between">
+      <div className="flex items-center justify-between w-full mt-2">
         <HStack>
           <Tag fontSize={'x-small'} colorScheme={'purple'}>
             {props.upvotes + -props.downvotes} votes

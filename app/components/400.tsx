@@ -17,7 +17,7 @@ export default function Page400({
     <Wrapper>
       <Box bg={bg} my={8} p={8}>
         <VStack spacing={4}>
-          <h2 className="text-7xl font-bold" color="purple.300">
+          <h2 className="font-bold text-7xl" color="purple.300">
             {statusCode}
           </h2>
           <Text fontSize={'lg'} fontWeight="bold" color={'purple.600'}>

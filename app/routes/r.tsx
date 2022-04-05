@@ -4,7 +4,7 @@ import { User } from '@prisma/client'
 import { LoaderFunction, redirect } from 'remix'
 
 import { authenticator } from '~/utils/auth.server'
-import { prisma } from '~/db.server'
+import { prisma } from '~/utils/prisma.server'
 
 export const loader: LoaderFunction = async ({ request }) => {
   const user = (await authenticator.isAuthenticated(request, {

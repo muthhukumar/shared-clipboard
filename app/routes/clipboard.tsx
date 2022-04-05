@@ -12,7 +12,7 @@ import {
 } from 'remix'
 
 import { authenticator } from '~/utils/auth.server'
-import { prisma } from '~/db.server'
+import { prisma } from '~/utils/prisma.server'
 import {
   ClipboardContent as ClipboardContentComp,
   DefaultCatchBoundary,
@@ -72,14 +72,14 @@ export default function ClipboardContent() {
           <SearchBar />
           <AddButton url="/clipboard/new" />
         </HStack>
-        <div className="mt-6 flex flex-col">
+        <div className="flex flex-col mt-6">
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
             {contents.map((content) => {
               return (
                 <Link
                   to={`/clipboard/${content.id}`}
                   key={content.id}
-                  className="w-full rounded-md border transition-all hover:border-white"
+                  className="w-full transition-all border rounded-md hover:border-white"
                 >
                   <ClipboardContentComp {...content} key={content.id} />
                 </Link>

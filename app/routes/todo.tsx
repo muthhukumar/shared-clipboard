@@ -96,7 +96,7 @@ export default function TodoIndex() {
     <div className="w-full py-8">
       <Wrapper>
         <Form
-          className="flex w-full items-center justify-between"
+          className="flex items-center justify-between w-full"
           method="get"
           onChange={(target) => submit(target.currentTarget)}
           onReset={(target) => submit(target.currentTarget)}
@@ -192,7 +192,7 @@ export default function TodoIndex() {
             <NoItems title="No todo list items found!!!" />
           </div>
         )}
-        {hasPendingTodos && <h2 className="mt-10 border-b pb-4 text-xl font-bold">Pending</h2>}
+        {hasPendingTodos && <h2 className="pb-4 mt-10 text-xl font-bold border-b">Pending</h2>}
         <VStack
           alignItems={'flex-start'}
           mt="6"
@@ -207,7 +207,7 @@ export default function TodoIndex() {
             })}
         </VStack>
         {hasCompletedSomeTodos && (
-          <h2 className="mt-10 border-b pb-4 text-xl font-bold">Completed</h2>
+          <h2 className="pb-4 mt-10 text-xl font-bold border-b">Completed</h2>
         )}
         <VStack
           alignItems={'flex-start'}

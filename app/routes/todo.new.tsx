@@ -20,7 +20,7 @@ import moment from 'moment'
 
 import { composePriority } from '~/utils'
 import { authenticator } from '~/utils/auth.server'
-import { prisma } from '~/db.server'
+import { prisma } from '~/utils/prisma.server'
 import { TodoForm, Dialog, DefaultCatchBoundary, DefaultErrorBoundary } from '~/components'
 import { getFinalFormData, getFormData } from '~/utils/form'
 import { CatchBoundaryComponent } from '@remix-run/react/routeModules'

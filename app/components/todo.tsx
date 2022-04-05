@@ -80,8 +80,8 @@ export default function TodoItem(
   }
 
   return (
-    <div className="flex w-full flex-col items-start gap-y-1 rounded-md py-2">
-      <div className="flex w-full items-center justify-between">
+    <div className="flex flex-col items-start w-full py-2 rounded-md gap-y-1">
+      <div className="flex items-center justify-between w-full">
         <p className="text-lg">{props.title}</p>
         <HStack spacing={2}>
           {isOverDue && !props.completed && (
@@ -140,7 +140,7 @@ export default function TodoItem(
           </Menu>
         </HStack>
       </div>
-      <div className="mt-2 flex w-full items-center justify-between">
+      <div className="flex items-center justify-between w-full mt-2">
         <HStack>
           <Tag fontSize={'xx-small'} colorScheme={getPriorityColor(props.priority)}>
             {capitalCase(`${props.priority} PRIORITY`)}

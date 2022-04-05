@@ -26,7 +26,7 @@ import {
 } from '@chakra-ui/react'
 
 import { authenticator } from '~/utils/auth.server'
-import { prisma } from '~/db.server'
+import { prisma } from '~/utils/prisma.server'
 import { Dialog, DefaultCatchBoundary, DefaultErrorBoundary, NoItems } from '~/components'
 import { getFinalFormData, getFormData } from '~/utils/form'
 import { CatchBoundaryComponent } from '@remix-run/react/routeModules'
@@ -158,10 +158,10 @@ export default function ShortURLNew() {
         </friendFetcher.Form>
 
         {userData ? (
-          <div className="mt-4 flex flex-col gap-y-4 rounded-md border p-4">
+          <div className="flex flex-col p-4 mt-4 border rounded-md gap-y-4">
             <HStack>
               <Avatar src={userData.profileUrl ?? ''} size="sm" />
-              <h2 className="truncate font-bold">{userData.email}</h2>
+              <h2 className="font-bold truncate">{userData.email}</h2>
             </HStack>
             <friendRequestSubmit.Form className="w-full" method="post" action="/friends/request">
               <input type="hidden" name="requestTo" defaultValue={userData.email} />

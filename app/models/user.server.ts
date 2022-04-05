@@ -1,7 +1,7 @@
 import type { User } from '@prisma/client'
 
 import { redirect } from 'remix'
-import { prisma } from '~/db.server'
+import { prisma } from '~/utils/prisma.server'
 
 import { authenticator } from '../utils/auth.server'
 

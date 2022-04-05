@@ -1,6 +1,6 @@
 import type { Friend, User } from '@prisma/client'
 
-import { prisma } from '~/db.server'
+import { prisma } from '~/utils/prisma.server'
 
 const getUserFriendsMetaData = async (user: User) => {
   return prisma.friend.findMany({
