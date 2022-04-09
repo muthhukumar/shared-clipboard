@@ -78,7 +78,6 @@ export function CatchBoundary() {
 }
 
 function Document({ children, title }: { children: React.ReactNode; title?: string }) {
-  console.log('gtag.GA_TRACKING_ID', gtag.GA_TRACKING_ID)
   return (
     <html lang="en">
       <head>
