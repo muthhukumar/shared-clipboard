@@ -1,11 +1,10 @@
 // app/session.server.ts
 import { createCookieSessionStorage } from 'remix'
+import invariant from 'tiny-invariant'
 
 const cookieSecret = process.env.COOKIE_SECRET
 
-if (!cookieSecret) {
-  throw new Error('Please add cookie secret env variable')
-}
+invariant(cookieSecret, 'COOKIE_SECRET must be set')
 
 export const sessionStorage = createCookieSessionStorage({
   cookie: {

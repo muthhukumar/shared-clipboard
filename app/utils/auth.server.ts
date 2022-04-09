@@ -4,44 +4,33 @@ import { GitHubStrategy } from 'remix-auth-github'
 
 import { sessionStorage } from '~/utils/session.server'
 import { User } from './user.server'
+import invariant from 'tiny-invariant'
 
 const clientID = process.env.CLIENT_ID
 const clientSecret = process.env.CLIENT_SECRET
 const callbackURL = process.env.CALL_BACK_URL
 
-const googleclientID = process.env.GOOGLE_CLIENT_ID
-const googleclientSecret = process.env.GOOGLE_CLIENT_SECRET
-const googlecallbackURL = process.env.GOOGLE_CALL_BACK_URL
+const googleClientID = process.env.GOOGLE_CLIENT_ID
+const googleClientSecret = process.env.GOOGLE_CLIENT_SECRET
+const googleCallbackURL = process.env.GOOGLE_CALL_BACK_URL
 
-if (!googleclientID) {
-  throw new Error('Google Client id is not added')
-}
+invariant(clientID, 'Github CLIENT_ID must be set')
 
-if (!googleclientSecret) {
-  throw new Error('Google Client secret is not added')
-}
+invariant(clientSecret, 'Github CLIENT_SECRET must be set')
 
-if (!googlecallbackURL) {
-  throw new Error('Google Callback url is not provided')
-}
+invariant(callbackURL, 'Github CALL_BACK_URL must be set')
 
-if (!clientID) {
-  throw new Error('Client id is not added')
-}
+invariant(googleClientID, 'GOOGLE_CLIENT_ID must be set')
 
-if (!clientSecret) {
-  throw new Error('Client secret is not added')
-}
+invariant(googleClientSecret, 'GOOGLE_CLIENT_SECRET must be set')
 
-if (!callbackURL) {
-  throw new Error('Callback url is not provided')
-}
+invariant(googleCallbackURL, 'GOOGLE_CALL_BACK_URL must be set')
 
 const googleStrategy = new GoogleStrategy(
   {
-    clientID: googleclientID,
-    clientSecret: googleclientSecret,
-    callbackURL: googlecallbackURL,
+    clientID: googleClientID,
+    clientSecret: googleClientSecret,
+    callbackURL: googleCallbackURL,
   },
   async ({ profile }) => {
     const email = profile.emails[0].value
