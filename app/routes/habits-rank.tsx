@@ -53,6 +53,8 @@ export default function ClipbaordContent() {
 
   const borderColor = useColorModeValue('gray.200', 'gray.700')
 
+  const archived = habits.filter((habit) => habit.isArchived)
+
   return (
     <div className="flex w-full py-8">
       <Wrapper>
@@ -68,9 +70,24 @@ export default function ClipbaordContent() {
             divider={<StackDivider borderColor={borderColor} />}
           >
             {habits.map((vote) => {
-              return <VoteItem {...vote} key={vote.id} editable />
+              if (!vote.isArchived) return <VoteItem {...vote} key={vote.id} editable />
+              return null
             })}
             {habits.length === 0 && <NoItems title="No habits found. Please add some!!!" />}
+          </VStack>
+        </div>
+        <div className="py-4 mt-4 border rounded-md">
+          <h2 className="px-4 pb-4 text-xl font-bold border-b">Archived Habits</h2>
+          <VStack
+            px="4"
+            alignItems={'flex-start'}
+            divider={<StackDivider borderColor={borderColor} />}
+          >
+            {archived.map((vote) => {
+              if (vote.isArchived) return <VoteItem {...vote} key={vote.id} editable />
+              return null
+            })}
+            {archived.length === 0 && <NoItems title="No Archived habits found." />}
           </VStack>
         </div>
         <div className="py-4 mt-4 border rounded-md">

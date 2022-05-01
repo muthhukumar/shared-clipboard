@@ -1,6 +1,15 @@
 import { ShareOption, Vote } from '@prisma/client'
 
-import { HStack, Tag, IconButton, Menu, MenuButton, MenuList, MenuItem } from '@chakra-ui/react'
+import {
+  HStack,
+  Tag,
+  IconButton,
+  Menu,
+  MenuButton,
+  MenuList,
+  MenuItem,
+  Button,
+} from '@chakra-ui/react'
 import { BsArrowUp, BsArrowDown, BsThreeDotsVertical } from 'react-icons/bs'
 import { useFetcher, useNavigate } from 'remix'
 import { capitalCase } from 'change-case'
@@ -15,6 +24,12 @@ export default function VoteItem(props: VoteProps) {
   const upvotesFetcher = useFetcher()
   const downvoteFetcher = useFetcher()
 
+  const archiveFetcher = useFetcher()
+
+  const isArchiving =
+    archiveFetcher.state === 'submitting' ||
+    (archiveFetcher.state === 'loading' && archiveFetcher.type === 'actionReload')
+
   const isUpvoting =
     upvotesFetcher.state === 'submitting' ||
     (upvotesFetcher.state === 'loading' && upvotesFetcher.type === 'actionReload')
@@ -28,6 +43,20 @@ export default function VoteItem(props: VoteProps) {
         <p className="text-lg">{props.title}</p>
         {props.editable ? (
           <HStack>
+            <archiveFetcher.Form
+              method="post"
+              action={`/habits-rank/vote/${props.id}/archive/toggle`}
+            >
+              <Button
+                size="xs"
+                type="submit"
+                colorScheme={props.isArchived ? 'cyan' : 'gray'}
+                isLoading={isArchiving}
+                loadingText={props.isArchived ? 'Un Archiving' : 'Archiving'}
+              >
+                {props.isArchived ? 'Un Archive' : 'Archive'}
+              </Button>
+            </archiveFetcher.Form>
             <upvotesFetcher.Form method="post" action={`/habits-rank/vote/${props.id}/upvote`}>
               <IconButton
                 isLoading={isUpvoting}

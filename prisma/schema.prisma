@@ -39,16 +39,17 @@ model User {
 }
 
 model Vote {
-  title      String
-  id         Int          @id @default(autoincrement())
-  upvotes    Int          @default(0)
-  downvotes  Int          @default(0)
-  User       User?        @relation(fields: [userEmail], references: [email])
-  userEmail  String?
-  createdAt  DateTime     @default(now())
-  updatedAt  DateTime?    @updatedAt
-  label      String?
-  shareWith ShareOption? @default(PRIVATE)
+  title       String
+  id          Int          @id @default(autoincrement())
+  upvotes     Int          @default(0)
+  downvotes   Int          @default(0)
+  User        User?        @relation(fields: [userEmail], references: [email])
+  userEmail   String?
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime?    @updatedAt
+  label       String?
+  shareWith   ShareOption? @default(PRIVATE)
+  isArchived Boolean      @default(false)
 }
 
 model Todo {
@@ -149,6 +150,6 @@ model Friend {
   user      User   @relation(fields: [userEmail], references: [email])
   userEmail String
 
-  @@unique([requestFrom, requestTo])
 
+  @@unique([requestFrom, requestTo])
 }
