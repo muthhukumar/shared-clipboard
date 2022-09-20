@@ -120,3 +120,7 @@ export const intentionalThrow = () => {
     throw new Error('Intentionally throwing error')
   }
 }
+
+export function composeToBoolean(value: unknown) {
+  return value === 'true' || value === true ? true : false
+}

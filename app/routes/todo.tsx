@@ -20,6 +20,7 @@ import {
   HStack,
   Select,
   Stack,
+  Switch,
 } from '@chakra-ui/react'
 import { IoMdAdd } from 'react-icons/io'
 import { RiSearchLine } from 'react-icons/ri'
@@ -33,12 +34,14 @@ import {
   useCatch,
   useLoaderData,
   useNavigate,
+  useSearchParams,
   useSubmit,
 } from 'remix'
 
 import { Wrapper, NoItems, TodoItem, Page400, Page500, GoToHome } from '~/components'
 import { authenticator } from '~/utils/auth.server'
 import { CatchBoundaryComponent } from '@remix-run/react/routeModules'
+import { composeToBoolean } from '~/utils'
 
 type LoaderType = {
   todos: (TodoType & {
@@ -68,11 +71,16 @@ export const loader: LoaderFunction = async ({ request }) => {
   const filterBy = url.searchParams.get('filterBy') ?? TodoFilterByOptions.SHOW_ALL
   const sortBy = url.searchParams.get('sortBy') ?? TodoSortByOptions.LATEST
   const show = url.searchParams.get('show') ?? 'pending'
+  const showCompleted = composeToBoolean(url.searchParams.get('showCompleted') ?? 'false')
 
   const addiontalQuery = getTodoFilterByOptions(filterBy as TodoFilterByOptions)
   const orderBy = getTodoSortOption(sortBy as TodoSortByOptions)
 
-  const todos = await getUserTodos(user, query, addiontalQuery, orderBy)
+  if (!showCompleted) {
+    Object.assign(addiontalQuery, { completed: false })
+  }
+
+  const todos = await getUserTodos(user, query, { ...addiontalQuery }, orderBy)
 
   return json({ todos, filterBy, sortBy, show })
 }
@@ -81,6 +89,8 @@ export default function TodoIndex() {
   const navigation = useNavigate()
 
   const { todos, filterBy, sortBy } = useLoaderData<LoaderType>()
+
+  const [searchParams] = useSearchParams()
 
   const submit = useSubmit()
 
@@ -163,6 +173,14 @@ export default function TodoIndex() {
               </div>
             </Stack>
             <HStack w="full" justifyContent={'flex-end'}>
+              <Stack align="center" direction="row">
+                <p>Show completed</p>
+                <Switch
+                  size="lg"
+                  name="showCompleted"
+                  value={'true' ?? searchParams.get('showCompleted')}
+                />
+              </Stack>
               <Button
                 leftIcon={<IoMdAdd />}
                 variant="outline"
