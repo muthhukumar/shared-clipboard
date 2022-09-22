@@ -3,7 +3,14 @@
 import { Label, LabelsOnTodo, Todo, Vote } from '@prisma/client'
 
 import { HStack, StackDivider, Tag, useColorModeValue, VStack } from '@chakra-ui/react'
-import { ErrorBoundaryComponent, json, LoaderFunction, MetaFunction, useLoaderData } from 'remix'
+import {
+  ErrorBoundaryComponent,
+  json,
+  Link,
+  LoaderFunction,
+  MetaFunction,
+  useLoaderData,
+} from 'remix'
 
 import {
   Card,
@@ -68,7 +75,9 @@ export default function Index() {
         <VStack alignItems={'flex-start'} w="full" spacing={6}>
           <Card>
             <div className="flex items-center justify-between pb-2 mb-4 border-b">
-              <h2 className="text-2xl font-bold">Todos</h2>
+              <h2 className="text-2xl font-bold">
+                <Link to="/todo">Todos</Link>
+              </h2>
               <HStack>
                 <Tag>{incompleteTask}</Tag>
                 <span>/</span>
@@ -84,7 +93,9 @@ export default function Index() {
           </Card>
           <Card>
             <div className="flex items-center justify-between pb-2 mb-4 border-b">
-              <h2 className="text-2xl font-bold">Habits</h2>
+              <h2 className="text-2xl font-bold">
+                <Link to="/habits-rank">Habits</Link>
+              </h2>
             </div>
             <VStack alignItems={'flex-start'} divider={<StackDivider borderColor={borderColor} />}>
               {data.habits.map((habit) => (
