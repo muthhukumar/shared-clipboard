@@ -1,3 +1,4 @@
+import * as React from 'react'
 import {
   FormControl,
   FormLabel,
@@ -32,6 +33,7 @@ export default function HabitForm(props: VoteFormProps) {
         <Input
           placeholder="Title"
           type="text"
+          autoFocus
           name="title"
           defaultValue={props?.title?.value}
           isInvalid={props?.title?.invalid}

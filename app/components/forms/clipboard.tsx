@@ -34,6 +34,7 @@ export default function ClipboardForm(props: ClipboardFormProps) {
           placeholder="Title"
           type="text"
           name="title"
+          autoFocus
           isInvalid={props?.title?.invalid}
           defaultValue={props?.title?.value ?? ''}
         />

@@ -2,8 +2,6 @@ import { TodoType } from '~/types/todo'
 import { FormPropsType } from '~/types/common'
 import { Priority } from '@prisma/client'
 
-import * as React from 'react'
-
 import {
   FormControl,
   FormLabel,
@@ -24,8 +22,6 @@ export interface TodoFormProps extends FormPropsType<TodoType> {
 }
 
 export default function TodoForm(props: TodoFormProps) {
-  const firstInputRef = React.useRef<HTMLInputElement>(null)
-
   const navigation = useNavigate()
   const onClose = () => navigation('/todo')
 
@@ -33,22 +29,15 @@ export default function TodoForm(props: TodoFormProps) {
 
   const submitting = transition.state === 'submitting'
 
-  React.useEffect(() => {
-    if (firstInputRef.current) {
-      firstInputRef.current.focus()
-    }
-  }, [])
-
   return (
     <Form method="post">
       <FormControl isInvalid={props?.title?.invalid}>
         <FormLabel>Title</FormLabel>
         <Input
-          // isRequired
-          ref={firstInputRef}
           placeholder="Title"
           type="text"
           name="title"
+          autoFocus
           isInvalid={props?.title?.invalid}
           defaultValue={props?.title?.value ?? ''}
         />

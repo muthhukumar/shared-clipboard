@@ -24,6 +24,7 @@ export default function ShortURL(props: ShortURLPropsType) {
           placeholder="Title"
           type="text"
           name="title"
+          autoFocus
           isInvalid={props?.title?.invalid}
           defaultValue={props?.title?.value ?? ''}
         />
