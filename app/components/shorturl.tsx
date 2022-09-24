@@ -61,12 +61,12 @@ export default function ShortURL(props: ShortURLType) {
       </div>
       <div className="flex items-center justify-between w-full mt-2">
         <HStack>
-          <Tag fontSize={'x-small'} colorScheme={'pink'}>
+          <Tag fontSize={'x-small'} colorScheme={'pink'} p="1">
             Slug: {props.slug}
           </Tag>
-          <Tag fontSize={'x-small'} colorScheme="purple">
+          <Tag fontSize={'x-small'} colorScheme="purple" w="100%">
             <Link href={props.url} isExternal>
-              {props.url} <ExternalLinkIcon mx="2px" />
+              <p className="break-all overflow-clip">{props.url}</p> <ExternalLinkIcon mx="2px" />
             </Link>
           </Tag>
           {/* {(isOverDue || isUpcoming) && !props.completed && (
@@ -86,7 +86,7 @@ export default function ShortURL(props: ShortURLType) {
         </HStack>
         <HStack pl="2" spacing={2}>
           {props.updatedAt ? (
-            <Tag ml="auto" fontSize={'xx-small'} colorScheme={'linkedin'}>
+            <Tag ml="auto" fontSize={'xx-small'} colorScheme={'linkedin'} p="1">
               {moment(props.updatedAt).calendar()}
             </Tag>
           ) : null}
