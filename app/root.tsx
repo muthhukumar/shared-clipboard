@@ -26,6 +26,8 @@ import { authenticator } from './utils/auth.server'
 import type { User } from '@prisma/client'
 import { theme } from './others/theme'
 import * as gtag from '~/utils/gtags'
+import { withEmotionCache } from '@emotion/react'
+import { ClientStyleContext, ServerStyleContext } from './utils/context'
 
 export const links: LinksFunction = () => {
   return [
@@ -79,28 +81,52 @@ export function CatchBoundary() {
   )
 }
 
-function Document({ children, title }: { children: React.ReactNode; title?: string }) {
-  return (
-    <html lang="en">
-      <head>
-        <meta charSet="utf-8" />
-        <meta name="viewport" content="width=device-width,initial-scale=1" />
-        {title ? <title>{title}</title> : null}
-        <Meta />
-        <Links />
-      </head>
-      <body>
-        {process.env.NODE_ENV === 'development' ? null : (
-          <>
-            <script
-              async
-              src={`https://www.googletagmanager.com/gtag/js?id=${gtag.GA_TRACKING_ID}`}
+const Document = withEmotionCache(
+  ({ children, title }: { children: React.ReactNode; title?: string }, emotionCache) => {
+    const serverStyleData = React.useContext(ServerStyleContext)
+    const clientStyleData = React.useContext(ClientStyleContext)
+
+    // Only executed on client
+    React.useEffect(() => {
+      // re-link sheet container
+      emotionCache.sheet.container = document.head
+      // re-inject tags
+      const tags = emotionCache.sheet.tags
+      emotionCache.sheet.flush()
+      tags.forEach((tag) => {
+        ;(emotionCache.sheet as any)._insertTag(tag)
+      })
+      // reset cache to reapply global styles
+      clientStyleData?.reset()
+    }, [])
+    return (
+      <html lang="en">
+        <head>
+          <meta charSet="utf-8" />
+          <meta name="viewport" content="width=device-width,initial-scale=1" />
+          {title ? <title>{title}</title> : null}
+          <Meta />
+          <Links />
+          {serverStyleData?.map(({ key, ids, css }) => (
+            <style
+              key={key}
+              data-emotion={`${key} ${ids.join(' ')}`}
+              dangerouslySetInnerHTML={{ __html: css }}
             />
-            <script
-              async
-              id="gtag-init"
-              dangerouslySetInnerHTML={{
-                __html: `
+          ))}
+        </head>
+        <body>
+          {process.env.NODE_ENV === 'development' ? null : (
+            <>
+              <script
+                async
+                src={`https://www.googletagmanager.com/gtag/js?id=${gtag.GA_TRACKING_ID}`}
+              />
+              <script
+                async
+                id="gtag-init"
+                dangerouslySetInnerHTML={{
+                  __html: `
                 window.dataLayer = window.dataLayer || [];
                 function gtag(){dataLayer.push(arguments);}
                 gtag('js', new Date());
@@ -108,18 +134,19 @@ function Document({ children, title }: { children: React.ReactNode; title?: stri
                   page_path: window.location.pathname,
                 });
               `,
-              }}
-            />
-          </>
-        )}
-        {children}
-        <ScrollRestoration />
-        <Scripts />
-        <LiveReload />
-      </body>
-    </html>
-  )
-}
+                }}
+              />
+            </>
+          )}
+          {children}
+          <ScrollRestoration />
+          <Scripts />
+          <LiveReload />
+        </body>
+      </html>
+    )
+  },
+)
 
 function Layout({ children }: { children: React.ReactNode }) {
   const user = useLoaderData<User>()
