@@ -1,5 +1,5 @@
-import { TodoType } from '~/types/todo'
-import { FormPropsType } from '~/types/common'
+import type { TodoType } from '~/types/todo'
+import type { FormPropsType } from '~/types/common'
 import { Priority } from '@prisma/client'
 
 import {
@@ -12,7 +12,7 @@ import {
   Button,
   HStack,
 } from '@chakra-ui/react'
-import { Form, useNavigate, useTransition } from 'remix'
+import { Form, useNavigate, useTransition } from '@remix-run/react'
 import { composeToBoolean } from '~/utils/form'
 import moment from 'moment'
 

@@ -1,5 +1,5 @@
-import { CatchBoundaryComponent } from '@remix-run/react/routeModules'
-import { ErrorBoundaryComponent, json, LoaderFunction, redirect } from 'remix'
+import type { ErrorBoundaryComponent, LoaderFunction } from '@remix-run/node'
+import { json, redirect } from '@remix-run/node'
 import validator from 'validator'
 
 import { DefaultCatchBoundary, DefaultErrorBoundary } from '~/components'
@@ -39,6 +39,6 @@ export default function Redirect() {
   return <div>something</div>
 }
 
-export const CatchBoundary: CatchBoundaryComponent = DefaultCatchBoundary
+export const CatchBoundary = DefaultCatchBoundary
 
 export const ErrorBoundary: ErrorBoundaryComponent = DefaultErrorBoundary

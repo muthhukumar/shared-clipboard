@@ -1,16 +1,9 @@
 // TODO - Handle 404 and error boundary and catch boundary
 
-import { Label, LabelsOnTodo, Todo, Vote } from '@prisma/client'
-
 import { HStack, StackDivider, Tag, useColorModeValue, VStack } from '@chakra-ui/react'
-import {
-  ErrorBoundaryComponent,
-  json,
-  Link,
-  LoaderFunction,
-  MetaFunction,
-  useLoaderData,
-} from 'remix'
+import type { ErrorBoundaryComponent, LoaderArgs, MetaFunction } from '@remix-run/node'
+import { json } from '@remix-run/node'
+import { Link, useLoaderData } from '@remix-run/react'
 
 import {
   Card,
@@ -22,22 +15,9 @@ import {
   Wrapper,
 } from '~/components'
 
-import { CatchBoundaryComponent } from '@remix-run/react/routeModules'
 import { getUserFriendsHabits, getUserHabits } from '~/models/vote.server'
 import { getUserTodayTodos } from '~/models/todo'
 import { getUser } from '~/models/user.server'
-
-type LoaderType = {
-  todos: Array<
-    Todo & {
-      labels: (LabelsOnTodo & {
-        Label: Label | null
-      })[]
-    }
-  >
-  habits: Array<Vote>
-  friendsHabits: Array<Vote>
-}
 
 export const meta: MetaFunction = () => {
   return {
@@ -45,7 +25,7 @@ export const meta: MetaFunction = () => {
   }
 }
 
-export const loader: LoaderFunction = async ({ request }) => {
+export const loader = async ({ request }: LoaderArgs) => {
   const user = await getUser(request)
 
   const todos = await getUserTodayTodos(user)
@@ -58,7 +38,7 @@ export const loader: LoaderFunction = async ({ request }) => {
 }
 
 export default function Index() {
-  const data = useLoaderData<LoaderType>()
+  const data = useLoaderData<typeof loader>()
 
   const borderColor = useColorModeValue('gray.200', 'gray.800')
 
@@ -74,7 +54,7 @@ export default function Index() {
       <Wrapper>
         <VStack alignItems={'flex-start'} w="full" spacing={6}>
           <Card>
-            <div className="flex items-center justify-between pb-2 mb-4 border-b">
+            <div className="mb-4 flex items-center justify-between border-b pb-2">
               <h2 className="text-2xl font-bold">
                 <Link to="/todo">Todos</Link>
               </h2>
@@ -86,20 +66,31 @@ export default function Index() {
             </div>
             <VStack alignItems={'flex-start'} divider={<StackDivider borderColor={borderColor} />}>
               {data.todos.map((todo) => (
-                <TodoItem {...todo} key={todo.id} />
+                <TodoItem
+                  key={todo.id}
+                  {...todo}
+                  createdAt={new Date(todo.createdAt)}
+                  updatedAt={new Date(todo.updatedAt)}
+                />
               ))}
             </VStack>
             {data.todos.length === 0 && <NoItems title="No todos for today!!!" />}
           </Card>
           <Card>
-            <div className="flex items-center justify-between pb-2 mb-4 border-b">
+            <div className="mb-4 flex items-center justify-between border-b pb-2">
               <h2 className="text-2xl font-bold">
                 <Link to="/habits-rank">Habits</Link>
               </h2>
             </div>
             <VStack alignItems={'flex-start'} divider={<StackDivider borderColor={borderColor} />}>
               {data.habits.map((habit) => (
-                <VoteItem {...habit} key={habit.id} editable />
+                <VoteItem
+                  key={habit.id}
+                  {...habit}
+                  editable
+                  createdAt={new Date(habit.createdAt)}
+                  updatedAt={new Date(habit.updatedAt ?? '')}
+                />
               ))}
             </VStack>
             {data.habits.length === 0 && (
@@ -107,12 +98,17 @@ export default function Index() {
             )}
           </Card>
           <Card>
-            <div className="flex items-center justify-between pb-2 mb-4 border-b">
+            <div className="mb-4 flex items-center justify-between border-b pb-2">
               <h2 className="text-2xl font-bold">Friend's Habits</h2>
             </div>
             <VStack alignItems={'flex-start'} divider={<StackDivider borderColor={borderColor} />}>
               {data.friendsHabits.map((habit) => (
-                <VoteItem {...habit} key={habit.id} />
+                <VoteItem
+                  key={habit.id}
+                  {...habit}
+                  createdAt={new Date(habit.createdAt)}
+                  updatedAt={new Date(habit.updatedAt ?? '')}
+                />
               ))}
             </VStack>
             {data.friendsHabits.length === 0 && <NoItems title="No friends habits found." />}
@@ -123,6 +119,6 @@ export default function Index() {
   )
 }
 
-export const CatchBoundary: CatchBoundaryComponent = DefaultCatchBoundary
+export const CatchBoundary = DefaultCatchBoundary
 
 export const ErrorBoundary: ErrorBoundaryComponent = DefaultErrorBoundary

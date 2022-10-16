@@ -1,7 +1,7 @@
 import { FormControl, FormLabel, Input, FormErrorMessage, HStack, Button } from '@chakra-ui/react'
-import { Form, useNavigate, useTransition } from 'remix'
-import { FormPropsType } from '~/types/common'
-import { ShortURLType } from '~/types/shorturl'
+import { Form, useNavigate, useTransition } from '@remix-run/react'
+import type { FormPropsType } from '~/types/common'
+import type { ShortURLType } from '~/types/shorturl'
 
 export interface ShortURLPropsType extends FormPropsType<ShortURLType> {
   submittingText: string

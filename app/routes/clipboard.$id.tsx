@@ -1,6 +1,6 @@
 // TODO - Might want to refactor this... Especially the form
 
-import { ClipboardContent as ClipboardContentType, User } from '@prisma/client'
+import type { ClipboardContent as ClipboardContentType, User } from '@prisma/client'
 
 import * as React from 'react'
 import {
@@ -22,18 +22,16 @@ import {
   TabPanels,
   Tabs,
 } from '@chakra-ui/react'
+import type { ErrorBoundaryComponent, LoaderFunction, MetaFunction } from '@remix-run/node'
+import { json } from '@remix-run/node'
 import {
-  json,
-  LoaderFunction,
-  useLoaderData,
-  useParams,
-  Outlet,
-  useTransition,
   Form,
+  Outlet,
+  useLoaderData,
   useNavigate,
-  MetaFunction,
-  ErrorBoundaryComponent,
-} from 'remix'
+  useParams,
+  useTransition,
+} from '@remix-run/react'
 import { ChevronDownIcon } from '@chakra-ui/icons'
 
 import { authenticator } from '~/utils/auth.server'
@@ -47,7 +45,6 @@ import {
 } from '~/components'
 import { copyToClipboard } from '~/utils/browser'
 import { composeUrl } from '~/utils'
-import { CatchBoundaryComponent } from '@remix-run/react/routeModules'
 
 export const meta: MetaFunction = () => {
   return {
@@ -201,6 +198,6 @@ export default function Copy() {
   )
 }
 
-export const CatchBoundary: CatchBoundaryComponent = DefaultCatchBoundary
+export const CatchBoundary = DefaultCatchBoundary
 
 export const ErrorBoundary: ErrorBoundaryComponent = DefaultErrorBoundary

@@ -1,17 +1,9 @@
 import { Alert, AlertIcon, Button, HStack, useToast } from '@chakra-ui/react'
-import { UniqueReference } from '@prisma/client'
-import { CatchBoundaryComponent } from '@remix-run/react/routeModules'
+import type { UniqueReference } from '@prisma/client'
 import { IoMdAdd } from 'react-icons/io'
-import {
-  ActionFunction,
-  ErrorBoundaryComponent,
-  Form,
-  json,
-  LoaderFunction,
-  redirect,
-  useFetcher,
-  useLoaderData,
-} from 'remix'
+import type { ActionFunction, ErrorBoundaryComponent, LoaderFunction } from '@remix-run/node'
+import { json, redirect } from '@remix-run/node'
+import { Form, useFetcher, useLoaderData } from '@remix-run/react'
 import { DefaultCatchBoundary, DefaultErrorBoundary, GoToHome } from '~/components'
 import { copyToClipboard } from '~/utils/browser'
 
@@ -76,10 +68,10 @@ export default function PersonalId() {
   const toast = useToast()
   return (
     <div className="flex flex-col gap-y-4">
-      <div className="pb-2 border-b">
+      <div className="border-b pb-2">
         <h2>Personal ID</h2>
       </div>
-      <div className="p-4 border rounded-lg">{uniqueReference.personalId}</div>
+      <div className="rounded-lg border p-4">{uniqueReference.personalId}</div>
       <div>
         <Button
           onClick={() =>
@@ -101,7 +93,7 @@ export default function PersonalId() {
   )
 }
 
-export const CatchBoundary: CatchBoundaryComponent = () => {
+export const CatchBoundary = () => {
   const generatePersonalIdFetcher = useFetcher()
   const isGeneratingPersonalId =
     generatePersonalIdFetcher.state === 'submitting' ||

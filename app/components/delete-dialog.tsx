@@ -1,5 +1,5 @@
 import { ModalHeader, ModalCloseButton, ModalBody, ModalFooter, Button } from '@chakra-ui/react'
-import { Form, useNavigate, useTransition } from 'remix'
+import { Form, useNavigate, useTransition } from '@remix-run/react'
 import Dialog from './dialog'
 
 type DeleteDialogProps = {

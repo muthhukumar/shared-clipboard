@@ -52,7 +52,7 @@ export const gitHubStrategy = new GitHubStrategy(
   },
   async ({ profile }) => {
     return User.findOrCreate({
-      email: profile.emails[0].value,
+      email: (profile && profile.emails && profile.emails[0].value) ?? '',
       profileUrl: profile._json.avatar_url,
     })
   },

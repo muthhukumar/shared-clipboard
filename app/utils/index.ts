@@ -1,7 +1,7 @@
 import { Priority } from '@prisma/client'
-import { Transition } from '@remix-run/react/transition'
+import type { Transition } from '@remix-run/react/dist/transition'
 import moment from 'moment'
-import { Params } from 'react-router'
+import type { Params } from 'react-router'
 
 // TODO - After refactoring check whether we are using this some where if not then just remove it.
 export function formatFieldErrors(fieldErrors: Record<string, Array<string>>) {

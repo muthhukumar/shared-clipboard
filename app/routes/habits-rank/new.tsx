@@ -1,23 +1,19 @@
-import { ShareOption, User } from '@prisma/client'
-import { ActionType } from '~/types/common'
+import type { User } from '@prisma/client'
+import { ShareOption } from '@prisma/client'
+import type { ActionType } from '~/types/common'
 
-import {
-  ActionFunction,
-  ErrorBoundaryComponent,
-  LoaderFunction,
-  redirect,
-  useActionData,
-  useNavigate,
-} from 'remix'
+import type { ActionFunction, ErrorBoundaryComponent, LoaderFunction } from '@remix-run/node'
+import { redirect } from '@remix-run/node'
+import { useActionData, useNavigate } from '@remix-run/react'
 import { ModalHeader, ModalCloseButton, ModalBody } from '@chakra-ui/react'
 
 import { authenticator } from '~/utils/auth.server'
 import { prisma } from '~/utils/prisma.server'
 import { DefaultCatchBoundary, DefaultErrorBoundary, Dialog, HabitForm } from '~/components'
-import { VoteFormProps } from '~/components/forms/vote'
+import type { VoteFormProps } from '~/components/forms/vote'
 import { getFinalFormData, getFormData } from '~/utils/form'
-import { VoteSchema, VoteType } from '~/types/vote'
-import { CatchBoundaryComponent } from '@remix-run/react/routeModules'
+import type { VoteType } from '~/types/vote'
+import { VoteSchema } from '~/types/vote'
 
 interface VoteActionType extends ActionType<VoteType> {}
 
@@ -86,6 +82,6 @@ export default function VoteNew() {
   )
 }
 
-export const CatchBoundary: CatchBoundaryComponent = DefaultCatchBoundary
+export const CatchBoundary = DefaultCatchBoundary
 
 export const ErrorBoundary: ErrorBoundaryComponent = DefaultErrorBoundary

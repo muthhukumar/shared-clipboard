@@ -1,19 +1,19 @@
 // TODO - Handle this with the Errory boundary and catch boundary
 
-import { FriendSchema, FriendType } from '~/types/friend'
-import { ActionType } from '~/types/common'
-import { User } from '@prisma/client'
+import type { FriendType } from '~/types/friend'
+import { FriendSchema } from '~/types/friend'
+import type { ActionType } from '~/types/common'
+import type { User } from '@prisma/client'
 
-import {
+import type {
   ActionFunction,
-  LoaderFunction,
-  redirect,
-  useNavigate,
-  MetaFunction,
   ErrorBoundaryComponent,
-  json,
-  useFetcher,
-} from 'remix'
+  LoaderFunction,
+  MetaFunction,
+} from '@remix-run/node'
+import { json, redirect } from '@remix-run/node'
+
+import { useFetcher, useNavigate } from '@remix-run/react'
 import {
   ModalHeader,
   ModalCloseButton,
@@ -29,7 +29,6 @@ import { authenticator } from '~/utils/auth.server'
 import { prisma } from '~/utils/prisma.server'
 import { Dialog, DefaultCatchBoundary, DefaultErrorBoundary, NoItems } from '~/components'
 import { getFinalFormData, getFormData } from '~/utils/form'
-import { CatchBoundaryComponent } from '@remix-run/react/routeModules'
 import { getUser } from '~/models/user.server'
 import { getFriendUser } from './resources/personal-id'
 
@@ -158,10 +157,10 @@ export default function ShortURLNew() {
         </friendFetcher.Form>
 
         {userData ? (
-          <div className="flex flex-col p-4 mt-4 border rounded-md gap-y-4">
+          <div className="mt-4 flex flex-col gap-y-4 rounded-md border p-4">
             <HStack>
               <Avatar src={userData.profileUrl ?? ''} size="sm" />
-              <h2 className="font-bold truncate">{userData.email}</h2>
+              <h2 className="truncate font-bold">{userData.email}</h2>
             </HStack>
             <friendRequestSubmit.Form className="w-full" method="post" action="/friends/request">
               <input type="hidden" name="requestTo" defaultValue={userData.email} />
@@ -183,6 +182,6 @@ export default function ShortURLNew() {
   )
 }
 
-export const CatchBoundary: CatchBoundaryComponent = DefaultCatchBoundary
+export const CatchBoundary = DefaultCatchBoundary
 
 export const ErrorBoundary: ErrorBoundaryComponent = DefaultErrorBoundary

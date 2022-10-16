@@ -1,5 +1,5 @@
 // app/session.server.ts
-import { createCookieSessionStorage } from 'remix'
+import { createCookieSessionStorage } from '@remix-run/node'
 import invariant from 'tiny-invariant'
 
 const cookieSecret = process.env.COOKIE_SECRET

@@ -1,5 +1,5 @@
 import { Button } from '@chakra-ui/react'
-import { useNavigate } from 'remix'
+import { useNavigate } from '@remix-run/react'
 
 export default function GoToHome() {
   const navigation = useNavigate()

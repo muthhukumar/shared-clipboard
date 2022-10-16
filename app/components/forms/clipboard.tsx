@@ -8,9 +8,9 @@ import {
   HStack,
   Button,
 } from '@chakra-ui/react'
-import { Form, useNavigate, useTransition } from 'remix'
-import { ClipboardContentType } from '~/types/clipboard'
-import { FormPropsType } from '~/types/common'
+import { Form, useNavigate, useTransition } from '@remix-run/react'
+import type { ClipboardContentType } from '~/types/clipboard'
+import type { FormPropsType } from '~/types/common'
 import { composeToBoolean } from '~/utils/form'
 
 export interface ClipboardFormProps extends FormPropsType<ClipboardContentType> {

@@ -1,18 +1,17 @@
-import { Priority, User } from '@prisma/client'
-import { ActionType } from '~/types/common'
-import { TodoSchema, TodoType } from '~/types/todo'
+import type { Priority, User } from '@prisma/client'
+import type { ActionType } from '~/types/common'
+import type { TodoType } from '~/types/todo'
+import { TodoSchema } from '~/types/todo'
 
-import {
+import type {
   ActionFunction,
-  LoaderFunction,
-  redirect,
-  useActionData,
-  useNavigate,
-  json,
-  useLoaderData,
-  MetaFunction,
   ErrorBoundaryComponent,
-} from 'remix'
+  LoaderArgs,
+  MetaFunction,
+} from '@remix-run/node'
+import { json, redirect } from '@remix-run/node'
+
+import { useActionData, useLoaderData, useNavigate } from '@remix-run/react'
 import { ModalHeader, ModalCloseButton, ModalBody } from '@chakra-ui/react'
 import moment from 'moment'
 
@@ -21,8 +20,8 @@ import { authenticator } from '~/utils/auth.server'
 import { prisma } from '~/utils/prisma.server'
 import { getFinalFormData, getFormData } from '~/utils/form'
 import { DefaultCatchBoundary, DefaultErrorBoundary, Dialog } from '~/components'
-import TodoForm, { TodoFormProps } from '~/components/forms/todo'
-import { CatchBoundaryComponent } from '@remix-run/react/routeModules'
+import type { TodoFormProps } from '~/components/forms/todo'
+import TodoForm from '~/components/forms/todo'
 
 type TodoActionType = ActionType<TodoType>
 
@@ -91,7 +90,7 @@ export const action: ActionFunction = async ({ request, params }) => {
   }
 }
 
-export const loader: LoaderFunction = async ({ request, params }) => {
+export const loader = async ({ request, params }: LoaderArgs) => {
   const user = (await authenticator.isAuthenticated(request, {
     failureRedirect: '/login',
   })) as User
@@ -125,7 +124,7 @@ export default function TodoEdit() {
 
   const actionData = useActionData<TodoActionType>()
 
-  const todo = useLoaderData<TodoType>()
+  const todo = useLoaderData<typeof loader>()
 
   const todoFormProps: TodoFormProps = {
     title: {
@@ -133,7 +132,7 @@ export default function TodoEdit() {
       ...actionData?.title,
     },
     description: {
-      value: todo.description,
+      value: todo.description ?? '',
       ...actionData?.description,
     },
     completed: {
@@ -141,8 +140,8 @@ export default function TodoEdit() {
       ...actionData?.completed,
     },
     dueDate: {
-      value: todo.dueDate,
       ...actionData?.dueDate,
+      value: todo.dueDate ? new Date(todo.dueDate) : undefined,
     },
     priority: {
       value: todo.priority,
@@ -163,6 +162,6 @@ export default function TodoEdit() {
   )
 }
 
-export const CatchBoundary: CatchBoundaryComponent = DefaultCatchBoundary
+export const CatchBoundary = DefaultCatchBoundary
 
 export const ErrorBoundary: ErrorBoundaryComponent = DefaultErrorBoundary

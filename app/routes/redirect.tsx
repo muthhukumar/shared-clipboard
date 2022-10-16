@@ -1,8 +1,8 @@
 // TODO - Handle error boundary and catch boundary
 
-import { ActionType } from '~/types/common'
-import { RedirectType } from '~/types/redirect'
-import { User } from '@prisma/client'
+import type { ActionType } from '~/types/common'
+import type { RedirectType } from '~/types/redirect'
+import type { User } from '@prisma/client'
 
 import * as React from 'react'
 import {
@@ -16,18 +16,16 @@ import {
   useToast,
   Link,
 } from '@chakra-ui/react'
-import {
+
+import type {
   ActionFunction,
   ErrorBoundaryComponent,
-  Form,
-  json,
   LoaderFunction,
   MetaFunction,
-  redirect,
-  useActionData,
-  useLoaderData,
-  useTransition,
-} from 'remix'
+} from '@remix-run/node'
+import { json, redirect } from '@remix-run/node'
+
+import { Form, useActionData, useLoaderData, useTransition } from '@remix-run/react'
 import Validator from 'validator'
 
 import {
@@ -43,7 +41,6 @@ import { copyToClipboard } from '~/utils/browser'
 import { composeUrl } from '~/utils'
 import { getFinalFormData, getFormData } from '~/utils/form'
 import { ExternalLinkIcon } from '@chakra-ui/icons'
-import { CatchBoundaryComponent } from '@remix-run/react/routeModules'
 
 type RedirectActionType = ActionType<RedirectType>
 
@@ -161,7 +158,7 @@ export default function QuickCopy() {
 
           <VStack w="full" alignItems={'flex-start'}>
             <h2>Shareable URL</h2>
-            <p className="w-full p-4 border rounded-md">{quickUrl}</p>
+            <p className="w-full rounded-md border p-4">{quickUrl}</p>
             <HStack>
               <Button onClick={() => copy(quickUrl)}>Copy URL</Button>
               <Link href={quickUrl} isExternal>
@@ -180,6 +177,6 @@ export default function QuickCopy() {
   )
 }
 
-export const CatchBoundary: CatchBoundaryComponent = DefaultCatchBoundary
+export const CatchBoundary = DefaultCatchBoundary
 
 export const ErrorBoundary: ErrorBoundaryComponent = DefaultErrorBoundary

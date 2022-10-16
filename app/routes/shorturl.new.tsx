@@ -1,20 +1,20 @@
 // TODO - Handle this with the Errory boundary and catch boundary
 
-import { ActionType } from '~/types/common'
-import { ShortURLSchema, ShortURLType } from '~/types/shorturl'
-import { User } from '@prisma/client'
-import { ShortURLPropsType } from '~/components/forms/shorturl'
+import type { ActionType } from '~/types/common'
+import type { ShortURLType } from '~/types/shorturl'
+import { ShortURLSchema } from '~/types/shorturl'
+import type { User } from '@prisma/client'
+import type { ShortURLPropsType } from '~/components/forms/shorturl'
 
-import {
+import type {
   ActionFunction,
-  LoaderFunction,
-  redirect,
-  useActionData,
-  useNavigate,
-  MetaFunction,
   ErrorBoundaryComponent,
-  json,
-} from 'remix'
+  LoaderFunction,
+  MetaFunction,
+} from '@remix-run/node'
+import { json, redirect } from '@remix-run/node'
+
+import { useActionData, useNavigate } from '@remix-run/react'
 import { ModalHeader, ModalCloseButton, ModalBody } from '@chakra-ui/react'
 import validator from 'validator'
 
@@ -22,7 +22,6 @@ import { authenticator } from '~/utils/auth.server'
 import { prisma } from '~/utils/prisma.server'
 import { ShortURLForm, Dialog, DefaultCatchBoundary, DefaultErrorBoundary } from '~/components'
 import { getFinalFormData, getFormData } from '~/utils/form'
-import { CatchBoundaryComponent } from '@remix-run/react/routeModules'
 
 type ShortURLActionType = ActionType<ShortURLType>
 
@@ -122,6 +121,6 @@ export default function ShortURLNew() {
   )
 }
 
-export const CatchBoundary: CatchBoundaryComponent = DefaultCatchBoundary
+export const CatchBoundary = DefaultCatchBoundary
 
 export const ErrorBoundary: ErrorBoundaryComponent = DefaultErrorBoundary

@@ -1,7 +1,9 @@
-import { User } from '@prisma/client'
+import type { User } from '@prisma/client'
 
 import { FormControl, FormLabel, Switch, VStack } from '@chakra-ui/react'
-import { ActionFunction, Form, LoaderFunction, redirect, useLoaderData, useSubmit } from 'remix'
+import type { ActionFunction, LoaderFunction } from '@remix-run/node'
+import { redirect } from '@remix-run/node'
+import { Form, useLoaderData, useSubmit } from '@remix-run/react'
 
 import { prisma } from '~/utils/prisma.server'
 import { getUser } from '~/models/user.server'

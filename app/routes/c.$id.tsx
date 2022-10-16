@@ -1,16 +1,17 @@
 // TODO - Might want to refactor this file
 
-import { User } from '.prisma/client'
+import type { User } from '.prisma/client'
 
 import * as React from 'react'
 import { Button, useToast, VStack } from '@chakra-ui/react'
-import { ErrorBoundaryComponent, json, LoaderFunction, MetaFunction, useLoaderData } from 'remix'
+import type { ErrorBoundaryComponent, LoaderFunction, MetaFunction } from '@remix-run/node'
+import { json } from '@remix-run/node'
+import { useLoaderData } from '@remix-run/react'
 
 import { DefaultCatchBoundary, DefaultErrorBoundary, PageTitle, Wrapper } from '~/components'
 import { authenticator } from '~/utils/auth.server'
 import { copyToClipboard } from '~/utils/browser'
 import { prisma } from '~/utils/prisma.server'
-import { CatchBoundaryComponent } from '@remix-run/react/routeModules'
 
 type LoaderType = { content: string; title: string }
 
@@ -136,13 +137,13 @@ export default function CopyId() {
       <Wrapper>
         <VStack alignItems={'flex-start'} py={'6'} spacing={6}>
           <p className="mt-4">The content below is automatically copied.</p>
-          <p className="w-full p-4 border rounded-md">{content.content}</p>
+          <p className="w-full rounded-md border p-4">{content.content}</p>
         </VStack>
       </Wrapper>
     </div>
   )
 }
 
-export const CatchBoundary: CatchBoundaryComponent = DefaultCatchBoundary
+export const CatchBoundary = DefaultCatchBoundary
 
 export const ErrorBoundary: ErrorBoundaryComponent = DefaultErrorBoundary

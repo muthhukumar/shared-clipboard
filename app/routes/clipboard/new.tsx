@@ -1,24 +1,24 @@
-import { ClipboardContentSchema, ClipboardContentType } from '~/types/clipboard'
-import { ActionType } from '~/types/common'
-import { User } from '@prisma/client'
+import type { ClipboardContentType } from '~/types/clipboard'
+import { ClipboardContentSchema } from '~/types/clipboard'
+import type { ActionType } from '~/types/common'
+import type { User } from '@prisma/client'
 
-import {
+import type {
   ActionFunction,
-  LoaderFunction,
-  redirect,
-  useActionData,
-  useNavigate,
-  MetaFunction,
   ErrorBoundaryComponent,
-} from 'remix'
+  LoaderFunction,
+  MetaFunction,
+} from '@remix-run/node'
+import { redirect } from '@remix-run/node'
+
+import { useActionData, useNavigate } from '@remix-run/react'
 import { ModalHeader, ModalCloseButton, ModalBody } from '@chakra-ui/react'
 
-import { ClipboardFormProps } from '~/components/forms/clipboard'
+import type { ClipboardFormProps } from '~/components/forms/clipboard'
 import { authenticator } from '~/utils/auth.server'
 import { prisma } from '~/utils/prisma.server'
 import { ClipboardForm, DefaultCatchBoundary, DefaultErrorBoundary, Dialog } from '~/components'
 import { getFinalFormData, getFormData } from '~/utils/form'
-import { CatchBoundaryComponent } from '@remix-run/react/routeModules'
 
 type ClipboardActionType = ActionType<ClipboardContentType>
 
@@ -96,6 +96,6 @@ export default function ClipboardContentNew() {
   )
 }
 
-export const CatchBoundary: CatchBoundaryComponent = DefaultCatchBoundary
+export const CatchBoundary = DefaultCatchBoundary
 
 export const ErrorBoundary: ErrorBoundaryComponent = DefaultErrorBoundary

@@ -14,11 +14,11 @@ import {
   useColorMode,
   useColorModeValue,
 } from '@chakra-ui/react'
-import { User } from '@prisma/client'
+import type { User } from '@prisma/client'
 import clsx from 'clsx'
 import { useViewportScroll } from 'framer-motion'
 import React from 'react'
-import { Link as RLink, useLocation, useTransition } from 'remix'
+import { Link as RLink, useLocation, useTransition } from '@remix-run/react'
 import { Wrapper } from '.'
 import { FaMoon, FaSun } from 'react-icons/fa'
 import { AiOutlineAliwangwang } from 'react-icons/ai'
@@ -156,15 +156,15 @@ function StickyHeader() {
                 <HStack className="pb-3">
                   <AiOutlineAliwangwang size={20} />
                   <Tag size={'sm'}>
-                    <p className="w-16 text-center truncate">{getTransitionTypes(transition)}</p>
+                    <p className="w-16 truncate text-center">{getTransitionTypes(transition)}</p>
                   </Tag>
                 </HStack>
               ) : null}
               {links.map((link) => (
                 <RLink
-                  to={link.to}
                   key={link.to}
-                  className={clsx('pb-3 border-b-2', {
+                  to={link.to}
+                  className={clsx('border-b-2 pb-3', {
                     [borderColor]: location.pathname.includes(link.to),
                     'border-transparent':
                       !location.pathname.includes(link.to) || location.pathname === '/',

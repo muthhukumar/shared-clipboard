@@ -1,4 +1,4 @@
-import { ShortURL as ShortURLType } from '@prisma/client'
+import type { ShortURL as ShortURLType } from '@prisma/client'
 
 import * as React from 'react'
 import {
@@ -13,7 +13,7 @@ import {
   useToast,
 } from '@chakra-ui/react'
 import { BsThreeDotsVertical } from 'react-icons/bs'
-import { useNavigate } from 'remix'
+import { useNavigate } from '@remix-run/react'
 import moment from 'moment'
 
 import { ExternalLinkIcon } from '@chakra-ui/icons'
@@ -41,8 +41,8 @@ export default function ShortURL(props: ShortURLType) {
     })
   }
   return (
-    <div className="flex flex-col items-start w-full py-2 rounded-md gap-y-1">
-      <div className="flex items-center justify-between w-full">
+    <div className="flex w-full flex-col items-start gap-y-1 rounded-md py-2">
+      <div className="flex w-full items-center justify-between">
         <p className="text-lg">{props.title}</p>
         <HStack>
           <Button onClick={() => copy(quickUrl)} size="xs">
@@ -59,14 +59,14 @@ export default function ShortURL(props: ShortURLType) {
           </Menu>
         </HStack>
       </div>
-      <div className="flex items-center justify-between w-full mt-2">
+      <div className="mt-2 flex w-full items-center justify-between">
         <HStack>
           <Tag fontSize={'x-small'} colorScheme={'pink'} p="1">
             Slug: {props.slug}
           </Tag>
           <Tag fontSize={'x-small'} colorScheme="purple" w="100%">
             <Link href={props.url} isExternal>
-              <p className="break-all overflow-clip">{props.url}</p> <ExternalLinkIcon mx="2px" />
+              <p className="overflow-clip break-all">{props.url}</p> <ExternalLinkIcon mx="2px" />
             </Link>
           </Tag>
           {/* {(isOverDue || isUpcoming) && !props.completed && (
@@ -77,7 +77,7 @@ export default function ShortURL(props: ShortURLType) {
           {/* {hasLabels
             ? labels.map((label) => {
                 return (
-                  <Tag fontSize={'xx-small'} colorScheme="whatsapp" key={label.id}>
+                  <Tag  key={label.id} fontSize={'xx-small'} colorScheme="whatsapp">
                     {label.label}
                   </Tag>
                 )

@@ -1,4 +1,4 @@
-import { ErrorBoundaryComponent } from 'remix'
+import type { ErrorBoundaryComponent } from '@remix-run/node'
 
 import Page500 from './500'
 
