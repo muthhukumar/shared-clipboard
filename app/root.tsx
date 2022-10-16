@@ -1,10 +1,8 @@
-import type { ErrorBoundaryComponent, LinksFunction } from 'remix'
+import type { ErrorBoundaryComponent, LinksFunction, LoaderFunction } from '@remix-run/node'
 
-import * as React from 'react'
 import {
   Links,
   LiveReload,
-  LoaderFunction,
   Meta,
   Outlet,
   Scripts,
@@ -12,17 +10,19 @@ import {
   useCatch,
   useLoaderData,
   useLocation,
-} from 'remix'
+} from '@remix-run/react'
+
+import * as React from 'react'
 import clsx from 'clsx'
 
-import globalStylesUrl from '~/styles/global.css'
-import tailwindStylesUrl from '~/styles/tailwind.css'
-import vendorsStylesUrl from '~/styles/vendors.css'
+import globalStylesUrl from './styles/global.css'
+import tailwindStylesUrl from './styles/tailwind.css'
+import vendorsStylesUrl from './styles/vendors.css'
 
 import { Navbar, Page500, TransitionModal } from '~/components'
 import { Box, ChakraProvider, Heading, useColorModeValue } from '@chakra-ui/react'
 import { authenticator } from './utils/auth.server'
-import { User } from '@prisma/client'
+import type { User } from '@prisma/client'
 import { theme } from './others/theme'
 import * as gtag from '~/utils/gtags'
 

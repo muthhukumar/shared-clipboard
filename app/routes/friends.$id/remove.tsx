@@ -1,7 +1,7 @@
-import { User } from '@prisma/client'
-import { CatchBoundaryComponent } from '@remix-run/react/routeModules'
+import type { User } from '@prisma/client'
 
-import { ActionFunction, ErrorBoundaryComponent, MetaFunction, redirect } from 'remix'
+import type { ActionFunction, ErrorBoundaryComponent, MetaFunction } from '@remix-run/node'
+import { redirect } from '@remix-run/node'
 
 import { DefaultCatchBoundary, DefaultErrorBoundary, DeleteDialog } from '~/components'
 import { authenticator } from '~/utils/auth.server'
@@ -48,6 +48,6 @@ export default function Remove() {
   )
 }
 
-export const CatchBoundary: CatchBoundaryComponent = DefaultCatchBoundary
+export const CatchBoundary = DefaultCatchBoundary
 
 export const ErrorBoundary: ErrorBoundaryComponent = DefaultErrorBoundary

@@ -1,5 +1,5 @@
 import { Modal, ModalOverlay, ModalContent } from '@chakra-ui/react'
-import { useTransition } from 'remix'
+import { useTransition } from '@remix-run/react'
 import { Spinner } from '.'
 
 export default function TransitionModal() {

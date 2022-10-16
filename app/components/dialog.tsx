@@ -1,11 +1,6 @@
 import * as React from 'react'
-import {
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  useColorModeValue,
-  ThemingProps,
-} from '@chakra-ui/react'
+import type { ThemingProps } from '@chakra-ui/react'
+import { Modal, ModalOverlay, ModalContent, useColorModeValue } from '@chakra-ui/react'
 
 type DialogProps = {
   children: React.ReactNode

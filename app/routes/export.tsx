@@ -1,6 +1,7 @@
-import { User } from '@prisma/client'
+import type { User } from '@prisma/client'
 
-import { LoaderFunction, MetaFunction, redirect } from 'remix'
+import type { LoaderFunction, MetaFunction } from '@remix-run/node'
+import { redirect } from '@remix-run/node'
 
 import { authenticator } from '~/utils/auth.server'
 import { prisma } from '~/utils/prisma.server'

@@ -1,14 +1,9 @@
-import { Vote } from '@prisma/client'
+import type { Vote } from '@prisma/client'
 
 import { VStack, useColorModeValue, StackDivider, HStack } from '@chakra-ui/react'
-import {
-  useLoaderData,
-  json,
-  LoaderFunction,
-  MetaFunction,
-  Outlet,
-  ErrorBoundaryComponent,
-} from 'remix'
+import type { ErrorBoundaryComponent, LoaderFunction, MetaFunction } from '@remix-run/node'
+import { json } from '@remix-run/node'
+import { Outlet, useLoaderData } from '@remix-run/react'
 
 import {
   VoteItem,
@@ -19,7 +14,6 @@ import {
   AddButton,
   SearchBar,
 } from '~/components'
-import { CatchBoundaryComponent } from '@remix-run/react/routeModules'
 import { getUser } from '~/models/user.server'
 import { getUserFriendsHabits, getUserHabits } from '~/models/vote.server'
 
@@ -62,43 +56,69 @@ export default function ClipbaordContent() {
           <SearchBar />
           <AddButton url="/habits-rank/new" />
         </HStack>
-        <div className="py-4 mt-4 border rounded-md">
-          <h2 className="px-4 pb-4 text-xl font-bold border-b">Personal</h2>
+        <div className="mt-4 rounded-md border py-4">
+          <h2 className="border-b px-4 pb-4 text-xl font-bold">Personal</h2>
           <VStack
             px="4"
             alignItems={'flex-start'}
             divider={<StackDivider borderColor={borderColor} />}
           >
             {habits.map((vote) => {
-              if (!vote.isArchived) return <VoteItem {...vote} key={vote.id} editable />
+              if (!vote.isArchived)
+                return (
+                  <VoteItem
+                    key={vote.id}
+                    {...vote}
+                    editable
+                    createdAt={new Date(vote.createdAt)}
+                    updatedAt={new Date(vote.updatedAt ?? '')}
+                  />
+                )
               return null
             })}
             {habits.length === 0 && <NoItems title="No habits found. Please add some!!!" />}
           </VStack>
         </div>
-        <div className="py-4 mt-4 border rounded-md">
-          <h2 className="px-4 pb-4 text-xl font-bold border-b">Archived Habits</h2>
+        <div className="mt-4 rounded-md border py-4">
+          <h2 className="border-b px-4 pb-4 text-xl font-bold">Archived Habits</h2>
           <VStack
             px="4"
             alignItems={'flex-start'}
             divider={<StackDivider borderColor={borderColor} />}
           >
             {archived.map((vote) => {
-              if (vote.isArchived) return <VoteItem {...vote} key={vote.id} editable />
+              if (vote.isArchived)
+                return (
+                  <VoteItem
+                    key={vote.id}
+                    {...vote}
+                    editable
+                    createdAt={new Date(vote.createdAt)}
+                    updatedAt={new Date(vote.updatedAt ?? '')}
+                  />
+                )
               return null
             })}
             {archived.length === 0 && <NoItems title="No Archived habits found." />}
           </VStack>
         </div>
-        <div className="py-4 mt-4 border rounded-md">
-          <h2 className="px-4 pb-4 text-xl font-bold border-b">Friend's Habits</h2>
+        <div className="mt-4 rounded-md border py-4">
+          <h2 className="border-b px-4 pb-4 text-xl font-bold">Friend's Habits</h2>
           <VStack
             px="4"
             alignItems={'flex-start'}
             divider={<StackDivider borderColor={borderColor} />}
           >
             {friendsHabits.map((vote) => {
-              return <VoteItem {...vote} key={vote.id} editable={false} />
+              return (
+                <VoteItem
+                  key={vote.id}
+                  {...vote}
+                  editable={false}
+                  createdAt={new Date(vote.createdAt)}
+                  updatedAt={new Date(vote.updatedAt ?? '')}
+                />
+              )
             })}
             {friendsHabits.length === 0 && <NoItems title="No friends habits found." />}
           </VStack>
@@ -109,6 +129,6 @@ export default function ClipbaordContent() {
   )
 }
 
-export const CatchBoundary: CatchBoundaryComponent = DefaultCatchBoundary
+export const CatchBoundary = DefaultCatchBoundary
 
 export const ErrorBoundary: ErrorBoundaryComponent = DefaultErrorBoundary

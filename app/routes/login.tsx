@@ -1,9 +1,10 @@
+import type { ErrorBoundaryComponent, LoaderFunction, MetaFunction } from '@remix-run/node'
+
 import { Button, Flex, Heading, Stack, Image, Text } from '@chakra-ui/react'
-import { ErrorBoundaryComponent, LoaderFunction, MetaFunction, useFetcher } from 'remix'
+import { useFetcher } from '@remix-run/react'
 import { BsGoogle, BsGithub } from 'react-icons/bs'
 
 import { authenticator } from '~/utils/auth.server'
-import { CatchBoundaryComponent } from '@remix-run/react/routeModules'
 import { DefaultCatchBoundary, DefaultErrorBoundary } from '~/components'
 
 export const meta: MetaFunction = () => {
@@ -26,7 +27,7 @@ export default function SimpleCard() {
 
   return (
     <Stack minH={'100vh'} direction={{ base: 'column', md: 'row' }}>
-      <div className="flex items-center justify-center flex-1 p-8">
+      <div className="flex flex-1 items-center justify-center p-8">
         <Stack spacing={4} w={'full'} maxW={'md'}>
           <Heading fontSize={'2xl'} mb="4">
             Sign in to your account
@@ -77,6 +78,6 @@ export default function SimpleCard() {
   )
 }
 
-export const CatchBoundary: CatchBoundaryComponent = DefaultCatchBoundary
+export const CatchBoundary = DefaultCatchBoundary
 
 export const ErrorBoundary: ErrorBoundaryComponent = DefaultErrorBoundary

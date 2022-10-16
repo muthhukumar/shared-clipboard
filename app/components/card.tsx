@@ -1,4 +1,5 @@
-import { Flex, FlexboxProps, useColorModeValue } from '@chakra-ui/react'
+import type { FlexboxProps } from '@chakra-ui/react'
+import { Flex, useColorModeValue } from '@chakra-ui/react'
 import * as React from 'react'
 
 export default function Card({ children, ...props }: { children: React.ReactNode } & FlexboxProps) {

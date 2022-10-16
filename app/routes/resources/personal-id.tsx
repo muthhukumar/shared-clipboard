@@ -1,6 +1,7 @@
-import { User } from '@prisma/client'
+import type { User } from '@prisma/client'
 
-import { LoaderFunction, json } from 'remix'
+import type { LoaderFunction } from '@remix-run/node'
+import { json } from '@remix-run/node'
 
 import { prisma } from '~/utils/prisma.server'
 import { getUser } from '~/models/user.server'

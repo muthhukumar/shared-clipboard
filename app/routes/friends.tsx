@@ -9,18 +9,10 @@ import {
   VStack,
 } from '@chakra-ui/react'
 import { Status } from '@prisma/client'
-import { CatchBoundaryComponent } from '@remix-run/react/routeModules'
 import { IoMdAdd } from 'react-icons/io'
-import {
-  ErrorBoundaryComponent,
-  json,
-  LoaderFunction,
-  MetaFunction,
-  Outlet,
-  useFetcher,
-  useLoaderData,
-  useNavigate,
-} from 'remix'
+import type { ErrorBoundaryComponent, LoaderFunction, MetaFunction } from '@remix-run/node'
+import { json } from '@remix-run/node'
+import { Outlet, useFetcher, useLoaderData, useNavigate } from '@remix-run/react'
 
 import {
   AddButton,
@@ -88,9 +80,9 @@ export default function Friends() {
           <SearchBar />
           <AddButton url="/friends/request" name="friend" />
         </HStack>
-        <div className="flex flex-col mt-6 gap-y-6">
-          <div className="py-4 border rounded-md">
-            <h2 className="px-4 pb-4 mb-4 font-bold border-b">Friends</h2>
+        <div className="mt-6 flex flex-col gap-y-6">
+          <div className="rounded-md border py-4">
+            <h2 className="mb-4 border-b px-4 pb-4 font-bold">Friends</h2>
             <VStack
               alignItems={'flex-start'}
               divider={<StackDivider borderColor={borderColor} />}
@@ -99,7 +91,7 @@ export default function Friends() {
             >
               {friends.map((friend) => {
                 return (
-                  <div key={friend.friendId} className="flex items-center justify-between w-full">
+                  <div key={friend.friendId} className="flex w-full items-center justify-between">
                     <HStack>
                       <Avatar src={friend.profileUrl ?? ''} size="sm" />
                       <h2 className="truncate">{friend.email}</h2>
@@ -116,8 +108,8 @@ export default function Friends() {
               {friends.length === 0 && <NoItems title="No Friends found." />}
             </VStack>
           </div>
-          <div className="py-4 border rounded-md">
-            <h2 className="px-4 pb-4 mb-4 font-bold border-b">Friend requests send</h2>
+          <div className="rounded-md border py-4">
+            <h2 className="mb-4 border-b px-4 pb-4 font-bold">Friend requests send</h2>
             <VStack
               alignItems={'flex-start'}
               divider={<StackDivider borderColor={borderColor} />}
@@ -126,7 +118,7 @@ export default function Friends() {
             >
               {friendRequestSend.map((friend) => {
                 return (
-                  <div key={friend.friendId} className="flex items-center justify-between w-full">
+                  <div key={friend.friendId} className="flex w-full items-center justify-between">
                     <HStack>
                       <Avatar src={friend.profileUrl ?? ''} size="sm" />
                       <h2 className="truncate">{friend.email}</h2>
@@ -146,8 +138,8 @@ export default function Friends() {
               {friendRequestSend.length === 0 && <NoItems title="No Friend requests send." />}
             </VStack>
           </div>
-          <div className="py-4 border rounded-md">
-            <h2 className="px-4 pb-4 mb-4 font-bold border-b">Friend requests </h2>
+          <div className="rounded-md border py-4">
+            <h2 className="mb-4 border-b px-4 pb-4 font-bold">Friend requests </h2>
             <VStack
               alignItems={'flex-start'}
               divider={<StackDivider borderColor={borderColor} />}
@@ -156,7 +148,7 @@ export default function Friends() {
             >
               {friendRequests.map((friend) => {
                 return (
-                  <div key={friend.friendId} className="flex items-center justify-between w-full">
+                  <div key={friend.friendId} className="flex w-full items-center justify-between">
                     <HStack>
                       <Avatar src={friend.profileUrl ?? ''} size="sm" />
                       <h2 className="truncate">{friend.email}</h2>
@@ -204,7 +196,7 @@ export default function Friends() {
   )
 }
 
-export const CatchBoundary: CatchBoundaryComponent = () => {
+export const CatchBoundary = () => {
   const navigation = useNavigate()
   return (
     <DefaultCatchBoundary>

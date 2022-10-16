@@ -1,19 +1,18 @@
 import * as React from 'react'
-
-import { CatchBoundaryComponent } from '@remix-run/react/routeModules'
-import { useCatch } from 'remix'
+import { useCatch } from '@remix-run/react'
 
 import Page400 from './400'
 import Page500 from './500'
 
-const CatchBoundary: CatchBoundaryComponent = ({ children }: { children?: React.ReactNode }) => {
+// TODO: remove any props
+const CatchBoundary = (props: { children: React.ReactNode }) => {
   const caught = useCatch()
   let page = (
     <Page400
       statusCode={caught.status}
       message={caught.data?.message}
       description={caught.data?.description}
-      children={children}
+      children={props.children}
     />
   )
 

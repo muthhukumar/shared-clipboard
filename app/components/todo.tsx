@@ -10,9 +10,10 @@ import {
   MenuList,
   Tag,
 } from '@chakra-ui/react'
-import { Label, LabelsOnTodo, Priority, Todo } from '@prisma/client'
+import type { Label, LabelsOnTodo, Todo } from '@prisma/client'
+import { Priority } from '@prisma/client'
 import moment from 'moment'
-import { useFetcher, useNavigate } from 'remix'
+import { useFetcher, useNavigate } from '@remix-run/react'
 import { BsThreeDotsVertical } from 'react-icons/bs'
 import { RiCheckboxBlankCircleLine } from 'react-icons/ri'
 import { HiCheckCircle } from 'react-icons/hi'
@@ -80,8 +81,8 @@ export default function TodoItem(
   }
 
   return (
-    <div className="flex flex-col items-start w-full py-2 rounded-md gap-y-1">
-      <div className="flex items-center justify-between w-full">
+    <div className="flex w-full flex-col items-start gap-y-1 rounded-md py-2">
+      <div className="flex w-full items-center justify-between">
         <p className="text-lg">{props.title}</p>
         <HStack spacing={2}>
           {isOverDue && !props.completed && (
@@ -140,7 +141,7 @@ export default function TodoItem(
           </Menu>
         </HStack>
       </div>
-      <div className="flex items-center justify-between w-full mt-2">
+      <div className="mt-2 flex w-full items-center justify-between">
         <HStack>
           <Tag fontSize={'xx-small'} colorScheme={getPriorityColor(props.priority)}>
             {capitalCase(`${props.priority} PRIORITY`)}
@@ -153,7 +154,7 @@ export default function TodoItem(
           {hasLabels
             ? labels.map((label) => {
                 return (
-                  <Tag fontSize={'xx-small'} colorScheme="whatsapp" key={label.id}>
+                  <Tag key={label.id} fontSize={'xx-small'} colorScheme="whatsapp">
                     {label.label}
                   </Tag>
                 )

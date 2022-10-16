@@ -1,6 +1,8 @@
-import { Status, User } from '@prisma/client'
+import type { User } from '@prisma/client'
+import { Status } from '@prisma/client'
 
-import { ActionFunction, json, MetaFunction } from 'remix'
+import type { ActionFunction, MetaFunction } from '@remix-run/node'
+import { json } from '@remix-run/node'
 
 import { authenticator } from '~/utils/auth.server'
 import { prisma } from '~/utils/prisma.server'

@@ -1,9 +1,9 @@
 import { Stack, StackDivider, useColorModeValue, VStack } from '@chakra-ui/react'
-import { ErrorBoundaryComponent, Link, MetaFunction, Outlet, useLocation } from 'remix'
+import type { ErrorBoundaryComponent, MetaFunction } from '@remix-run/node'
+import { Link, Outlet, useLocation } from '@remix-run/react'
 import clsx from 'clsx'
 
 import { DefaultCatchBoundary, DefaultErrorBoundary, PageTitle, Wrapper } from '~/components'
-import { CatchBoundaryComponent } from '@remix-run/react/routeModules'
 
 const links: Array<{ title: string; to: string }> = [
   {
@@ -63,8 +63,8 @@ export default function Profile() {
           >
             {links.map((link) => (
               <Link
-                to={link.to}
                 key={link.to}
+                to={link.to}
                 className={clsx('ml-4', textColor, {
                   [lightTextColor]: !location.pathname.includes(link.to),
                   'font-bold': location.pathname.includes(link.to),
@@ -83,6 +83,6 @@ export default function Profile() {
   )
 }
 
-export const CatchBoundary: CatchBoundaryComponent = DefaultCatchBoundary
+export const CatchBoundary = DefaultCatchBoundary
 
 export const ErrorBoundary: ErrorBoundaryComponent = DefaultErrorBoundary

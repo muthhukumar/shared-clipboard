@@ -1,4 +1,4 @@
-import { User } from '@prisma/client'
+import type { User } from '@prisma/client'
 
 import moment from 'moment'
 import { getToday } from '~/utils'

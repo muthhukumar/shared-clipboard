@@ -1,7 +1,7 @@
 // TODO - Handle error boundary and catch boundary
 
-import { User } from '@prisma/client'
-import { CopyType } from '~/types/copy'
+import type { User } from '@prisma/client'
+import type { CopyType } from '~/types/copy'
 
 import * as React from 'react'
 import {
@@ -19,16 +19,16 @@ import {
   HStack,
   Link,
 } from '@chakra-ui/react'
-import {
+
+import type {
   ActionFunction,
   ErrorBoundaryComponent,
-  Form,
   LoaderFunction,
   MetaFunction,
-  redirect,
-  useLoaderData,
-  useTransition,
-} from 'remix'
+} from '@remix-run/node'
+import { redirect } from '@remix-run/node'
+
+import { Form, useLoaderData, useTransition } from '@remix-run/react'
 
 import {
   DefaultCatchBoundary,
@@ -42,7 +42,6 @@ import { prisma } from '~/utils/prisma.server'
 import { copyToClipboard } from '~/utils/browser'
 import { composeUrl } from '~/utils'
 import { getFormData } from '~/utils/form'
-import { CatchBoundaryComponent } from '@remix-run/react/routeModules'
 import { ExternalLinkIcon } from '@chakra-ui/icons'
 
 export const meta: MetaFunction = () => {
@@ -130,7 +129,7 @@ export default function QuickCopy() {
 
           <VStack w="full" alignItems={'flex-start'}>
             <h2>Shareable URL</h2>
-            <p className="w-full p-4 border rounded-md">{url}</p>
+            <p className="w-full rounded-md border p-4">{url}</p>
             <HStack>
               <Button onClick={() => copy(url)}>Copy URL</Button>
               <Link href={url} isExternal>
@@ -160,6 +159,6 @@ export default function QuickCopy() {
   )
 }
 
-export const CatchBoundary: CatchBoundaryComponent = DefaultCatchBoundary
+export const CatchBoundary = DefaultCatchBoundary
 
 export const ErrorBoundary: ErrorBoundaryComponent = DefaultErrorBoundary

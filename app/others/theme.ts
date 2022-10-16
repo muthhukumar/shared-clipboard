@@ -13,7 +13,7 @@ export const theme = extendTheme({
     },
   },
   styles: {
-    global: (props) => ({
+    global: (props: Record<string, any>) => ({
       body: {
         fontFamily: 'body',
         color: mode('gray.800', 'whiteAlpha.900')(props),

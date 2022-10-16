@@ -33,7 +33,7 @@ export function getFormData<FormDataType>(formData: FormData, fields: Array<Fiel
   return result as FormDataType
 }
 
-export function getFinalFormData<FormDataType>(
+export function getFinalFormData<FormDataType extends {}>(
   values: FormDataType,
   fields: {
     [key: string]: string[]

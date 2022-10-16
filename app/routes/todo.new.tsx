@@ -1,20 +1,20 @@
 // TODO - Handle this with the Errory boundary and catch boundary
 
-import { ActionType } from '~/types/common'
-import { TodoSchema, TodoType } from '~/types/todo'
-import { Priority, User } from '@prisma/client'
-import { TodoFormProps } from '~/components/forms/todo'
+import type { ActionType } from '~/types/common'
+import type { TodoType } from '~/types/todo'
+import { TodoSchema } from '~/types/todo'
+import type { Priority, User } from '@prisma/client'
+import type { TodoFormProps } from '~/components/forms/todo'
 
-import {
+import type {
   ActionFunction,
-  LoaderFunction,
-  redirect,
-  useActionData,
-  useNavigate,
-  MetaFunction,
   ErrorBoundaryComponent,
-  json,
-} from 'remix'
+  LoaderFunction,
+  MetaFunction,
+} from '@remix-run/node'
+import { json, redirect } from '@remix-run/node'
+
+import { useActionData, useNavigate } from '@remix-run/react'
 import { ModalHeader, ModalCloseButton, ModalBody } from '@chakra-ui/react'
 import moment from 'moment'
 
@@ -23,7 +23,6 @@ import { authenticator } from '~/utils/auth.server'
 import { prisma } from '~/utils/prisma.server'
 import { TodoForm, Dialog, DefaultCatchBoundary, DefaultErrorBoundary } from '~/components'
 import { getFinalFormData, getFormData } from '~/utils/form'
-import { CatchBoundaryComponent } from '@remix-run/react/routeModules'
 
 type TodoActionType = ActionType<TodoType>
 
@@ -100,6 +99,10 @@ export default function TodoNew() {
 
   const todoFormProps: TodoFormProps = {
     ...actionData,
+    dueDate: {
+      ...actionData?.dueDate,
+      value: actionData?.dueDate ? new Date(actionData.dueDate.value ?? '') : undefined,
+    },
     submittingText: 'Creating',
     okButtonText: 'Create',
   }
@@ -115,6 +118,6 @@ export default function TodoNew() {
   )
 }
 
-export const CatchBoundary: CatchBoundaryComponent = DefaultCatchBoundary
+export const CatchBoundary = DefaultCatchBoundary
 
 export const ErrorBoundary: ErrorBoundaryComponent = DefaultErrorBoundary

@@ -8,4 +8,4 @@ const ClipboardContentSchema = z.object({
 
 type ClipboardContentType = z.infer<typeof ClipboardContentSchema>
 
-export { ClipboardContentSchema, ClipboardContentType }
+export { ClipboardContentSchema, type ClipboardContentType }

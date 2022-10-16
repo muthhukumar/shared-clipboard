@@ -1,6 +1,7 @@
-import { User } from '@prisma/client'
+import type { User } from '@prisma/client'
 
-import { ActionFunction, json, redirect } from 'remix'
+import type { ActionFunction } from '@remix-run/node'
+import { json, redirect } from '@remix-run/node'
 import { composeNumberId } from '~/utils'
 
 import { authenticator } from '~/utils/auth.server'

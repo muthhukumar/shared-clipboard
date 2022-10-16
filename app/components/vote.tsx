@@ -1,4 +1,5 @@
-import { ShareOption, Vote } from '@prisma/client'
+import type { Vote } from '@prisma/client'
+import { ShareOption } from '@prisma/client'
 
 import {
   HStack,
@@ -11,7 +12,7 @@ import {
   Button,
 } from '@chakra-ui/react'
 import { BsArrowUp, BsArrowDown, BsThreeDotsVertical } from 'react-icons/bs'
-import { useFetcher, useNavigate } from 'remix'
+import { useFetcher, useNavigate } from '@remix-run/react'
 import { capitalCase } from 'change-case'
 import moment from 'moment'
 
@@ -38,8 +39,8 @@ export default function VoteItem(props: VoteProps) {
     (downvoteFetcher.state === 'loading' && downvoteFetcher.type === 'actionReload')
 
   return (
-    <div className="flex flex-col items-start w-full py-2 rounded-md gap-y-1">
-      <div className="flex items-center justify-between w-full">
+    <div className="flex w-full flex-col items-start gap-y-1 rounded-md py-2">
+      <div className="flex w-full items-center justify-between">
         <p className="text-lg">{props.title}</p>
         {props.editable ? (
           <HStack>
@@ -98,7 +99,7 @@ export default function VoteItem(props: VoteProps) {
           </Tag>
         )}
       </div>
-      <div className="flex items-center justify-between w-full mt-2">
+      <div className="mt-2 flex w-full items-center justify-between">
         <HStack>
           <Tag fontSize={'x-small'} colorScheme={'purple'}>
             {props.upvotes + -props.downvotes} votes

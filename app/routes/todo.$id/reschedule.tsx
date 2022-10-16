@@ -1,7 +1,8 @@
 // TODO - If free check this again.
-import { User } from '@prisma/client'
+import type { User } from '@prisma/client'
 
-import { ActionFunction, json, LoaderFunction, redirect } from 'remix'
+import type { ActionFunction, LoaderFunction } from '@remix-run/node'
+import { json, redirect } from '@remix-run/node'
 
 import { z } from 'zod'
 import moment from 'moment'

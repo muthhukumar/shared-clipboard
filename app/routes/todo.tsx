@@ -7,7 +7,7 @@ import {
   getTodoFilterByOptions,
   getUserTodos,
 } from '~/models/todo'
-import { Label, LabelsOnTodo, Todo as TodoType, User } from '@prisma/client'
+import type { User } from '@prisma/client'
 
 import {
   InputGroup,
@@ -25,34 +25,20 @@ import {
 import { IoMdAdd } from 'react-icons/io'
 import { RiSearchLine } from 'react-icons/ri'
 import { RiDeleteBack2Line } from 'react-icons/ri'
+import type { ErrorBoundaryComponent, LoaderArgs, MetaFunction } from '@remix-run/node'
+import { json } from '@remix-run/node'
 import {
-  ErrorBoundaryComponent,
   Form,
-  json,
-  LoaderFunction,
-  MetaFunction,
   useCatch,
   useLoaderData,
   useNavigate,
   useSearchParams,
   useSubmit,
-} from 'remix'
+} from '@remix-run/react'
 
 import { Wrapper, NoItems, TodoItem, Page400, Page500, GoToHome } from '~/components'
 import { authenticator } from '~/utils/auth.server'
-import { CatchBoundaryComponent } from '@remix-run/react/routeModules'
 import { composeToBoolean } from '~/utils'
-
-type LoaderType = {
-  todos: (TodoType & {
-    labels: (LabelsOnTodo & {
-      Label: Label | null
-    })[]
-  })[]
-  sortBy: TodoSortByOptions
-  filterBy: TodoFilterByOptions
-  show: 'completed' | 'pending'
-}
 
 export const meta: MetaFunction = () => {
   return {
@@ -60,7 +46,7 @@ export const meta: MetaFunction = () => {
   }
 }
 
-export const loader: LoaderFunction = async ({ request }) => {
+export const loader = async ({ request }: LoaderArgs) => {
   const user = (await authenticator.isAuthenticated(request, {
     failureRedirect: '/login',
   })) as User
@@ -88,7 +74,7 @@ export const loader: LoaderFunction = async ({ request }) => {
 export default function TodoIndex() {
   const navigation = useNavigate()
 
-  const { todos, filterBy, sortBy } = useLoaderData<LoaderType>()
+  const { todos, filterBy, sortBy } = useLoaderData<typeof loader>()
 
   const [searchParams] = useSearchParams()
 
@@ -106,7 +92,7 @@ export default function TodoIndex() {
     <div className="w-full py-8">
       <Wrapper>
         <Form
-          className="flex items-center justify-between w-full"
+          className="flex w-full items-center justify-between"
           method="get"
           onChange={(target) => submit(target.currentTarget)}
           onReset={(target) => submit(target.currentTarget)}
@@ -210,7 +196,7 @@ export default function TodoIndex() {
             <NoItems title="No todo list items found!!!" />
           </div>
         )}
-        {hasPendingTodos && <h2 className="pb-4 mt-10 text-xl font-bold border-b">Pending</h2>}
+        {hasPendingTodos && <h2 className="mt-10 border-b pb-4 text-xl font-bold">Pending</h2>}
         <VStack
           alignItems={'flex-start'}
           mt="6"
@@ -219,13 +205,20 @@ export default function TodoIndex() {
           {hasPendingTodos &&
             todos.map((todo) => {
               if (!todo.completed) {
-                return <TodoItem {...todo} key={todo.id} />
+                return (
+                  <TodoItem
+                    key={todo.id}
+                    {...todo}
+                    createdAt={new Date(todo.createdAt)}
+                    updatedAt={new Date(todo.updatedAt)}
+                  />
+                )
               }
               return null
             })}
         </VStack>
         {hasCompletedSomeTodos && (
-          <h2 className="pb-4 mt-10 text-xl font-bold border-b">Completed</h2>
+          <h2 className="mt-10 border-b pb-4 text-xl font-bold">Completed</h2>
         )}
         <VStack
           alignItems={'flex-start'}
@@ -235,7 +228,14 @@ export default function TodoIndex() {
           {todos.length > 0 &&
             todos.map((todo) => {
               if (todo.completed) {
-                return <TodoItem {...todo} key={todo.id} />
+                return (
+                  <TodoItem
+                    key={todo.id}
+                    {...todo}
+                    createdAt={new Date(todo.createdAt)}
+                    updatedAt={new Date(todo.updatedAt)}
+                  />
+                )
               }
               return null
             })}
@@ -245,7 +245,7 @@ export default function TodoIndex() {
   )
 }
 
-export const CatchBoundary: CatchBoundaryComponent = () => {
+export const CatchBoundary = () => {
   const caught = useCatch()
   const navigation = useNavigate()
 

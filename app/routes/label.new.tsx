@@ -1,17 +1,16 @@
-import { User } from '@prisma/client'
+import type { User } from '@prisma/client'
 
 import * as React from 'react'
-import {
+
+import type {
   ActionFunction,
-  LoaderFunction,
-  redirect,
-  useActionData,
-  useNavigate,
-  useTransition,
-  Form,
-  MetaFunction,
   ErrorBoundaryComponent,
-} from 'remix'
+  LoaderFunction,
+  MetaFunction,
+} from '@remix-run/node'
+import { redirect } from '@remix-run/node'
+
+import { Form, useActionData, useNavigate, useTransition } from '@remix-run/react'
 import {
   Button,
   Modal,
@@ -31,7 +30,6 @@ import { z } from 'zod'
 import { formatFieldErrorsNew } from '~/utils'
 import { authenticator } from '~/utils/auth.server'
 import { prisma } from '~/utils/prisma.server'
-import { CatchBoundaryComponent } from '@remix-run/react/routeModules'
 import { DefaultCatchBoundary, DefaultErrorBoundary } from '~/components'
 
 const LabelSchema = z.object({
@@ -40,12 +38,14 @@ const LabelSchema = z.object({
 
 type ActionDataType = {
   values: z.infer<typeof LabelSchema> | Record<string, unknown>
-  errors: Record<
-    keyof z.infer<typeof LabelSchema>,
-    {
-      message: string
-      isInvalid: boolean
-    }
+  errors: Partial<
+    Record<
+      keyof z.infer<typeof LabelSchema>,
+      {
+        message: string
+        isInvalid: boolean
+      }
+    >
   >
 }
 
@@ -106,7 +106,7 @@ export default function TodoNew() {
 
   const onClose = () => navigation(-1)
 
-  const initialRef = React.useRef<HTMLInputElement>()
+  const initialRef = React.useRef<HTMLInputElement>(null)
 
   const transition = useTransition()
 
@@ -123,16 +123,16 @@ export default function TodoNew() {
           <ModalCloseButton />
           <Form method="post">
             <ModalBody pb={6}>
-              <FormControl isInvalid={actionData?.errors.label.isInvalid}>
+              <FormControl isInvalid={actionData?.errors.label?.isInvalid}>
                 <FormLabel>Label</FormLabel>
                 <Input
                   ref={initialRef}
                   placeholder="Label"
                   type="text"
                   name="label"
-                  isInvalid={actionData?.errors.label.isInvalid}
+                  isInvalid={actionData?.errors.label?.isInvalid}
                 />
-                <FormErrorMessage>{actionData?.errors.label.message}</FormErrorMessage>
+                <FormErrorMessage>{actionData?.errors.label?.message}</FormErrorMessage>
               </FormControl>
             </ModalBody>
 
@@ -155,6 +155,6 @@ export default function TodoNew() {
   )
 }
 
-export const CatchBoundary: CatchBoundaryComponent = DefaultCatchBoundary
+export const CatchBoundary = DefaultCatchBoundary
 
 export const ErrorBoundary: ErrorBoundaryComponent = DefaultErrorBoundary

@@ -1,18 +1,10 @@
-import { ShortURL as ShortURLType, User } from '@prisma/client'
+import type { ErrorBoundaryComponent, LoaderFunction, MetaFunction } from '@remix-run/node'
+import type { ShortURL as ShortURLType, User } from '@prisma/client'
 
 import { Button, HStack, StackDivider, VStack, useColorModeValue } from '@chakra-ui/react'
-import { CatchBoundaryComponent } from '@remix-run/react/routeModules'
 import { IoMdAdd } from 'react-icons/io'
-import {
-  ErrorBoundaryComponent,
-  json,
-  LoaderFunction,
-  MetaFunction,
-  Outlet,
-  useCatch,
-  useLoaderData,
-  useNavigate,
-} from 'remix'
+import { json } from '@remix-run/node'
+import { Outlet, useCatch, useLoaderData, useNavigate } from '@remix-run/react'
 
 import {
   AddButton,
@@ -99,7 +91,15 @@ export default function ShortURL() {
           divider={<StackDivider borderColor={borderColor} />}
         >
           {shortURLs.map((shortURL) => {
-            return <ShortURLItem {...shortURL} key={shortURL.id} />
+            return (
+              <ShortURLItem
+                key={shortURL.id}
+                {...shortURL}
+                createdAt={new Date(shortURL.createdAt)}
+                // TODO
+                updatedAt={new Date(shortURL.updatedAt ?? '')}
+              />
+            )
           })}
         </VStack>
       </Wrapper>
@@ -108,7 +108,7 @@ export default function ShortURL() {
   )
 }
 
-export const CatchBoundary: CatchBoundaryComponent = () => {
+export const CatchBoundary = () => {
   const caught = useCatch()
   const navigation = useNavigate()
 

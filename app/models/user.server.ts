@@ -1,6 +1,6 @@
 import type { User } from '@prisma/client'
 
-import { redirect } from 'remix'
+import { redirect } from '@remix-run/node'
 import { prisma } from '~/utils/prisma.server'
 
 import { authenticator } from '../utils/auth.server'

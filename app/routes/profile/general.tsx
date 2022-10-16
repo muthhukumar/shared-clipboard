@@ -1,10 +1,10 @@
-import { User } from '@prisma/client'
+import type { User } from '@prisma/client'
 
 import { InputGroup, InputLeftAddon, Input, VStack, Avatar } from '@chakra-ui/react'
-import { ErrorBoundaryComponent, LoaderFunction, MetaFunction, useLoaderData } from 'remix'
+import type { ErrorBoundaryComponent, LoaderFunction, MetaFunction } from '@remix-run/node'
+import { useLoaderData } from '@remix-run/react'
 
 import { authenticator } from '~/utils/auth.server'
-import { CatchBoundaryComponent } from '@remix-run/react/routeModules'
 import { DefaultCatchBoundary, DefaultErrorBoundary } from '~/components'
 
 export const meta: MetaFunction = () => {
@@ -35,6 +35,6 @@ export default function General() {
   )
 }
 
-export const CatchBoundary: CatchBoundaryComponent = DefaultCatchBoundary
+export const CatchBoundary = DefaultCatchBoundary
 
 export const ErrorBoundary: ErrorBoundaryComponent = DefaultErrorBoundary

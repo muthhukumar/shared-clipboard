@@ -1,13 +1,13 @@
 import { InputGroup, InputLeftElement, Input } from '@chakra-ui/react'
 import { RiSearchLine } from 'react-icons/ri'
-import { Form, useSubmit } from 'remix'
+import { Form, useSubmit } from '@remix-run/react'
 
 export default function SearchBar() {
   const submit = useSubmit()
 
   return (
     <Form
-      className="flex items-center justify-between w-full"
+      className="flex w-full items-center justify-between"
       method="get"
       onChange={(target) => submit(target.currentTarget)}
     >

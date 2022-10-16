@@ -1,4 +1,3 @@
-import * as React from 'react'
 import {
   FormControl,
   FormLabel,
@@ -9,9 +8,9 @@ import {
   Select,
 } from '@chakra-ui/react'
 import { ShareOption } from '@prisma/client'
-import { Form, useNavigate, useTransition } from 'remix'
-import { FormPropsType } from '~/types/common'
-import { VoteType } from '~/types/vote'
+import { Form, useNavigate, useTransition } from '@remix-run/react'
+import type { FormPropsType } from '~/types/common'
+import type { VoteType } from '~/types/vote'
 
 export interface VoteFormProps extends FormPropsType<VoteType> {
   submittingText: string

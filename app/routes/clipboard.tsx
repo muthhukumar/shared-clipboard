@@ -1,15 +1,9 @@
-import { ClipboardContent as ClipboardContentType, User } from '@prisma/client'
+import type { User } from '@prisma/client'
 
 import { HStack } from '@chakra-ui/react'
-import {
-  LoaderFunction,
-  json,
-  useLoaderData,
-  Link,
-  Outlet,
-  MetaFunction,
-  ErrorBoundaryComponent,
-} from 'remix'
+import type { ErrorBoundaryComponent, MetaFunction } from '@remix-run/node'
+import { json } from '@remix-run/node'
+import { Link, Outlet, useLoaderData } from '@remix-run/react'
 
 import { authenticator } from '~/utils/auth.server'
 import { prisma } from '~/utils/prisma.server'
@@ -22,7 +16,7 @@ import {
   SearchBar,
   Wrapper,
 } from '~/components'
-import { CatchBoundaryComponent } from '@remix-run/react/routeModules'
+import type { LoaderArgs } from '@remix-run/server-runtime'
 
 export const meta: MetaFunction = () => {
   return {
@@ -30,7 +24,7 @@ export const meta: MetaFunction = () => {
   }
 }
 
-export const loader: LoaderFunction = async ({ request }) => {
+export const loader = async ({ request }: LoaderArgs) => {
   const user = (await authenticator.isAuthenticated(request, {
     failureRedirect: '/login',
   })) as User
@@ -63,7 +57,7 @@ export const loader: LoaderFunction = async ({ request }) => {
 }
 
 export default function ClipboardContent() {
-  const contents = useLoaderData<Array<ClipboardContentType>>()
+  const contents = useLoaderData<typeof loader>()
 
   return (
     <div className="flex w-full py-8">
@@ -72,16 +66,20 @@ export default function ClipboardContent() {
           <SearchBar />
           <AddButton url="/clipboard/new" />
         </HStack>
-        <div className="flex flex-col mt-6">
+        <div className="mt-6 flex flex-col">
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
             {contents.map((content) => {
               return (
                 <Link
-                  to={`/clipboard/${content.id}`}
                   key={content.id}
-                  className="w-full transition-all border rounded-md hover:border-white"
+                  to={`/clipboard/${content.id}`}
+                  className="w-full rounded-md border transition-all hover:border-white"
                 >
-                  <ClipboardContentComp {...content} key={content.id} />
+                  <ClipboardContentComp
+                    key={content.id}
+                    {...content}
+                    createdAt={new Date(content.createdAt)}
+                  />
                 </Link>
               )
             })}
@@ -94,6 +92,6 @@ export default function ClipboardContent() {
   )
 }
 
-export const CatchBoundary: CatchBoundaryComponent = DefaultCatchBoundary
+export const CatchBoundary = DefaultCatchBoundary
 
 export const ErrorBoundary: ErrorBoundaryComponent = DefaultErrorBoundary
