@@ -18,6 +18,7 @@ import clsx from 'clsx'
 import globalStylesUrl from './styles/global.css'
 import tailwindStylesUrl from './styles/tailwind.css'
 import vendorsStylesUrl from './styles/vendors.css'
+import reactCalendarStylesURL from 'react-calendar/dist/Calendar.css'
 
 import { Navbar, Page500, TransitionModal } from '~/components'
 import { Box, ChakraProvider, Heading, useColorModeValue } from '@chakra-ui/react'
@@ -30,9 +31,10 @@ export const links: LinksFunction = () => {
   return [
     { rel: 'stylesheet', href: globalStylesUrl },
     { rel: 'stylesheet', href: tailwindStylesUrl },
+    { rel: 'stylesheet', href: reactCalendarStylesURL },
     { rel: 'stylesheet', href: vendorsStylesUrl },
-    { rel: 'icon', href: 'assets/images/favicon.svg', type: 'image/svg+xml' },
-    { rel: 'icon', href: 'assets/images/favicon.png', type: 'image/png' },
+    { rel: 'icon', href: '/assets/images/favicon.svg', type: 'image/svg+xml' },
+    { rel: 'icon', href: '/assets/images/favicon.png', type: 'image/png' },
   ]
 }
 
