@@ -22,7 +22,7 @@ import {
   TabPanels,
   Tabs,
 } from '@chakra-ui/react'
-import type { ErrorBoundaryComponent, LoaderFunction, MetaFunction } from '@remix-run/node'
+import type { LoaderFunction, V2_MetaFunction } from '@remix-run/node'
 import { json } from '@remix-run/node'
 import {
   Form,
@@ -46,10 +46,12 @@ import {
 import { copyToClipboard } from '~/utils/browser'
 import { composeUrl } from '~/utils'
 
-export const meta: MetaFunction = () => {
-  return {
-    title: 'Clipboard',
-  }
+export const meta: V2_MetaFunction = () => {
+  return [
+    {
+      title: 'Clipboard',
+    },
+  ]
 }
 
 export const loader: LoaderFunction = async ({ request, params }) => {
@@ -200,4 +202,4 @@ export default function Copy() {
 
 export const CatchBoundary = DefaultCatchBoundary
 
-export const ErrorBoundary: ErrorBoundaryComponent = DefaultErrorBoundary
+export const ErrorBoundary = DefaultErrorBoundary

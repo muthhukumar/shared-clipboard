@@ -10,7 +10,7 @@ import {
 } from '@chakra-ui/react'
 import { Status } from '@prisma/client'
 import { IoMdAdd } from 'react-icons/io'
-import type { ErrorBoundaryComponent, LoaderFunction, MetaFunction } from '@remix-run/node'
+import type { LoaderFunction, V2_MetaFunction } from '@remix-run/node'
 import { json } from '@remix-run/node'
 import { Outlet, useFetcher, useLoaderData, useNavigate } from '@remix-run/react'
 
@@ -45,10 +45,12 @@ type LoaderType = {
   friendRequests: Array<UserData>
 }
 
-export const meta: MetaFunction = () => {
-  return {
-    title: 'Friends',
-  }
+export const meta: V2_MetaFunction = () => {
+  return [
+    {
+      title: 'Friends',
+    },
+  ]
 }
 
 export const loader: LoaderFunction = async ({ request }) => {
@@ -214,4 +216,4 @@ export const CatchBoundary = () => {
   )
 }
 
-export const ErrorBoundary: ErrorBoundaryComponent = DefaultErrorBoundary
+export const ErrorBoundary = DefaultErrorBoundary

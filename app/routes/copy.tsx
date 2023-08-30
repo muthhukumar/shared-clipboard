@@ -20,12 +20,7 @@ import {
   Link,
 } from '@chakra-ui/react'
 
-import type {
-  ActionFunction,
-  ErrorBoundaryComponent,
-  LoaderFunction,
-  MetaFunction,
-} from '@remix-run/node'
+import type { ActionFunction, LoaderFunction, V2_MetaFunction } from '@remix-run/node'
 import { redirect } from '@remix-run/node'
 
 import { Form, useLoaderData, useTransition } from '@remix-run/react'
@@ -44,10 +39,12 @@ import { composeUrl } from '~/utils'
 import { getFormData } from '~/utils/form'
 import { ExternalLinkIcon } from '@chakra-ui/icons'
 
-export const meta: MetaFunction = () => {
-  return {
-    title: 'Quick Copy',
-  }
+export const meta: V2_MetaFunction = () => {
+  return [
+    {
+      title: 'Quick Copy',
+    },
+  ]
 }
 
 export const action: ActionFunction = async ({ request }) => {
@@ -161,4 +158,4 @@ export default function QuickCopy() {
 
 export const CatchBoundary = DefaultCatchBoundary
 
-export const ErrorBoundary: ErrorBoundaryComponent = DefaultErrorBoundary
+export const ErrorBoundary = DefaultErrorBoundary

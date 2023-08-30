@@ -1,7 +1,7 @@
 import type { User } from '@prisma/client'
 
 import { HStack } from '@chakra-ui/react'
-import type { ErrorBoundaryComponent, MetaFunction } from '@remix-run/node'
+import type { V2_MetaFunction } from '@remix-run/node'
 import { json } from '@remix-run/node'
 import { Link, Outlet, useLoaderData } from '@remix-run/react'
 
@@ -18,10 +18,12 @@ import {
 } from '~/components'
 import type { LoaderArgs } from '@remix-run/server-runtime'
 
-export const meta: MetaFunction = () => {
-  return {
-    title: 'Clipboard',
-  }
+export const meta: V2_MetaFunction = () => {
+  return [
+    {
+      title: 'Clipboard',
+    },
+  ]
 }
 
 export const loader = async ({ request }: LoaderArgs) => {
@@ -94,4 +96,4 @@ export default function ClipboardContent() {
 
 export const CatchBoundary = DefaultCatchBoundary
 
-export const ErrorBoundary: ErrorBoundaryComponent = DefaultErrorBoundary
+export const ErrorBoundary = DefaultErrorBoundary

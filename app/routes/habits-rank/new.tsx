@@ -2,7 +2,7 @@ import type { User } from '@prisma/client'
 import { ShareOption } from '@prisma/client'
 import type { ActionType } from '~/types/common'
 
-import type { ActionFunction, ErrorBoundaryComponent, LoaderFunction } from '@remix-run/node'
+import type { ActionFunction, LoaderFunction } from '@remix-run/node'
 import { redirect } from '@remix-run/node'
 import { useActionData, useNavigate } from '@remix-run/react'
 import { ModalHeader, ModalCloseButton, ModalBody } from '@chakra-ui/react'
@@ -84,4 +84,4 @@ export default function VoteNew() {
 
 export const CatchBoundary = DefaultCatchBoundary
 
-export const ErrorBoundary: ErrorBoundaryComponent = DefaultErrorBoundary
+export const ErrorBoundary = DefaultErrorBoundary

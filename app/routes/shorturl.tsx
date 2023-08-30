@@ -1,4 +1,4 @@
-import type { ErrorBoundaryComponent, LoaderFunction, MetaFunction } from '@remix-run/node'
+import type { LoaderFunction, V2_MetaFunction } from '@remix-run/node'
 import type { ShortURL as ShortURLType, User } from '@prisma/client'
 
 import { Button, HStack, StackDivider, VStack, useColorModeValue } from '@chakra-ui/react'
@@ -20,10 +20,12 @@ import {
 import { authenticator } from '~/utils/auth.server'
 import { prisma } from '~/utils/prisma.server'
 
-export const meta: MetaFunction = () => {
-  return {
-    title: 'Short URL',
-  }
+export const meta: V2_MetaFunction = () => {
+  return [
+    {
+      title: 'Short URL',
+    },
+  ]
 }
 
 export const loader: LoaderFunction = async ({ request }) => {
@@ -134,4 +136,4 @@ export const CatchBoundary = () => {
   return <>{page}</>
 }
 
-export const ErrorBoundary: ErrorBoundaryComponent = DefaultErrorBoundary
+export const ErrorBoundary = DefaultErrorBoundary

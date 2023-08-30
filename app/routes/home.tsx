@@ -1,7 +1,7 @@
 // TODO - Handle 404 and error boundary and catch boundary
 
 import { HStack, StackDivider, Tag, useColorModeValue, VStack } from '@chakra-ui/react'
-import type { ErrorBoundaryComponent, LoaderArgs, MetaFunction } from '@remix-run/node'
+import type { LoaderArgs, V2_MetaFunction } from '@remix-run/node'
 import { json } from '@remix-run/node'
 import { Link, useLoaderData } from '@remix-run/react'
 
@@ -19,10 +19,12 @@ import { getUserFriendsHabits, getUserHabits } from '~/models/vote.server'
 import { getUserTodayTodos } from '~/models/todo'
 import { getUser } from '~/models/user.server'
 
-export const meta: MetaFunction = () => {
-  return {
-    title: 'Home',
-  }
+export const meta: V2_MetaFunction = () => {
+  return [
+    {
+      title: 'Home',
+    },
+  ]
 }
 
 export const loader = async ({ request }: LoaderArgs) => {
@@ -121,4 +123,4 @@ export default function Index() {
 
 export const CatchBoundary = DefaultCatchBoundary
 
-export const ErrorBoundary: ErrorBoundaryComponent = DefaultErrorBoundary
+export const ErrorBoundary = DefaultErrorBoundary

@@ -6,12 +6,7 @@ import { ShortURLSchema } from '~/types/shorturl'
 import type { User } from '@prisma/client'
 import type { ShortURLPropsType } from '~/components/forms/shorturl'
 
-import type {
-  ActionFunction,
-  ErrorBoundaryComponent,
-  LoaderFunction,
-  MetaFunction,
-} from '@remix-run/node'
+import type { ActionFunction, LoaderFunction, V2_MetaFunction } from '@remix-run/node'
 import { json, redirect } from '@remix-run/node'
 
 import { useActionData, useNavigate } from '@remix-run/react'
@@ -25,10 +20,12 @@ import { getFinalFormData, getFormData } from '~/utils/form'
 
 type ShortURLActionType = ActionType<ShortURLType>
 
-export const meta: MetaFunction = () => {
-  return {
-    title: 'ShortURL | New',
-  }
+export const meta: V2_MetaFunction = () => {
+  return [
+    {
+      title: 'ShortURL | New',
+    },
+  ]
 }
 
 export const action: ActionFunction = async ({ request }) => {
@@ -123,4 +120,4 @@ export default function ShortURLNew() {
 
 export const CatchBoundary = DefaultCatchBoundary
 
-export const ErrorBoundary: ErrorBoundaryComponent = DefaultErrorBoundary
+export const ErrorBoundary = DefaultErrorBoundary

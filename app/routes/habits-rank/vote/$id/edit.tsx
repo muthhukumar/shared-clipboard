@@ -4,7 +4,7 @@ import type { ActionType } from '~/types/common'
 import type { VoteType } from '~/types/vote'
 import { VoteSchema } from '~/types/vote'
 
-import type { ActionFunction, ErrorBoundaryComponent, LoaderFunction } from '@remix-run/node'
+import type { ActionFunction, LoaderFunction } from '@remix-run/node'
 import { json, redirect } from '@remix-run/node'
 import { useActionData, useLoaderData, useNavigate } from '@remix-run/react'
 import { ModalHeader, ModalCloseButton, ModalBody } from '@chakra-ui/react'
@@ -115,4 +115,4 @@ export default function VoteEdit() {
 
 export const CatchBoundary = DefaultCatchBoundary
 
-export const ErrorBoundary: ErrorBoundaryComponent = DefaultErrorBoundary
+export const ErrorBoundary = DefaultErrorBoundary

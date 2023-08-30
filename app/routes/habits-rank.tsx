@@ -1,7 +1,7 @@
 import type { Vote } from '@prisma/client'
 
 import { VStack, useColorModeValue, StackDivider, HStack } from '@chakra-ui/react'
-import type { ErrorBoundaryComponent, LoaderFunction, MetaFunction } from '@remix-run/node'
+import type { LoaderFunction, V2_MetaFunction } from '@remix-run/node'
 import { json } from '@remix-run/node'
 import { Outlet, useLoaderData } from '@remix-run/react'
 
@@ -22,10 +22,12 @@ type LoaderType = {
   friendsHabits: Array<Vote>
 }
 
-export const meta: MetaFunction = () => {
-  return {
-    title: 'Habits Rank',
-  }
+export const meta: V2_MetaFunction = () => {
+  return [
+    {
+      title: 'Habits Rank',
+    },
+  ]
 }
 
 export const loader: LoaderFunction = async ({ request }) => {
@@ -131,4 +133,4 @@ export default function ClipbaordContent() {
 
 export const CatchBoundary = DefaultCatchBoundary
 
-export const ErrorBoundary: ErrorBoundaryComponent = DefaultErrorBoundary
+export const ErrorBoundary = DefaultErrorBoundary

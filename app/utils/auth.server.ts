@@ -59,4 +59,5 @@ export const gitHubStrategy = new GitHubStrategy(
 )
 
 authenticator.use(gitHubStrategy)
+// @ts-ignore
 authenticator.use(googleStrategy)

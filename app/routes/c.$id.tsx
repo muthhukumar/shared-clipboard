@@ -4,7 +4,7 @@ import type { User } from '.prisma/client'
 
 import * as React from 'react'
 import { Button, useToast, VStack } from '@chakra-ui/react'
-import type { ErrorBoundaryComponent, LoaderFunction, MetaFunction } from '@remix-run/node'
+import type { LoaderFunction, V2_MetaFunction } from '@remix-run/node'
 import { json } from '@remix-run/node'
 import { useLoaderData } from '@remix-run/react'
 
@@ -15,10 +15,12 @@ import { prisma } from '~/utils/prisma.server'
 
 type LoaderType = { content: string; title: string }
 
-export const meta: MetaFunction = () => {
-  return {
-    title: 'Quick Copy',
-  }
+export const meta: V2_MetaFunction = () => {
+  return [
+    {
+      title: 'Quick Copy',
+    },
+  ]
 }
 
 export const loader: LoaderFunction = async ({ request, params }) => {
@@ -152,4 +154,4 @@ export default function CopyId() {
 
 export const CatchBoundary = DefaultCatchBoundary
 
-export const ErrorBoundary: ErrorBoundaryComponent = DefaultErrorBoundary
+export const ErrorBoundary = DefaultErrorBoundary

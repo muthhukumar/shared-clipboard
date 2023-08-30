@@ -1,4 +1,4 @@
-import type { ErrorBoundaryComponent, LoaderFunction } from '@remix-run/node'
+import type { LoaderFunction } from '@remix-run/node'
 import { json, redirect } from '@remix-run/node'
 import validator from 'validator'
 
@@ -41,4 +41,4 @@ export default function Redirect() {
 
 export const CatchBoundary = DefaultCatchBoundary
 
-export const ErrorBoundary: ErrorBoundaryComponent = DefaultErrorBoundary
+export const ErrorBoundary = DefaultErrorBoundary

@@ -1,7 +1,7 @@
 import { Alert, AlertIcon, Button, HStack, useToast } from '@chakra-ui/react'
 import type { UniqueReference } from '@prisma/client'
 import { IoMdAdd } from 'react-icons/io'
-import type { ActionFunction, ErrorBoundaryComponent, LoaderFunction } from '@remix-run/node'
+import type { ActionFunction, LoaderFunction } from '@remix-run/node'
 import { json, redirect } from '@remix-run/node'
 import { Form, useFetcher, useLoaderData } from '@remix-run/react'
 import { DefaultCatchBoundary, DefaultErrorBoundary, GoToHome } from '~/components'
@@ -120,4 +120,4 @@ export const CatchBoundary = () => {
   )
 }
 
-export const ErrorBoundary: ErrorBoundaryComponent = DefaultErrorBoundary
+export const ErrorBoundary = DefaultErrorBoundary

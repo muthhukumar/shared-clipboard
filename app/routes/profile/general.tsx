@@ -1,16 +1,18 @@
 import type { User } from '@prisma/client'
 
 import { InputGroup, InputLeftAddon, Input, VStack, Avatar } from '@chakra-ui/react'
-import type { ErrorBoundaryComponent, LoaderFunction, MetaFunction } from '@remix-run/node'
+import type { LoaderFunction, V2_MetaFunction } from '@remix-run/node'
 import { useLoaderData } from '@remix-run/react'
 
 import { authenticator } from '~/utils/auth.server'
 import { DefaultCatchBoundary, DefaultErrorBoundary } from '~/components'
 
-export const meta: MetaFunction = () => {
-  return {
-    title: 'Profile | General',
-  }
+export const meta: V2_MetaFunction = () => {
+  return [
+    {
+      title: 'Profile | General',
+    },
+  ]
 }
 
 export const loader: LoaderFunction = async ({ request }) => {
@@ -37,4 +39,4 @@ export default function General() {
 
 export const CatchBoundary = DefaultCatchBoundary
 
-export const ErrorBoundary: ErrorBoundaryComponent = DefaultErrorBoundary
+export const ErrorBoundary = DefaultErrorBoundary

@@ -2,12 +2,7 @@ import type { User } from '@prisma/client'
 
 import * as React from 'react'
 
-import type {
-  ActionFunction,
-  ErrorBoundaryComponent,
-  LoaderFunction,
-  MetaFunction,
-} from '@remix-run/node'
+import type { ActionFunction, LoaderFunction, V2_MetaFunction } from '@remix-run/node'
 import { redirect } from '@remix-run/node'
 
 import { Form, useActionData, useNavigate, useTransition } from '@remix-run/react'
@@ -49,10 +44,12 @@ type ActionDataType = {
   >
 }
 
-export const meta: MetaFunction = () => {
-  return {
-    title: 'Label | New',
-  }
+export const meta: V2_MetaFunction = () => {
+  return [
+    {
+      title: 'Label | New',
+    },
+  ]
 }
 
 export const action: ActionFunction = async ({ request }) => {
@@ -157,4 +154,4 @@ export default function TodoNew() {
 
 export const CatchBoundary = DefaultCatchBoundary
 
-export const ErrorBoundary: ErrorBoundaryComponent = DefaultErrorBoundary
+export const ErrorBoundary = DefaultErrorBoundary

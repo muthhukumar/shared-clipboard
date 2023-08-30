@@ -1,16 +1,18 @@
 import type { User } from '@prisma/client'
 
-import type { LoaderFunction, MetaFunction } from '@remix-run/node'
+import type { LoaderFunction, V2_MetaFunction } from '@remix-run/node'
 import { redirect } from '@remix-run/node'
 
 import { authenticator } from '~/utils/auth.server'
 import { prisma } from '~/utils/prisma.server'
 import { Item } from './profile/export'
 
-export const meta: MetaFunction = () => {
-  return {
-    title: 'Export',
-  }
+export const meta: V2_MetaFunction = () => {
+  return [
+    {
+      title: 'Export',
+    },
+  ]
 }
 
 const getData = async (name: Item | '', user: User) => {

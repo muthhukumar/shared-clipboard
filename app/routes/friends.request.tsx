@@ -5,12 +5,7 @@ import { FriendSchema } from '~/types/friend'
 import type { ActionType } from '~/types/common'
 import type { User } from '@prisma/client'
 
-import type {
-  ActionFunction,
-  ErrorBoundaryComponent,
-  LoaderFunction,
-  MetaFunction,
-} from '@remix-run/node'
+import type { ActionFunction, LoaderFunction, V2_MetaFunction } from '@remix-run/node'
 import { json, redirect } from '@remix-run/node'
 
 import { useFetcher, useNavigate } from '@remix-run/react'
@@ -34,10 +29,12 @@ import { getFriendUser } from './resources/personal-id'
 
 type FriendActionType = ActionType<FriendType>
 
-export const meta: MetaFunction = () => {
-  return {
-    title: 'Friend Request',
-  }
+export const meta: V2_MetaFunction = () => {
+  return [
+    {
+      title: 'Friend Request',
+    },
+  ]
 }
 
 export const action: ActionFunction = async ({ request }) => {
@@ -184,4 +181,4 @@ export default function ShortURLNew() {
 
 export const CatchBoundary = DefaultCatchBoundary
 
-export const ErrorBoundary: ErrorBoundaryComponent = DefaultErrorBoundary
+export const ErrorBoundary = DefaultErrorBoundary

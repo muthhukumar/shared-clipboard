@@ -1,16 +1,18 @@
 import type { User } from '@prisma/client'
 
-import type { ActionFunction, ErrorBoundaryComponent, MetaFunction } from '@remix-run/node'
+import type { ActionFunction, V2_MetaFunction } from '@remix-run/node'
 import { redirect } from '@remix-run/node'
 
 import { DefaultCatchBoundary, DefaultErrorBoundary, DeleteDialog } from '~/components'
 import { authenticator } from '~/utils/auth.server'
 import { prisma } from '~/utils/prisma.server'
 
-export const meta: MetaFunction = () => {
-  return {
-    title: 'Todo | Delete',
-  }
+export const meta: V2_MetaFunction = () => {
+  return [
+    {
+      title: 'Todo | Delete',
+    },
+  ]
 }
 
 export const action: ActionFunction = async ({ request, params }) => {
@@ -43,4 +45,4 @@ export default function Delete() {
 
 export const CatchBoundary = DefaultCatchBoundary
 
-export const ErrorBoundary: ErrorBoundaryComponent = DefaultErrorBoundary
+export const ErrorBoundary = DefaultErrorBoundary

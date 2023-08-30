@@ -23,9 +23,8 @@ import {
   Switch,
 } from '@chakra-ui/react'
 import { IoMdAdd } from 'react-icons/io'
-import { RiSearchLine } from 'react-icons/ri'
-import { RiDeleteBack2Line } from 'react-icons/ri'
-import type { ErrorBoundaryComponent, LoaderArgs, MetaFunction } from '@remix-run/node'
+import { RiDeleteBack2Line, RiSearchLine } from 'react-icons/ri'
+import type { LoaderArgs, V2_MetaFunction } from '@remix-run/node'
 import { json } from '@remix-run/node'
 import {
   Form,
@@ -40,10 +39,12 @@ import { Wrapper, NoItems, TodoItem, Page400, Page500, GoToHome } from '~/compon
 import { authenticator } from '~/utils/auth.server'
 import { composeToBoolean } from '~/utils'
 
-export const meta: MetaFunction = () => {
-  return {
-    title: 'Todo',
-  }
+export const meta: V2_MetaFunction = () => {
+  return [
+    {
+      title: 'Todo',
+    },
+  ]
 }
 
 export const loader = async ({ request }: LoaderArgs) => {
@@ -271,6 +272,6 @@ export const CatchBoundary = () => {
   return <>{page}</>
 }
 
-export const ErrorBoundary: ErrorBoundaryComponent = () => {
+export const ErrorBoundary = () => {
   return <Page500 />
 }

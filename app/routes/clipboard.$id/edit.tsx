@@ -1,12 +1,7 @@
 import type { ActionType } from '~/types/common'
 import type { ClipboardContent, User } from '@prisma/client'
 
-import type {
-  ActionFunction,
-  ErrorBoundaryComponent,
-  LoaderFunction,
-  MetaFunction,
-} from '@remix-run/node'
+import type { ActionFunction, LoaderFunction, V2_MetaFunction } from '@remix-run/node'
 import { json, redirect } from '@remix-run/node'
 
 import { useActionData, useLoaderData, useNavigate } from '@remix-run/react'
@@ -24,10 +19,12 @@ import ClipboardForm from '~/components/forms/clipboard'
 
 type ClipboardActionType = ActionType<ClipboardContentType>
 
-export const meta: MetaFunction = () => {
-  return {
-    title: 'Clipboard | Edit',
-  }
+export const meta: V2_MetaFunction = () => {
+  return [
+    {
+      title: 'Clipboard | Edit',
+    },
+  ]
 }
 
 export const action: ActionFunction = async ({ request, params }) => {
@@ -146,4 +143,4 @@ export default function ClipboardContentNew() {
 
 export const CatchBoundary = DefaultCatchBoundary
 
-export const ErrorBoundary: ErrorBoundaryComponent = DefaultErrorBoundary
+export const ErrorBoundary = DefaultErrorBoundary

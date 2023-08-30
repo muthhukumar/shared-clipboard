@@ -1,5 +1,5 @@
 import { Stack, StackDivider, useColorModeValue, VStack } from '@chakra-ui/react'
-import type { ErrorBoundaryComponent, MetaFunction } from '@remix-run/node'
+import type { V2_MetaFunction } from '@remix-run/node'
 import { Link, Outlet, useLocation } from '@remix-run/react'
 import clsx from 'clsx'
 
@@ -24,10 +24,12 @@ const links: Array<{ title: string; to: string }> = [
   },
 ]
 
-export const meta: MetaFunction = () => {
-  return {
-    title: 'Profile',
-  }
+export const meta: V2_MetaFunction = () => {
+  return [
+    {
+      title: 'Profile',
+    },
+  ]
 }
 
 export default function Profile() {
@@ -85,4 +87,4 @@ export default function Profile() {
 
 export const CatchBoundary = DefaultCatchBoundary
 
-export const ErrorBoundary: ErrorBoundaryComponent = DefaultErrorBoundary
+export const ErrorBoundary = DefaultErrorBoundary

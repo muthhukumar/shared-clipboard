@@ -1,4 +1,4 @@
-import type { ErrorBoundaryComponent, LoaderFunction, MetaFunction } from '@remix-run/node'
+import type { LoaderFunction, V2_MetaFunction } from '@remix-run/node'
 
 import { Button, Flex, Heading, Stack, Image, Text } from '@chakra-ui/react'
 import { useFetcher } from '@remix-run/react'
@@ -7,10 +7,12 @@ import { BsGoogle, BsGithub } from 'react-icons/bs'
 import { authenticator } from '~/utils/auth.server'
 import { DefaultCatchBoundary, DefaultErrorBoundary } from '~/components'
 
-export const meta: MetaFunction = () => {
-  return {
-    title: 'Clipi | Sign up (or in)',
-  }
+export const meta: V2_MetaFunction = () => {
+  return [
+    {
+      title: 'Clipi | Sign up (or in)',
+    },
+  ]
 }
 
 export const loader: LoaderFunction = async ({ request }) => {
@@ -80,4 +82,4 @@ export default function SimpleCard() {
 
 export const CatchBoundary = DefaultCatchBoundary
 
-export const ErrorBoundary: ErrorBoundaryComponent = DefaultErrorBoundary
+export const ErrorBoundary = DefaultErrorBoundary

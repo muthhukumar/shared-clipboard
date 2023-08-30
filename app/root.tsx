@@ -1,4 +1,4 @@
-import type { ErrorBoundaryComponent, LinksFunction, LoaderFunction } from '@remix-run/node'
+import type { LinksFunction, LoaderFunction } from '@remix-run/node'
 
 import {
   Links,
@@ -61,7 +61,7 @@ export default function App() {
   )
 }
 
-export const ErrorBoundary: ErrorBoundaryComponent = () => {
+export const ErrorBoundary = () => {
   return <Page500 />
 }
 
@@ -94,6 +94,7 @@ const Document = withEmotionCache(
       const tags = emotionCache.sheet.tags
       emotionCache.sheet.flush()
       tags.forEach((tag) => {
+        // eslint-disable-next-line
         ;(emotionCache.sheet as any)._insertTag(tag)
       })
       // reset cache to reapply global styles
