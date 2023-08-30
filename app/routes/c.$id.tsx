@@ -85,6 +85,8 @@ export const loader: LoaderFunction = async ({ request, params }) => {
     where: { id: Number(clipboardContentId) },
   })
 
+  const user = (await authenticator.isAuthenticated(request)) as User
+
   if (!clipboardContent) {
     // TODO - Handle this with the error boundary and catch boundary
     throw json(
@@ -95,7 +97,11 @@ export const loader: LoaderFunction = async ({ request, params }) => {
     )
   }
 
-  if (!clipboardContent?.private) {
+  if (user.email !== clipboardContent.userEmail) {
+    if (clipboardContent?.private) {
+      throw json({ message: "You're not authorized to access this content" }, { status: 403 })
+    }
+
     return { content: clipboardContent.content, title: clipboardContent.title }
   }
 
