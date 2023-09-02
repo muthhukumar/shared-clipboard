@@ -23,8 +23,7 @@ import {
   Switch,
 } from '@chakra-ui/react'
 import { IoMdAdd } from 'react-icons/io'
-import { RiSearchLine } from 'react-icons/ri'
-import { RiDeleteBack2Line } from 'react-icons/ri'
+import { RiDeleteBack2Line, RiSearchLine } from 'react-icons/ri'
 import type { ErrorBoundaryComponent, LoaderArgs, MetaFunction } from '@remix-run/node'
 import { json } from '@remix-run/node'
 import {

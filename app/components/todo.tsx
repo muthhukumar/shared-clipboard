@@ -100,6 +100,7 @@ export default function TodoItem(
                 <MenuItem closeOnSelect={false}>
                   <div className="bg-white">
                     <Calendar
+                      // @ts-ignore
                       onChange={(value: Date) => {
                         const newDueDate = new Date(value)
                         reschule(moment(newDueDate).format('YYYY-MM-DD'))
