@@ -1,45 +1,19 @@
+// ts-ignore 7017 is used to ignore the error that the global object is not
+// defined in the global scope. This is because the global object is only
+// defined in the global scope in Node.js and not in the browser.
+
 import { PrismaClient } from '@prisma/client'
-import invariant from 'tiny-invariant'
 
-let prisma: PrismaClient
+// PrismaClient is attached to the `global` object in development to prevent
+// exhausting your database connection limit.
+//
+// Learn more:
+// https://pris.ly/d/help/next-js-best-practices
 
-declare global {
-  var __db__: PrismaClient
-}
+const globalForPrisma = global as unknown as { prisma: PrismaClient }
 
-// this is needed because in development we don't want to restart
-// the server with every change, but we want to make sure we don't
-// create a new connection to the DB with every change either.
-// in production we'll have a single connection to the DB.
-if (process.env.NODE_ENV === 'production') {
-  prisma = getClient()
-} else {
-  if (!global.__db__) {
-    global.__db__ = getClient()
-  }
-  prisma = global.__db__
-}
+export const _prisma_raw = globalForPrisma.prisma || new PrismaClient()
 
-function getClient() {
-  const { DATABASE_URL } = process.env
-  invariant(typeof DATABASE_URL === 'string', 'DATABASE_URL env var not set')
+if (process.env.NODE_ENV !== 'production') globalForPrisma.prisma = _prisma_raw
 
-  console.log(`🔌 setting up prisma client to ${DATABASE_URL}`)
-  // NOTE: during development if you change anything in this function, remember
-  // that this only runs once per server restart and won't automatically be
-  // re-run per request like everything else is. So if you need to change
-  // something in this file, you'll need to manually restart the server.
-  const client = new PrismaClient({
-    datasources: {
-      db: {
-        url: DATABASE_URL,
-      },
-    },
-  })
-  // connect eagerly
-  client.$connect()
-
-  return client
-}
-
-export { prisma }
+export const prisma = _prisma_raw
