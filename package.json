@@ -23,7 +23,8 @@
     "typecheck": "tsc -b",
     "postinstall": "remix setup node && npx prisma generate",
     "migrate:deploy": "npx prisma migrate deploy",
-    "start": "cross-env NODE_ENV=production node ./build/server.js"
+    "start": "cross-env NODE_ENV=production node ./build/server.js",
+    "docker": "docker compose up -d"
   },
   "dependencies": {
     "@chakra-ui/icons": "^2.1.0",
