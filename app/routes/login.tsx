@@ -1,8 +1,8 @@
 import type { ErrorBoundaryComponent, LoaderFunction, MetaFunction } from '@remix-run/node'
 
-import { Button, Flex, Heading, Stack, Image, Text } from '@chakra-ui/react'
+import { Button, Flex, Heading, Stack, Image } from '@chakra-ui/react'
 import { useFetcher } from '@remix-run/react'
-import { BsGoogle, BsGithub } from 'react-icons/bs'
+import { BsGoogle } from 'react-icons/bs'
 
 import { authenticator } from '~/utils/auth.server'
 import { DefaultCatchBoundary, DefaultErrorBoundary } from '~/components'
@@ -19,10 +19,8 @@ export const loader: LoaderFunction = async ({ request }) => {
 }
 
 export default function SimpleCard() {
-  const githubAuthFetcher = useFetcher()
   const googleAuthFetcher = useFetcher()
 
-  const isGithubAuthenticating = githubAuthFetcher.state === 'submitting'
   const isGoogleAuthenticating = googleAuthFetcher.state === 'submitting'
 
   return (
@@ -33,22 +31,6 @@ export default function SimpleCard() {
             Sign in to your account
           </Heading>
           <Stack spacing={4}>
-            <githubAuthFetcher.Form action="/auth/github" method="post" className="w-full">
-              <Button
-                isLoading={isGithubAuthenticating}
-                loadingText="Authenticating"
-                colorScheme={'telegram'}
-                variant={'solid'}
-                w="full"
-                leftIcon={<BsGithub />}
-                type="submit"
-              >
-                Sign In (or up) with Github
-              </Button>
-            </githubAuthFetcher.Form>
-            <Text textAlign="center" color="gray.300">
-              Or
-            </Text>
             <googleAuthFetcher.Form action="/auth/google" method="post" className="w-full">
               <Button
                 isLoading={isGoogleAuthenticating}
